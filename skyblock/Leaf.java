@@ -1,20 +1,19 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Grass here.
+ * Write a description of class Leave here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Grass extends Block
+public class Leaf extends Block
 {
-    private static Color brown = new Color(185, 122, 87);
-    public Grass(){
-        super(brown,1);
-        GreenfootImage img = new GreenfootImage("block of grass.png");
+    private static Color green = new Color(23, 120, 51);
+    public Leaf(){
+        super(green,1);
+        GreenfootImage img = new GreenfootImage("leaves.png");
         img.scale(32,32);
         setImage(img);
-        isDirt = true;
     }
     /**
      * Act - do whatever the Grass wants to do. This method is called whenever
