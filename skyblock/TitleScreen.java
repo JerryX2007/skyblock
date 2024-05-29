@@ -1,0 +1,26 @@
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class TitleScreen here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class TitleScreen extends World
+{
+
+    /**
+     * Constructor for objects of class TitleScreen.
+     * 
+     */
+    public TitleScreen()
+    {    
+        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
+        super(1280, 720, 1); 
+        Image logo = new Image("logo.png", 75);
+        GreenfootImage background = new GreenfootImage("titlescreen.png");
+        background.scale(1280, 720);
+        setBackground(background);
+        addObject(logo, getWidth() / 2, 100);
+    }
+}
