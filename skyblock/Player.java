@@ -13,12 +13,14 @@ public abstract class Player extends SuperSmoothMover
     protected static int reach;
     protected static boolean canDrop;
     protected static int pickUpRange;
-    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange) {
+    protected static boolean jumping;
+    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
         this.reach = reach;
         this.canDrop = canDrop;
         this.pickUpRange = pickUpRange;
+        this.jumping = jumping;
     }
     /**
      * Act - do whatever the Player wants to do. This method is called whenever
@@ -43,5 +45,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public int getPickUpRange() {
         return this.pickUpRange;
+    }
+    public boolean isJumping() {
+        return this.jumping;
     }
 }
