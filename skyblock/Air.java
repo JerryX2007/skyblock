@@ -16,7 +16,7 @@ public class Air extends Block
     public Air(){
         super(Color.WHITE,100);
         GreenfootImage img = new GreenfootImage("air.png");
-        img.scale(80,80);
+        img.scale(64,64);
         setImage(img);
     }
     
