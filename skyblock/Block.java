@@ -71,9 +71,6 @@ public abstract class  Block extends Actor
     public void act()
     {
         // Add your action code here.
-        if(!isSelected){
-            stopBreaking();
-        }
         /**
         if (Greenfoot.mouseMoved(this)) {
             isSelected = true;
@@ -83,14 +80,28 @@ public abstract class  Block extends Actor
             isSelected = false;
         }
         */
-        if (Greenfoot.mousePressed(this)) {
-            // Mouse button is pressed
-            isHoldingMouse = true;
-        }
+        MouseInfo mouse = Greenfoot.getMouseInfo();
         
-        if (Greenfoot.mouseClicked(this)) {
-            isHoldingMouse = false; // Reset the flag
+        if (mouse != null) {
+            // Extract the x and y coordinates of the mouse
+            int mouseX = mouse.getX();
+            int mouseY = mouse.getY();
+            
+            isSelected = isIntersectingWithCoordinate(mouseX, mouseY);
+            
+            if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
+                // Mouse button is pressed
+                isHoldingMouse = true;
+            }
+            if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
+                isHoldingMouse = false; // Reset the flag
+            }            
         }
+        if(!isSelected){
+            stopBreaking();
+            isHoldingMouse = false;
+        }
+        //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
             isSelected = true;
             breakMe(0,0);
@@ -99,12 +110,8 @@ public abstract class  Block extends Actor
             stopBreaking();
             isSelected = false;
         }
-        if((100*getSubBreakTime()/getBreakTime() < 95)){
-            getWorld().addObject(be, getX(),getY());
-        }
-        else{
-            
-        }
+        //add the breaking effect 
+        getWorld().addObject(be, getX(),getY());
         //block is broken
         if(subBreakTime < 0){
             drop();
@@ -114,10 +121,22 @@ public abstract class  Block extends Actor
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);
     }
+     /**
+     * Check if the actor is intersecting with a given coordinate.
+     * @param x The x-coordinate to check.
+     * @param y The y-coordinate to check.
+     * @return true if the actor intersects with the coordinate, false otherwise.
+     */
+    public boolean isIntersectingWithCoordinate(int x, int y) {
+        int actorX = getX();
+        int actorY = getY();
+        GreenfootImage image = getImage();
+        int halfWidth = image.getWidth() / 2;
+        int halfHeight = image.getHeight() / 2;
+
+        // Check if the coordinate is within the bounding box of the actor
+        return (x >= actorX - halfWidth && x <= actorX + halfWidth &&
+                y >= actorY - halfHeight && y <= actorY + halfHeight);
+    }
 }
-/**
-            BreakingEffect e = (BreakingEffect)getOneIntersectingObject(BreakingEffect.class);
-            if (e != null) {
-                getWorld().removeObject(e);
-            }
-            */
+
