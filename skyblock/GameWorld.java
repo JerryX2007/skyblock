@@ -16,7 +16,7 @@ public class GameWorld extends World
         super(1280, 768, 1);
 
         // Initialize the grid
-        grid = new Block[16][9];
+        grid = new Block[20][12];
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
@@ -24,9 +24,9 @@ public class GameWorld extends World
 
     private void initializeGrid() {
         // Example of initializing the grid with Dirt blocks
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (j<5) {
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 12; j++) {
+                if (j<9) {
                     grid[i][j] = new Air();
                 }
                 else {
