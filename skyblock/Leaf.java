@@ -9,10 +9,14 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Leaf extends Block
 {
     private static Color green = new Color(23, 120, 51);
+    private GreenfootImage img;
+    private GreenfootImage img2;
+    private Color gold = new Color(255, 201, 14);
     public Leaf(){
         super(green,1);
-        GreenfootImage img = new GreenfootImage("leaves.png");
+        img = new GreenfootImage("leaves.png");
         img.scale(32,32);
+        img2 = addBorder(img, gold);
         setImage(img);
     }
     /**
@@ -23,6 +27,12 @@ public class Leaf extends Block
     {
         // Add your action code here.
         super.act();
+        if(isSelected){
+            setImage(img2);
+        }
+        if(!isSelected){
+            setImage(img);
+        }
     }
     public void drop(){
         

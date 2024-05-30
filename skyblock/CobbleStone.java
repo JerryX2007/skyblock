@@ -8,11 +8,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class CobbleStone extends Block
 {
+    private GreenfootImage img;
+    private GreenfootImage img2;
+    private Color gold = new Color(255, 201, 14);
     public CobbleStone(){
         super(Color.GRAY,5);
-        GreenfootImage img = new GreenfootImage("cobblestone.png");
+        img= new GreenfootImage("cobblestone.png");
         img.scale(32,32);
         setImage(img);
+        img2 = addBorder(img, gold);
         isStone = true;
     }
     /**
@@ -23,6 +27,12 @@ public class CobbleStone extends Block
     {
         // Add your action code here.
         super.act();
+        if(isSelected){
+            setImage(img2);
+        }
+        if(!isSelected){
+            setImage(img);
+        }
     }
     public void drop(){
         
