@@ -14,8 +14,8 @@ public class Leaf extends Block
     private Color gold = new Color(255, 201, 14);
     public Leaf(){
         super(green,1);
-        img = new GreenfootImage("leaves.png");
-        img.scale(32,32);
+        img = new GreenfootImage("block/leaves.png");
+        img.scale(64,64);
         img2 = addBorder(img, gold);
         setImage(img);
     }

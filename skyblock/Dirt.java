@@ -14,8 +14,8 @@ public class Dirt extends Block
     private Color gold = new Color(255, 201, 14);
     public Dirt(){
         super(brown,1);
-        img = new GreenfootImage("dirt.png");
-        img.scale(32,32);
+        img = new GreenfootImage("block/dirt.png");
+        img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
         isDirt = true;
