@@ -26,7 +26,12 @@ public class GameWorld extends World
         // Example of initializing the grid with Dirt blocks
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 9; j++) {
-                grid[i][j] = new Air();
+                if (i<10) {
+                    grid[i][j] = new Air();
+                }
+                else {
+                    grid[i][j] = new CobbleStone();
+                }
                 addActorToGrid(grid[i][j], i, j);
             }
         }
