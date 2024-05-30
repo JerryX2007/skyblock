@@ -2,16 +2,18 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.time.LocalTime;
 
 /**
- * Write a description of class TitleScreen here.
+ * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Benny
+ * @version May 29, 2024
  */
 public class TitleScreen extends World
 {
     private GreenfootImage background;
     private Button play;
     private GameWorld game;
+    private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
+    private boolean musicStarted = false;
     
     /**
      * Constructor for objects of class TitleScreen.
@@ -42,10 +44,62 @@ public class TitleScreen extends World
         addObject(logo, getWidth() / 2, 100);
     }
     
-    public void act(){
-        checkClick();
+    /**
+     * Stops music when greenfoot is stopped
+     *
+     */
+    public void stopped() {
+        mainMenu.pause();
     }
     
+    /**
+     * Starts playing music when greenfoot is started
+     *
+     */
+    public void started() {
+        mainMenu.playLoop();
+    }
+    
+    public void act(){
+        checkClick();
+        startMusic();
+    }
+    
+    /**
+     * Plays music
+     */
+    public static void playMusic(){
+        mainMenu.playLoop();
+    }
+    
+    /**
+     * Pauses music
+     */
+    public static void pauseMusic(){
+        mainMenu.pause();
+    }
+    
+    /**
+     * Setter for mainMenu volume
+     * 
+     * @param volume New volume
+     */
+    public static void setMusicVolume(int volume){
+        mainMenu.setVolume(volume);
+    }
+    
+    /**
+     * Start background music
+     */
+    public void startMusic(){
+        if (!musicStarted) { // Start music only once
+            mainMenu.setVolume(25);
+            mainMenu.playLoop();
+            musicStarted = true;
+        }
+    }
+
+    // Checks if buttons are pressed
     private void checkClick(){
         if(play.isPressed()){
             game = new GameWorld();
