@@ -17,12 +17,28 @@ public class Items extends Actor
      * Create an Items with given file name
      * 
      * @param file Location and name of file.
+     * @param world World where items will reside in.
      */
     public Items(String file, World world){
         this.setImage(file);
         getImage().scale(48, 48);
         X = world.getWidth()/2;
         Y = world.getHeight()/2;
+    }
+    
+    /**
+     * Create an Items with given file name
+     * 
+     * @param file Location and name of file.
+     * @param world World where items will reside in.
+     * @param X x pos of the item.
+     * @param Y y pos of the item.
+     */
+    public Items(String file, World world, int X, int Y){
+        this.setImage(file);
+        getImage().scale(48, 48);
+        this.X = X;
+        this.Y = Y;
     }
     
     public void act(){

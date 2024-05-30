@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Adds a grid of blocks to the screen. 
@@ -11,8 +12,9 @@ public class GameWorld extends World
 {
     private Block[][] grid;
     private boolean openInventory = false;
-    private Image inventory;
+    private GUI inventory;
     private Items dirtBlock;
+    private ArrayList<Items> itemsList;
 
     public GameWorld() {    
         // Create a new world with 1280x720 cells with a cell size of 1x1 pixels.
@@ -25,11 +27,13 @@ public class GameWorld extends World
         initializeGrid();
         
         // Inventory stuff
-        inventory = new Image("inventory.png", 300);
+        inventory = new GUI("inventory.png", 300);
         dirtBlock = new Items("dirtBlock.png", this);
+        itemsList = new ArrayList<>();
     }
     
     private boolean keyPreviouslyDown = false;
+    private boolean prevState = false;
 
     public void act() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -38,15 +42,30 @@ public class GameWorld extends World
             if (!openInventory) {
                 openInventory = true;
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
-                addObject(dirtBlock, dirtBlock.getXPos(), dirtBlock.getYPos());
+                for(Items i: itemsList){
+                    addObject(i, i.getXPos(), i.getYPos());
+                }
             } else {
                 openInventory = false;
                 removeObject(inventory);
-                removeObject(dirtBlock);
+                for(Items i: itemsList){
+                    removeObject(i);
+                }
             }
         }
     
         keyPreviouslyDown = keyCurrentlyDown;
+        boolean currentDown = Greenfoot.isKeyDown("p");
+        if(currentDown && !prevState){
+            if(openInventory){
+                int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
+                int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
+                Items temp = new Items("dirtBlock.png", this, tempX, tempY);
+                itemsList.add(temp);
+                addObject(temp, tempX, tempY);
+            }
+        }
+        prevState = currentDown;
     }
 
 
