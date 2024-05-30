@@ -13,7 +13,7 @@ public class GameWorld extends World
 
     public GameWorld() {    
         // Create a new world with 1280x720 cells with a cell size of 1x1 pixels.
-        super(1280, 720, 1);
+        super(1280, 768, 1);
 
         // Initialize the grid
         grid = new Block[16][9];
@@ -26,7 +26,7 @@ public class GameWorld extends World
         // Example of initializing the grid with Dirt blocks
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 9; j++) {
-                if (i<10) {
+                if (j<5) {
                     grid[i][j] = new Air();
                 }
                 else {
@@ -47,14 +47,14 @@ public class GameWorld extends World
     }
 
     public int[] getGridCoordinates(int x, int y) {
-        int gridX = x / 80;
-        int gridY = y / 80;
+        int gridX = x / 64;
+        int gridY = y / 64;
         return new int[]{gridX, gridY};
     }
 
     public int[] getWorldCoordinates(int gridX, int gridY) {
-        int worldX = gridX * 80 + 40; // center of the cell
-        int worldY = gridY * 80 + 40; // center of the cell
+        int worldX = gridX * 64 + 40; // center of the cell
+        int worldY = gridY * 64 + 40; // center of the cell
         return new int[]{worldX, worldY};
     }
 
