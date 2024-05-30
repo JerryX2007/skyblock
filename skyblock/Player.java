@@ -15,9 +15,10 @@ public abstract class Player extends SuperSmoothMover
     protected static int pickUpRange;
     protected static boolean jumping;
     
-    public static int jumpStrength = 20;
+    protected static int jumpStrength = 20;
     protected final int gravity = 2;
     protected int vSpeed;
+
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
