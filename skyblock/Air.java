@@ -22,6 +22,7 @@ public class Air extends Block
     
     public void act()
     {
+        //stop air from breaking
         if(isHoldingMouse){
             isHoldingMouse = false;
         }
