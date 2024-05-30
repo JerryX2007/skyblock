@@ -9,11 +9,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Grass extends Block
 {
     private static Color brown = new Color(185, 122, 87);
+    private GreenfootImage img;
+    private GreenfootImage img2;
+    private Color gold = new Color(255, 201, 14);
     public Grass(){
         super(brown,1);
-        GreenfootImage img = new GreenfootImage("block of grass.png");
+        img = new GreenfootImage("block of grass.png");
         img.scale(32,32);
         setImage(img);
+        img2 = addBorder(img, gold);
         isDirt = true;
     }
     /**
@@ -24,6 +28,12 @@ public class Grass extends Block
     {
         // Add your action code here.
         super.act();
+        if(isSelected){
+            setImage(img2);
+        }
+        if(!isSelected){
+            setImage(img);
+        }
     }
     public void drop(){
         

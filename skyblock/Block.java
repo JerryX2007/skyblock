@@ -104,7 +104,7 @@ public abstract class  Block extends Actor
         //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
             isSelected = true;
-            breakMe(0,0);
+            breakMe(1,100);
         }
         else{
             stopBreaking();
@@ -137,6 +137,27 @@ public abstract class  Block extends Actor
         // Check if the coordinate is within the bounding box of the actor
         return (x >= actorX - halfWidth && x <= actorX + halfWidth &&
                 y >= actorY - halfHeight && y <= actorY + halfHeight);
+    }
+    /**
+     * add a border to an image, rectangle only
+     * 
+     * @param image         the orginial image
+     * @param borderColor   the color of the border
+     * @return              return the new image
+     */
+    public static GreenfootImage addBorder(GreenfootImage image, Color borderColor) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+    
+        GreenfootImage newImage = new GreenfootImage(width, height);
+        // Draw the original image onto the new image
+        newImage.drawImage(image, 0, 0);
+        
+        newImage.setColor(borderColor);
+        // Draw the border around the new image
+        newImage.drawRect(0, 0, width - 1, height - 1);
+    
+        return newImage;
     }
 }
 
