@@ -10,6 +10,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class GameWorld extends World
 {
     private Block[][] grid;
+    private boolean openInventory = false;
+    private Image inventory;
+    private Items dirtBlock;
 
     public GameWorld() {    
         // Create a new world with 1280x720 cells with a cell size of 1x1 pixels.
@@ -20,7 +23,32 @@ public class GameWorld extends World
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
+        
+        // Inventory stuff
+        inventory = new Image("inventory.png", 300);
+        dirtBlock = new Items("dirtBlock.png", this);
     }
+    
+    private boolean keyPreviouslyDown = false;
+
+    public void act() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+    
+        if (keyCurrentlyDown && !keyPreviouslyDown) {
+            if (!openInventory) {
+                openInventory = true;
+                addObject(inventory, getWidth() / 2, getHeight() / 2);
+                addObject(dirtBlock, dirtBlock.getXPos(), dirtBlock.getYPos());
+            } else {
+                openInventory = false;
+                removeObject(inventory);
+                removeObject(dirtBlock);
+            }
+        }
+    
+        keyPreviouslyDown = keyCurrentlyDown;
+    }
+
 
     private void initializeGrid() {
         // Example of initializing the grid with Dirt blocks
