@@ -10,6 +10,8 @@ import java.time.LocalTime;
 public class TitleScreen extends World
 {
     private GreenfootImage background;
+    private Button play;
+    private GameWorld game;
     
     /**
      * Constructor for objects of class TitleScreen.
@@ -32,6 +34,23 @@ public class TitleScreen extends World
         }
         background.scale(1280, 720);
         setBackground(background);
+        play = new Button("play", 3, ".jpg");
+        
+        Button.init();
+        
+        addObject(play, getWidth() / 2, getHeight() / 2 + 150);
         addObject(logo, getWidth() / 2, 100);
+    }
+    
+    public void act(){
+        checkClick();
+    }
+    
+    private void checkClick(){
+        if(play.isPressed()){
+            game = new GameWorld();
+            Greenfoot.setWorld(game);
+            play.setPressedCondition(false);
+        }
     }
 }
