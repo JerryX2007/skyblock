@@ -14,15 +14,17 @@ public class Air extends Block
      */
     
     public Air(){
-        super(Color.GRAY,5);
-        GreenfootImage img = new GreenfootImage("cobblestone.png");
+        super(Color.WHITE,100);
+        GreenfootImage img = new GreenfootImage("air.png");
         img.scale(80,80);
         setImage(img);
-        isStone = true;
     }
     
     public void act()
     {
+        if(isHoldingMouse){
+            isHoldingMouse = false;
+        }
         super.act();
     }
      
