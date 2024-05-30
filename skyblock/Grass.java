@@ -15,7 +15,7 @@ public class Grass extends Block
     public Grass(){
         super(brown,1);
         img = new GreenfootImage("block of grass.png");
-        img.scale(32,32);
+        img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
         isDirt = true;

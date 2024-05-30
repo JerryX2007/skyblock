@@ -15,7 +15,7 @@ public class Log extends Block
     public Log(){
         super(brown,2);
         img = new GreenfootImage("wood.png");
-        img.scale(32,32);
+        img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
         isWood = true;

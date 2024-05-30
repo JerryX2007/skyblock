@@ -11,7 +11,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public abstract class  Block extends Actor
 {
-   
+
     private static MouseInfo mouse;
     private BreakingEffect be;
     private static int blockSize = 32;//how much pixels is a block
@@ -33,6 +33,7 @@ public abstract class  Block extends Actor
         be = new BreakingEffect(this);
         isSelected = false; isHoldingMouse = false;
     }
+
     /**
      * method to break to block only works if the block is selected (isSelected = true)
      * 
@@ -51,19 +52,24 @@ public abstract class  Block extends Actor
             //System.out.println("breaking");
         }
     }
+
     public void stopBreaking(){
         subBreakTime = breakTime;
     }
+
     public double getBreakTime(){
         return breakTime;
     }
+
     public double getSubBreakTime(){
         return subBreakTime;
     }
+
     /**
      * every block needs to drop something after being broken
      */
     protected abstract void drop();
+
     /**
      * Act - do whatever the Block wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -73,21 +79,29 @@ public abstract class  Block extends Actor
         // Add your action code here.
         /**
         if (Greenfoot.mouseMoved(this)) {
-            isSelected = true;
-            //System.out.println("hovered");
+        isSelected = true;
+        //System.out.println("hovered");
         }
         else{
-            isSelected = false;
+        isSelected = false;
         }
-        */
+         */
         MouseInfo mouse = Greenfoot.getMouseInfo();
-        
+
         if (mouse != null) {
             // Extract the x and y coordinates of the mouse
             int mouseX = mouse.getX();
             int mouseY = mouse.getY();
-            
-            isSelected = isIntersectingWithCoordinate(mouseX, mouseY);
+            /**
+            //borrowed mouseover code from Mr. Cohen
+            if(!isSelected && (Greenfoot.mouseMoved(be)||Greenfoot.mouseMoved(this))){
+                isSelected = true;
+            }
+            else if(isSelected && Greenfoot.mouseMoved(null) && (!Greenfoot.mouseMoved(this)||!Greenfoot.mouseMoved(be))){
+                isSelected = false;
+            }
+            */
+           isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
             
             if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
                 // Mouse button is pressed
@@ -95,7 +109,7 @@ public abstract class  Block extends Actor
             }
             if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
                 isHoldingMouse = false; // Reset the flag
-            }            
+            }   
         }
         if(!isSelected){
             stopBreaking();
@@ -121,23 +135,25 @@ public abstract class  Block extends Actor
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);
     }
-     /**
+
+    /**
      * Check if the actor is intersecting with a given coordinate.
      * @param x The x-coordinate to check.
      * @param y The y-coordinate to check.
      * @return true if the actor intersects with the coordinate, false otherwise.
      */
-    public boolean isIntersectingWithCoordinate(int x, int y) {
-        int actorX = getX();
-        int actorY = getY();
+    public boolean isIntersectingWithCoordinate(Actor a,int x, int y) {
+        int actorX = a.getX();
+        int actorY = a.getY();
         GreenfootImage image = getImage();
         int halfWidth = image.getWidth() / 2;
         int halfHeight = image.getHeight() / 2;
 
         // Check if the coordinate is within the bounding box of the actor
         return (x >= actorX - halfWidth && x <= actorX + halfWidth &&
-                y >= actorY - halfHeight && y <= actorY + halfHeight);
+            y >= actorY - halfHeight && y <= actorY + halfHeight);
     }
+
     /**
      * add a border to an image, rectangle only
      * 
@@ -148,15 +164,15 @@ public abstract class  Block extends Actor
     public static GreenfootImage addBorder(GreenfootImage image, Color borderColor) {
         int width = image.getWidth();
         int height = image.getHeight();
-    
+
         GreenfootImage newImage = new GreenfootImage(width, height);
         // Draw the original image onto the new image
         newImage.drawImage(image, 0, 0);
-        
+
         newImage.setColor(borderColor);
         // Draw the border around the new image
         newImage.drawRect(0, 0, width - 1, height - 1);
-    
+
         return newImage;
     }
 }
