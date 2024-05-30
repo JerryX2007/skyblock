@@ -17,8 +17,6 @@ public class Steve extends Player
      */
     public void act()
     {
-        if(Greenfoot.isKeyDown("d")) {
-            setLocation(getX() + moveSpeed, getY());
-        }
+        super.act();
     }
 }
