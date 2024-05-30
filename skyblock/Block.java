@@ -94,7 +94,6 @@ public abstract class  Block extends Actor
         if(isHoldingMouse){
             isSelected = true;
             breakMe(0,0);
-            System.out.println("holded");
         }
         else{
             stopBreaking();
