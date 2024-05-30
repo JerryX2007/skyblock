@@ -14,8 +14,8 @@ public class Log extends Block
     private Color gold = new Color(255, 201, 14);
     public Log(){
         super(brown,2);
-        img = new GreenfootImage("wood.png");
-        img.scale(32,32);
+        img = new GreenfootImage("block/wood.png");
+        img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
         isWood = true;

@@ -15,9 +15,10 @@ public abstract class Player extends SuperSmoothMover
     protected static int pickUpRange;
     protected static boolean jumping;
     
-    public static int jumpStrength = 20;
+    protected static int jumpStrength = 20;
     protected final int gravity = 2;
     protected int vSpeed;
+    protected int acceleration = 1;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -33,6 +34,7 @@ public abstract class Player extends SuperSmoothMover
     public void act()
     {
         checkKeys();
+        checkFalling();
     }
     
     public void checkKeys() {
@@ -48,8 +50,30 @@ public abstract class Player extends SuperSmoothMover
         }
     }
     
+    protected void fall() {
+        setLocation(getX(), getY() + vSpeed);
+        vSpeed = vSpeed + acceleration;
+    }
     
-    public void jump() {
+    protected boolean onGround() {
+        Actor under = getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        if(under != null) {
+            if(under instanceof Air) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
+    protected void checkFalling() {
+        if(!onGround()) {
+            fall();
+        }
+    }
+    
+    protected void jump() {
         vSpeed = vSpeed - jumpStrength;
         jumping = true;
     }

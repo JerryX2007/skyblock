@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * Dylan Dinesh
  * @version (a version number or a date)
  */
-public class GameWorld extends World
-{
+
+public class GameWorld extends World {
     private Block[][] grid;
     private boolean openInventory = false;
     private GUI inventory;
@@ -17,11 +17,11 @@ public class GameWorld extends World
     private ArrayList<Items> itemsList;
 
     public GameWorld() {    
-        // Create a new world with 1280x720 cells with a cell size of 1x1 pixels.
-        super(1280, 720, 1);
+        // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
+        super(1280, 768, 1);
 
         // Initialize the grid
-        grid = new Block[16][9];
+        grid = new Block[20][12];
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
@@ -70,12 +70,17 @@ public class GameWorld extends World
 
 
     private void initializeGrid() {
-        // Example of initializing the grid with Dirt blocks
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 9; j++) {
+        // Example of initializing the grid with Air blocks
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();
-                addActorToGrid(grid[i][j], i, j);
-            }
+                if (j<9) {
+                    grid[i][j] = new Air();
+                }
+                else {
+                    grid[i][j] = new CobbleStone();
+                }
+                addActorToGrid(grid[i][j], i, j);            }
         }
     }
 
@@ -89,14 +94,14 @@ public class GameWorld extends World
     }
 
     public int[] getGridCoordinates(int x, int y) {
-        int gridX = x / 80;
-        int gridY = y / 80;
+        int gridX = x / 64;
+        int gridY = y / 64;
         return new int[]{gridX, gridY};
     }
 
     public int[] getWorldCoordinates(int gridX, int gridY) {
-        int worldX = gridX * 80 + 40; // center of the cell
-        int worldY = gridY * 80 + 40; // center of the cell
+        int worldX = gridX * 64 + 32; // center of the cell
+        int worldY = gridY * 64 + 32; // center of the cell
         return new int[]{worldX, worldY};
     }
 
@@ -105,3 +110,4 @@ public class GameWorld extends World
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
 }
+
