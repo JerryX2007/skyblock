@@ -7,12 +7,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * Dylan Dinesh
  * @version (a version number or a date)
  */
-public class GameWorld extends World
-{
+
+public class GameWorld extends World {
     private Block[][] grid;
 
     public GameWorld() {    
-        // Create a new world with 1280x720 cells with a cell size of 1x1 pixels.
+        // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
         super(1280, 768, 1);
 
         // Initialize the grid
@@ -23,17 +23,17 @@ public class GameWorld extends World
     }
 
     private void initializeGrid() {
-        // Example of initializing the grid with Dirt blocks
+        // Example of initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
+                grid[i][j] = new Air();
                 if (j<9) {
                     grid[i][j] = new Air();
                 }
                 else {
                     grid[i][j] = new CobbleStone();
                 }
-                addActorToGrid(grid[i][j], i, j);
-            }
+                addActorToGrid(grid[i][j], i, j);            }
         }
     }
 
@@ -53,8 +53,8 @@ public class GameWorld extends World
     }
 
     public int[] getWorldCoordinates(int gridX, int gridY) {
-        int worldX = gridX * 64 + 40; // center of the cell
-        int worldY = gridY * 64 + 40; // center of the cell
+        int worldX = gridX * 64 + 32; // center of the cell
+        int worldY = gridY * 64 + 32; // center of the cell
         return new int[]{worldX, worldY};
     }
 
@@ -63,3 +63,4 @@ public class GameWorld extends World
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
 }
+
