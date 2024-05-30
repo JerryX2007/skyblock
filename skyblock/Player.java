@@ -14,6 +14,10 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
+    
+    public static int jumpStrength = 20;
+    protected final int gravity = 2;
+    protected int vSpeed;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -28,7 +32,26 @@ public abstract class Player extends SuperSmoothMover
      */
     public void act()
     {
-        // Add your action code here.
+        checkKeys();
+    }
+    
+    public void checkKeys() {
+        if(Greenfoot.isKeyDown("d")) {
+            setLocation(getX()+moveSpeed, getY());
+        }
+        if(Greenfoot.isKeyDown("a")) {
+            setLocation(getX()-moveSpeed, getY());
+        }
+        if(Greenfoot.isKeyDown("shift")) {
+            //Do shift animation type shit
+            jumpStrength = 15;
+        }
+    }
+    
+    
+    public void jump() {
+        vSpeed = vSpeed - jumpStrength;
+        jumping = true;
     }
     
     public int getMoveSpeed() {
