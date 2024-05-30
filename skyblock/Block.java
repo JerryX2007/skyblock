@@ -12,8 +12,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public abstract class  Block extends Actor
 {
    
-    
-    
+    private static MouseInfo mouse;
+    private BreakingEffect be;
     private static int blockSize = 32;//how much pixels is a block
     protected Color color;//pls enter in "Color.RED"/"Color.LIGHT_GRAY" form
     protected double hardness;//how long will it take to break
@@ -23,12 +23,15 @@ public abstract class  Block extends Actor
     protected boolean isStone;// i am a stone and an picaxe will break me faster
     protected boolean isDirt;// i am a dirt and a shovel will break me faster
     protected boolean isSelected;//the mouse have hovered over this block
+    protected boolean isHoldingMouse;
     public Block(Color color, double hardness){
         this.color = color;
         this.hardness = hardness;
         isWood = false; isStone = false; isDirt = false;
         breakTime = 60*hardness;
         subBreakTime = breakTime;
+        be = new BreakingEffect(this);
+        isSelected = false; isHoldingMouse = false;
     }
     /**
      * method to break to block only works if the block is selected (isSelected = true)
@@ -45,6 +48,7 @@ public abstract class  Block extends Actor
             else{
                 subBreakTime--;
             }
+            //System.out.println("breaking");
         }
     }
     public void stopBreaking(){
@@ -70,10 +74,51 @@ public abstract class  Block extends Actor
         if(!isSelected){
             stopBreaking();
         }
+        /**
+        if (Greenfoot.mouseMoved(this)) {
+            isSelected = true;
+            //System.out.println("hovered");
+        }
+        else{
+            isSelected = false;
+        }
+        */
+        if (Greenfoot.mousePressed(this)) {
+            // Mouse button is pressed
+            isHoldingMouse = true;
+        }
+        
+        if (Greenfoot.mouseClicked(this)) {
+            isHoldingMouse = false; // Reset the flag
+        }
+        if(isHoldingMouse){
+            isSelected = true;
+            breakMe(0,0);
+            System.out.println("holded");
+        }
+        else{
+            stopBreaking();
+            isSelected = false;
+        }
+        if((100*getSubBreakTime()/getBreakTime() < 95)){
+            getWorld().addObject(be, getX(),getY());
+        }
+        else{
+            
+        }
         //block is broken
         if(subBreakTime < 0){
             drop();
+            getWorld().removeObject(be);
             getWorld().removeObject(this);
         }
+        //System.out.println(isSelected);
+        //System.out.println((int)subBreakTime);
     }
 }
+/**
+            BreakingEffect e = (BreakingEffect)getOneIntersectingObject(BreakingEffect.class);
+            if (e != null) {
+                getWorld().removeObject(e);
+            }
+            */
