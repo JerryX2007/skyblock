@@ -17,7 +17,7 @@ public class BreakingEffect extends Actor
         this.block = b;
         for(int i = 0; i < breakFrames.length; i++){
             breakFrames[i].setTransparency (200);
-            breakFrames[i].scale(32, 32);
+            breakFrames[i].scale(80, 80);
         }
         disappear = false;
     }
