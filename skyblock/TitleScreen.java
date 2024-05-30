@@ -13,7 +13,6 @@ public class TitleScreen extends World
     
     /**
      * Constructor for objects of class TitleScreen.
-     * 
      */
     public TitleScreen()
     {    
