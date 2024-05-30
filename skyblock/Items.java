@@ -10,6 +10,8 @@ public class Items extends Actor
 {
     private int X;
     private int Y;
+    private MouseInfo mouse;
+    private boolean dragging  = false;
     
     /**
      * Create an Items with given file name
@@ -24,13 +26,21 @@ public class Items extends Actor
     }
     
     public void act(){
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+        if(Greenfoot.mousePressed(this) && !dragging){
+            dragging = true;
+        } else if (Greenfoot.mousePressed(this) && dragging){
+            dragging = false;
+        }
+        if(Greenfoot.mouseDragEnded(this)){
+            dragging = false;
+        }
+        
         // mouse dragging
-        if (Greenfoot.mouseDragged(this))
+        if (Greenfoot.mouseDragged(this) || dragging)
         {
-            
-            MouseInfo mouse = Greenfoot.getMouseInfo();
             X = mouse.getX();
-            Y = mouse.getX();
+            Y = mouse.getY();
             setLocation(mouse.getX(), mouse.getY());
         }
     }
