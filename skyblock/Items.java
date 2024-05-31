@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class Items here.
  * 
- * @author (your name) 
+ * @author Benny, Jerry
  * @version (a version number or a date)
  */
 public class Items extends Actor
@@ -125,7 +125,6 @@ public class Items extends Actor
             
             if(!dragging && !snapped){
                 
-                System.out.println("looking for position" + Greenfoot.getRandomNumber(100));
                 if(!getObjectsInRange(1000, Empty.class).isEmpty()){
                     int dist=1000;
                     
@@ -133,13 +132,14 @@ public class Items extends Actor
                         dist--;
                     }
                     dist++;
-                    
-                    Items temp = (Items) getObjectsInRange(dist,Empty.class).get(0);
+                    ArrayList<Empty> itemList = (ArrayList<Empty>) getObjectsInRange(dist, Empty.class);
+                    Items temp = (Items) itemList.get(0);
                     
                     X = temp.getX();
                     Y = temp.getY();
                     
                     ArrayList<Items> temp1 = (ArrayList<Items>) getIntersectingObjects(Items.class);
+                    
                     for(Items i : temp1){
                         if(i.getType().equals("air") || i.getType().equals(getType())){
                             setLocation(X, Y);
@@ -156,6 +156,7 @@ public class Items extends Actor
                             break;
                         }
                     }
+                    setLocation(X, Y);
                     temp1.clear();
                 }
             }
