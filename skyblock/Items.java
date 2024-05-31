@@ -94,8 +94,6 @@ public class Items extends Actor
             }
             
             if(!dragging && !snapped){
-                System.out.println(toString());
-                
                 if(!getObjectsInRange(500, Items.class).isEmpty()){
                     int dist=500;
                     
