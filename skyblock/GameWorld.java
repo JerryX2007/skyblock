@@ -1,4 +1,4 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+    import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
@@ -13,8 +13,10 @@ public class GameWorld extends World {
     private Block[][] grid;
     private boolean openInventory = false;
     private GUI inventory;
-    private Items dirtBlock;
     private ArrayList<Items> itemsList;
+    private int xAdjust = 0;
+    private int yAdjust = 0;
+    private Items[][] slots = new Items[9][3];
 
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
@@ -27,8 +29,7 @@ public class GameWorld extends World {
         initializeGrid();
         prepareWorld();
         // Inventory stuff
-        inventory = new GUI("inventory.png", 300);
-        dirtBlock = new Items("dirtBlock.png", this);
+        inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
     }
 
@@ -42,14 +43,31 @@ public class GameWorld extends World {
             if (!openInventory) {
                 openInventory = true;
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        slots[j][i] = temp;
+                        xAdjust += 54;
+                    }
+                    xAdjust = 0;
+                    yAdjust += 54;
+                }
                 for(Items i: itemsList){
                     addObject(i, i.getXPos(), i.getYPos());
                 }
+                xAdjust = 0;
+                yAdjust = 0;
             } else {
                 openInventory = false;
                 removeObject(inventory);
                 for(Items i: itemsList){
                     removeObject(i);
+                }
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        removeObject(slots[j][i]);
+                    }
                 }
             }
         }
@@ -60,7 +78,7 @@ public class GameWorld extends World {
             if(openInventory){
                 int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
                 int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                Items temp = new Items("dirtBlock.png", this, tempX, tempY);
+                Items temp = new Items("block/wood.png", this, tempX, tempY, 32, 32);
                 itemsList.add(temp);
                 addObject(temp, tempX, tempY);
             }
