@@ -9,7 +9,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Empty extends Items
 {
     public Empty(int length, int width, World world, int X, int Y){
-        super("block/air.png", length, width, world, false, X, Y, "air");
+        super("block/leaves.png", length, width, world, false, X, Y, "air");
     }
     
     /**

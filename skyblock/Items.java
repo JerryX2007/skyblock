@@ -124,15 +124,15 @@ public class Items extends Actor
             }
             
             if(!dragging && !snapped){
-                if(!getObjectsInRange(1000, Items.class).isEmpty()){
+                if(!getObjectsInRange(1000, Empty.class).isEmpty()){
                     int dist=1000;
                     
-                    while(!getObjectsInRange(dist, Items.class).isEmpty()){
+                    while(!getObjectsInRange(dist, Empty.class).isEmpty() && dist > 0){
                         dist--;
                     }
                     dist++;
                     
-                    Items temp = (Items) getObjectsInRange(dist,Items.class).get(0);
+                    Items temp = (Items) getObjectsInRange(dist,Empty.class).get(0);
                     
                     X = temp.getX();
                     Y = temp.getY();
@@ -146,13 +146,17 @@ public class Items extends Actor
                             tempY = getY();
                             X = getX();
                             Y = getY();
+                            snapped = true;
                         } else {
                             setLocation(tempX, tempY);
+                            X = getX();
+                            Y = getY();
+                            snapped = true;
                             break;
                         }
                     }
                     temp1.clear();
-                    snapped = true;
+
                 }
             }
             

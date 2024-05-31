@@ -38,7 +38,7 @@ public class GameWorld extends World {
     private boolean prevState1 = false;
 
     public void act() {
-        setPaintOrder(Items.class, Empty.class);
+        //setPaintOrder(Items.class, Empty.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
