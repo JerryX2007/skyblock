@@ -1,4 +1,4 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+    import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
@@ -13,8 +13,10 @@ public class GameWorld extends World {
     private Block[][] grid;
     private boolean openInventory = false;
     private GUI inventory;
-    private Items dirtBlock;
     private ArrayList<Items> itemsList;
+    private int xAdjust = 0;
+    private int yAdjust = 0;
+    private Items[][] slots = new Items[9][3];
 
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
@@ -25,42 +27,58 @@ public class GameWorld extends World {
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
-        
+        prepareWorld();
         // Inventory stuff
-        inventory = new GUI("inventory.png", 300);
-        dirtBlock = new Items("dirtBlock.png", this);
+        inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
     }
-    
+
     private boolean keyPreviouslyDown = false;
     private boolean prevState = false;
 
     public void act() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-    
+
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory) {
                 openInventory = true;
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        slots[j][i] = temp;
+                        xAdjust += 54;
+                    }
+                    xAdjust = 0;
+                    yAdjust += 54;
+                }
                 for(Items i: itemsList){
                     addObject(i, i.getXPos(), i.getYPos());
                 }
+                xAdjust = 0;
+                yAdjust = 0;
             } else {
                 openInventory = false;
                 removeObject(inventory);
                 for(Items i: itemsList){
                     removeObject(i);
                 }
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        removeObject(slots[j][i]);
+                    }
+                }
             }
         }
-    
+
         keyPreviouslyDown = keyCurrentlyDown;
         boolean currentDown = Greenfoot.isKeyDown("p");
         if(currentDown && !prevState){
             if(openInventory){
                 int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
                 int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                Items temp = new Items("dirtBlock.png", this, tempX, tempY);
+                Items temp = new Items("block/wood.png", this, tempX, tempY, 32, 32);
                 itemsList.add(temp);
                 addObject(temp, tempX, tempY);
             }
@@ -68,19 +86,13 @@ public class GameWorld extends World {
         prevState = currentDown;
     }
 
-
     private void initializeGrid() {
         // Example of initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();
-                if (j<9) {
-                    grid[i][j] = new Air();
-                }
-                else {
-                    grid[i][j] = new CobbleStone();
-                }
-                addActorToGrid(grid[i][j], i, j);            }
+                addActorToGrid(grid[i][j], i, j);           
+            }
         }
     }
 
@@ -109,6 +121,53 @@ public class GameWorld extends World {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
-    
+
+    private void prepareWorld()
+    {
+        for (int i = 2; i < 18; i++)
+        {
+            grid[i][8] = new Dirt();
+            addActorToGrid(grid[i][8], i, 8);  
+        }
+        for (int i = 2; i < 18; i++)
+        {
+            grid[i][7] = new Grass();
+            addActorToGrid(grid[i][7], i, 7);  
+        }
+        for (int i = 3; i < 17; i++)
+        {
+            grid[i][9] = new CobbleStone();
+            addActorToGrid(grid[i][9], i, 9);  
+        }
+        for (int i = 5; i < 15; i++)
+        {
+            grid[i][10] = new CobbleStone();
+            addActorToGrid(grid[i][10], i, 10);  
+        }
+
+        for (int i = 10; i < 15; i++)
+        {
+            grid[i][4] = new Leaf();
+            addActorToGrid(grid[i][4], i, 3);  
+        }
+        for (int i = 10; i < 15; i++)
+        {
+            grid[i][5] = new Leaf();
+            addActorToGrid(grid[i][5], i, 4);  
+        }
+        for (int i = 11; i < 14; i++)
+        {
+            grid[i][3] = new Leaf();
+            addActorToGrid(grid[i][3], i, 2);  
+        }
+
+        for (int j = 4; j < 7; j++)
+        {
+            grid[12][j] = new Log();
+            addActorToGrid(grid[12][j], 12, j);  
+        }
+
+        
+    }
 }
 

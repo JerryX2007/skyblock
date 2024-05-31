@@ -8,8 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Inventory extends GUI
 {
-    public Inventory (String file, int scale){
-        super(file, scale);
+    public Inventory (String file, int scale, World world){
+        super(file, scale, world);
     }
     
     /**
@@ -19,5 +19,6 @@ public class Inventory extends GUI
     public void act()
     {
         // Add your action code here.
+        
     }
 }
