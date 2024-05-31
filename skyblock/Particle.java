@@ -14,7 +14,7 @@ public class Particle extends SuperSmoothMover
     private int duration;
     public Particle(Color color, double xVel, double yVel){
         this.color = color;
-        duration = 60;
+        duration = 30;
         this.xVel = xVel;
         this.yVel = yVel;
         img = new GreenfootImage(4,4);
