@@ -183,11 +183,7 @@ public class GameWorld extends World {
             addActorToGrid(grid[12][j], 12, j);  
         }
 
-        for (int i = 0; i < 1; i++)
-        {
-            grid[12][1] = new Leaf();
-            addActorToGrid(grid[12][1], 12, 1);  
-        }
+        
     }
 }
 

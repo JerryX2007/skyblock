@@ -123,7 +123,7 @@ public abstract class  Block extends Actor
         //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
             isSelected = true;
-            breakMe(1,100);
+            breakMe(0,0);
         }
         else{
             stopBreaking();
