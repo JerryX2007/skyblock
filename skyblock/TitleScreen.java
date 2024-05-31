@@ -34,7 +34,6 @@ public class TitleScreen extends World
         } else {
             background = new GreenfootImage("midnight.png");
         }
-        background.scale(1280, 720);
         setBackground(background);
         play = new Button("play", 3, ".jpg");
         

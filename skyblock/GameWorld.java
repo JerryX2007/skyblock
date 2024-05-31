@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Adds a grid of blocks to the screen. 
@@ -10,6 +11,10 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class GameWorld extends World {
     private Block[][] grid;
+    private boolean openInventory = false;
+    private GUI inventory;
+    private Items dirtBlock;
+    private ArrayList<Items> itemsList;
 
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
@@ -20,7 +25,49 @@ public class GameWorld extends World {
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
+        
+        // Inventory stuff
+        inventory = new GUI("inventory.png", 300);
+        dirtBlock = new Items("dirtBlock.png", this);
+        itemsList = new ArrayList<>();
     }
+    
+    private boolean keyPreviouslyDown = false;
+    private boolean prevState = false;
+
+    public void act() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+    
+        if (keyCurrentlyDown && !keyPreviouslyDown) {
+            if (!openInventory) {
+                openInventory = true;
+                addObject(inventory, getWidth() / 2, getHeight() / 2);
+                for(Items i: itemsList){
+                    addObject(i, i.getXPos(), i.getYPos());
+                }
+            } else {
+                openInventory = false;
+                removeObject(inventory);
+                for(Items i: itemsList){
+                    removeObject(i);
+                }
+            }
+        }
+    
+        keyPreviouslyDown = keyCurrentlyDown;
+        boolean currentDown = Greenfoot.isKeyDown("p");
+        if(currentDown && !prevState){
+            if(openInventory){
+                int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
+                int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
+                Items temp = new Items("dirtBlock.png", this, tempX, tempY);
+                itemsList.add(temp);
+                addObject(temp, tempX, tempY);
+            }
+        }
+        prevState = currentDown;
+    }
+
 
     private void initializeGrid() {
         // Example of initializing the grid with Air blocks
