@@ -45,7 +45,7 @@ public class GameWorld extends World {
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust, "air");
                         addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
                         slots[j][i] = temp;
                         xAdjust += 54;
@@ -76,11 +76,9 @@ public class GameWorld extends World {
         boolean currentDown = Greenfoot.isKeyDown("p");
         if(currentDown && !prevState){
             if(openInventory){
-                int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                Items temp = new Items("block/wood.png", this, tempX, tempY, 32, 32);
+                Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
                 itemsList.add(temp);
-                addObject(temp, tempX, tempY);
+                addObject(temp, 424, getHeight()/2 + 27);
             }
         }
         prevState = currentDown;

@@ -15,6 +15,9 @@ public class Items extends Actor
     private boolean dragging  = false;
     private boolean draggable = true;
     private boolean snapped = false;
+    private String type;
+    private int tempX;
+    private int tempY;
     
     /**
      * Create an Items with given file name
@@ -22,11 +25,12 @@ public class Items extends Actor
      * @param file Location and name of file.
      * @param world World where items will reside in.
      */
-    public Items(String file, World world){
+    public Items(String file, World world, String type){
         this.setImage(file);
         getImage().scale(48, 48);
         X = world.getWidth()/2;
         Y = world.getHeight()/2;
+        this.type = type;
     }
     
     /**
@@ -54,19 +58,23 @@ public class Items extends Actor
      * @param length Length of the item
      * @param width Width of the item
      */
-    public Items(String file, World world, int X, int Y, int length, int width){
+    public Items(String file, World world, int X, int Y, int length, int width, String type){
         this.setImage(file);
         getImage().scale(length, width);
         this.X = X;
         this.Y = Y;
+        this.type = type;
     }
     
-    public Items(String file, int length, int width, World world, boolean draggable, int X, int Y){
+    public Items(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
         this.setImage(file);
         getImage().scale(length, width);
         this.draggable = draggable;
         this.X = X;
         this.Y = Y;
+        this.type = type;
+        tempX = X;
+        tempY = Y;
     }
     
     public void act(){
@@ -75,11 +83,14 @@ public class Items extends Actor
             if(Greenfoot.mousePressed(this) && !dragging){
                 dragging = true;
                 snapped = false;
+                
             } else if (Greenfoot.mousePressed(this) && dragging){
                 dragging = false;
             }
             if(Greenfoot.mouseDragged(this)){
                 dragging = true;
+                tempX = getX();
+                tempY = getY();
                 snapped = false;
             } else if(Greenfoot.mouseDragEnded(this)){
                 dragging = false;
@@ -94,19 +105,28 @@ public class Items extends Actor
             }
             
             if(!dragging && !snapped){
-                if(!getObjectsInRange(500, Items.class).isEmpty()){
-                    int dist=500;
+                if(!getObjectsInRange(1000, Items.class).isEmpty()){
+                    int dist=1000;
                     
                     while(!getObjectsInRange(dist, Items.class).isEmpty()){
                         dist--;
                     }
                     dist++;
- 
-                    Actor temp = (Items) getObjectsInRange(dist,Items.class).get(0);
+                    
+                    Items temp = (Items) getObjectsInRange(dist,Items.class).get(0);
+                    
                     X = temp.getX();
                     Y = temp.getY();
                     snapped = true;
-                    setLocation(X, Y);
+                    
+                    Items temp1 = (Items) getOneIntersectingObject(Items.class);
+                    if(temp1 != null && !temp1.getType().equals("air")){
+                        setLocation(tempX, tempY);
+                    } else {
+                        setLocation(X, Y);
+                        tempX = getX();
+                        tempY = getY();
+                    }
                 }
             }
         }
@@ -126,5 +146,9 @@ public class Items extends Actor
     
     public int getYPos(){
         return Y;
+    }
+    
+    public String getType(){
+        return type;
     }
 }
