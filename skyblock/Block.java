@@ -50,6 +50,11 @@ public abstract class  Block extends Actor
                 subBreakTime--;
             }
             //System.out.println("breaking");
+            if(Greenfoot.getRandomNumber(3) ==0){
+                //particle effect
+                this.particleEffect(this.getX(),this.getY(), 1, this.color);
+            }
+            
         }
     }
 
@@ -174,6 +179,18 @@ public abstract class  Block extends Actor
         newImage.drawRect(0, 0, width - 1, height - 1);
 
         return newImage;
+    }
+    /**
+     * 
+     */
+    public void particleEffect(int x, int y, int numOfParticles, Color color){
+        for(int i = 0; i < numOfParticles; i++){
+            double angle = Math.PI*Greenfoot.getRandomNumber(360)/180;
+            int speed = 3;
+            double xVel = (Math.cos(angle)*speed);
+            double yVel = (Math.sin(angle)*speed);
+            getWorld().addObject(new Particle(color,xVel,yVel), x, y);
+        }
     }
 }
 

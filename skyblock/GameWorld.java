@@ -109,5 +109,6 @@ public class GameWorld extends World {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
+    
 }
 
