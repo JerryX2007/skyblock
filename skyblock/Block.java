@@ -13,7 +13,7 @@ public abstract class  Block extends Actor
 {
 
     private static MouseInfo mouse;
-    private BreakingEffect be;
+    protected BreakingEffect be;
     private static int blockSize = 32;//how much pixels is a block
     protected Color color;//pls enter in "Color.RED"/"Color.LIGHT_GRAY" form
     protected double hardness;//how long will it take to break
@@ -52,7 +52,7 @@ public abstract class  Block extends Actor
             //System.out.println("breaking");
             if(Greenfoot.getRandomNumber(3) ==0){
                 //particle effect
-                this.particleEffect(this.getX(),this.getY(), 1, this.color);
+                this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
             }
             
         }
@@ -134,6 +134,7 @@ public abstract class  Block extends Actor
         //block is broken
         if(subBreakTime < 0){
             drop();
+            this.particleEffect(this.getX(),this.getY(), 10, this.color);
             getWorld().removeObject(be);
             getWorld().removeObject(this);
         }
@@ -181,12 +182,17 @@ public abstract class  Block extends Actor
         return newImage;
     }
     /**
+     * particle effect, break a block to see what it looks like idk :/
      * 
+     * @param x                 x-coord to spawn particle
+     * @param y                 y-coord to spawn particle
+     * @param numOfParticles    number of particle
+     * @param color             color of the particle
      */
     public void particleEffect(int x, int y, int numOfParticles, Color color){
         for(int i = 0; i < numOfParticles; i++){
-            double angle = Math.PI*Greenfoot.getRandomNumber(360)/180;
-            int speed = 3;
+            double angle = Math.PI*Greenfoot.getRandomNumber(180)/180;
+            int speed = 4;
             double xVel = (Math.cos(angle)*speed);
             double yVel = (Math.sin(angle)*speed);
             getWorld().addObject(new Particle(color,xVel,yVel), x, y);
