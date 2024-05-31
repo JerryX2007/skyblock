@@ -12,14 +12,14 @@ public class BreakingEffect extends Actor
                                                    new GreenfootImage("breaking/4.png"),new GreenfootImage("breaking/5.png"),new GreenfootImage("breaking/6.png"),
                                                    new GreenfootImage("breaking/7.png"),new GreenfootImage("breaking/8.png"),new GreenfootImage("breaking/9.png"),};
     private Block block;
-    private boolean disappear;
+    private boolean isOff;
     public BreakingEffect(Block b){
         this.block = b;
         for(int i = 0; i < breakFrames.length; i++){
             breakFrames[i].setTransparency (150);
             breakFrames[i].scale(64, 64);
         }
-        disappear = false;
+        isOff = false;
     }
      /**
      * Act - do whatever the Effect wants to do. This method is called whenever
@@ -30,6 +30,9 @@ public class BreakingEffect extends Actor
         // Add your action code here.
         if(block != null){
             int breakingPercent = (int)(100*block.getSubBreakTime()/block.getBreakTime());
+            if(isOff){
+                breakingPercent = 99999;
+            }
             if(breakingPercent > 90){
                 setImage(breakFrames[0]);
             }
@@ -67,5 +70,11 @@ public class BreakingEffect extends Actor
         else{
             getWorld().removeObject(this);
         }
+    }
+    /**
+     * turn the breaking effect off
+     */
+    public void lockFrame(){
+        isOff = true;        
     }
 }
