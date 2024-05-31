@@ -124,10 +124,12 @@ public class Items extends Actor
             }
             
             if(!dragging && !snapped){
+                
+                System.out.println("looking for position" + Greenfoot.getRandomNumber(100));
                 if(!getObjectsInRange(1000, Empty.class).isEmpty()){
                     int dist=1000;
                     
-                    while(!getObjectsInRange(dist, Empty.class).isEmpty() && dist > 0){
+                    while(!getObjectsInRange(dist, Empty.class).isEmpty() && dist >= 0){
                         dist--;
                     }
                     dist++;
@@ -136,7 +138,6 @@ public class Items extends Actor
                     
                     X = temp.getX();
                     Y = temp.getY();
-                    
                     
                     ArrayList<Items> temp1 = (ArrayList<Items>) getIntersectingObjects(Items.class);
                     for(Items i : temp1){
@@ -156,10 +157,8 @@ public class Items extends Actor
                         }
                     }
                     temp1.clear();
-
                 }
             }
-            
         }
         if(!draggable){
             ArrayList<Items> temp2 = (ArrayList<Items>) getIntersectingObjects(Items.class);
