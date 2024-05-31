@@ -35,17 +35,19 @@ public class GameWorld extends World {
 
     private boolean keyPreviouslyDown = false;
     private boolean prevState = false;
+    private boolean prevState1 = false;
 
     public void act() {
+        setPaintOrder(Items.class, Empty.class);
+        
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory) {
                 openInventory = true;
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust, "air");
+                        Empty temp = new Empty(16, 16, this, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
                         addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
                         slots[j][i] = temp;
                         xAdjust += 54;
@@ -82,6 +84,16 @@ public class GameWorld extends World {
             }
         }
         prevState = currentDown;
+        
+        boolean currentDown1 = Greenfoot.isKeyDown("o");
+        if(currentDown1 && !prevState1){
+            if(openInventory){
+                Items temp = new Items("block/cobblestone.png", this, 424, getHeight()/2 + 27, 32, 32, "cobblestone");
+                itemsList.add(temp);
+                addObject(temp, 424, getHeight()/2 + 27);
+            }
+        }
+        prevState1 = currentDown1;
     }
 
     private void initializeGrid() {
@@ -118,6 +130,12 @@ public class GameWorld extends World {
     public void addActorToGrid(Actor actor, int gridX, int gridY) {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
+    }
+    
+    public void setSlot(int x, int y, String itemName){
+        int tempX = slots[x][y].getX();
+        int tempY = slots[x][y].getY();
+        slots[x][y] = new Items("block/air.png", 16, 16, this, false, tempX, tempY, itemName);
     }
 
     private void prepareWorld()

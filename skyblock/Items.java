@@ -9,15 +9,16 @@ import java.util.ArrayList;
  */
 public class Items extends Actor
 {
-    private int X;
-    private int Y;
-    private MouseInfo mouse;
-    private boolean dragging  = false;
-    private boolean draggable = true;
-    private boolean snapped = false;
-    private String type;
-    private int tempX;
-    private int tempY;
+    protected int X;
+    protected int Y;
+    protected MouseInfo mouse;
+    protected boolean dragging  = false;
+    protected boolean draggable = true;
+    protected boolean snapped = false;
+    protected String type;
+    protected int tempX;
+    protected int tempY;
+    protected World world;
     
     /**
      * Create an Items with given file name
@@ -31,6 +32,7 @@ public class Items extends Actor
         X = world.getWidth()/2;
         Y = world.getHeight()/2;
         this.type = type;
+        this.world = world;
     }
     
     /**
@@ -46,6 +48,8 @@ public class Items extends Actor
         getImage().scale(48, 48);
         this.X = X;
         this.Y = Y;
+        this.world = world;
+    
     }
     
     /**
@@ -64,6 +68,9 @@ public class Items extends Actor
         this.X = X;
         this.Y = Y;
         this.type = type;
+        tempX = X;
+        tempY = Y;
+        this.world = world;
     }
     
     public Items(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
@@ -75,7 +82,10 @@ public class Items extends Actor
         this.type = type;
         tempX = X;
         tempY = Y;
+        this.world = world;
     }
+    
+    private boolean firstTime = true;
     
     public void act(){
         if(draggable){
@@ -83,17 +93,26 @@ public class Items extends Actor
             if(Greenfoot.mousePressed(this) && !dragging){
                 dragging = true;
                 snapped = false;
-                
+                if(firstTime){
+                    tempX = getX();
+                    tempY = getY();
+                    firstTime = false;
+                }
             } else if (Greenfoot.mousePressed(this) && dragging){
                 dragging = false;
+                firstTime = true;
             }
             if(Greenfoot.mouseDragged(this)){
                 dragging = true;
-                tempX = getX();
-                tempY = getY();
+                if(firstTime){
+                    tempX = getX();
+                    tempY = getY();
+                    firstTime = false;
+                }
                 snapped = false;
             } else if(Greenfoot.mouseDragEnded(this)){
                 dragging = false;
+                firstTime = true;
             }
             
             // mouse dragging
@@ -117,23 +136,48 @@ public class Items extends Actor
                     
                     X = temp.getX();
                     Y = temp.getY();
-                    snapped = true;
                     
-                    Items temp1 = (Items) getOneIntersectingObject(Items.class);
-                    if(temp1 != null && !temp1.getType().equals("air")){
-                        setLocation(tempX, tempY);
-                    } else {
-                        setLocation(X, Y);
-                        tempX = getX();
-                        tempY = getY();
+                    
+                    ArrayList<Items> temp1 = (ArrayList<Items>) getIntersectingObjects(Items.class);
+                    for(Items i : temp1){
+                        if(i.getType().equals("air") || i.getType().equals(getType())){
+                            setLocation(X, Y);
+                            tempX = getX();
+                            tempY = getY();
+                            X = getX();
+                            Y = getY();
+                        } else {
+                            setLocation(tempX, tempY);
+                            break;
+                        }
                     }
+                    temp1.clear();
+                    snapped = true;
                 }
             }
+            
+        }
+        if(!draggable){
+            ArrayList<Items> temp2 = (ArrayList<Items>) getIntersectingObjects(Items.class);
+            if(temp2.size() == 0){
+                type = "air";
+            }
+            if(temp2.size() > 0){
+                Items test = (Items) getOneIntersectingObject(Items.class);
+                if(test.isSnapped()){
+                    type = test.getType();
+                }
+            }
+            temp2.clear();
         }
     }
     
     public boolean getDraggable(){
         return draggable;
+    }
+    
+    public void setType(String type){
+        this.type = type;
     }
     
     public String toString(){
@@ -142,6 +186,10 @@ public class Items extends Actor
     
     public int getXPos(){
         return X;
+    }
+    
+    public boolean isSnapped(){
+        return snapped;
     }
     
     public int getYPos(){
