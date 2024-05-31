@@ -25,19 +25,19 @@ public class GameWorld extends World {
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
-        
+        prepareWorld();
         // Inventory stuff
         inventory = new GUI("inventory.png", 300);
         dirtBlock = new Items("dirtBlock.png", this);
         itemsList = new ArrayList<>();
     }
-    
+
     private boolean keyPreviouslyDown = false;
     private boolean prevState = false;
 
     public void act() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-    
+
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory) {
                 openInventory = true;
@@ -53,7 +53,7 @@ public class GameWorld extends World {
                 }
             }
         }
-    
+
         keyPreviouslyDown = keyCurrentlyDown;
         boolean currentDown = Greenfoot.isKeyDown("p");
         if(currentDown && !prevState){
@@ -68,19 +68,13 @@ public class GameWorld extends World {
         prevState = currentDown;
     }
 
-
     private void initializeGrid() {
         // Example of initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();
-                if (j<9) {
-                    grid[i][j] = new Air();
-                }
-                else {
-                    grid[i][j] = new CobbleStone();
-                }
-                addActorToGrid(grid[i][j], i, j);            }
+                addActorToGrid(grid[i][j], i, j);           
+            }
         }
     }
 
@@ -108,6 +102,58 @@ public class GameWorld extends World {
     public void addActorToGrid(Actor actor, int gridX, int gridY) {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
+    }
+
+    private void prepareWorld()
+    {
+        for (int i = 2; i < 18; i++)
+        {
+            grid[i][8] = new Dirt();
+            addActorToGrid(grid[i][8], i, 8);  
+        }
+        for (int i = 2; i < 18; i++)
+        {
+            grid[i][7] = new Grass();
+            addActorToGrid(grid[i][7], i, 7);  
+        }
+        for (int i = 3; i < 17; i++)
+        {
+            grid[i][9] = new CobbleStone();
+            addActorToGrid(grid[i][9], i, 9);  
+        }
+        for (int i = 5; i < 15; i++)
+        {
+            grid[i][10] = new CobbleStone();
+            addActorToGrid(grid[i][10], i, 10);  
+        }
+
+        for (int i = 10; i < 15; i++)
+        {
+            grid[i][4] = new Leaf();
+            addActorToGrid(grid[i][4], i, 3);  
+        }
+        for (int i = 10; i < 15; i++)
+        {
+            grid[i][5] = new Leaf();
+            addActorToGrid(grid[i][5], i, 4);  
+        }
+        for (int i = 11; i < 14; i++)
+        {
+            grid[i][3] = new Leaf();
+            addActorToGrid(grid[i][3], i, 2);  
+        }
+
+        for (int j = 4; j < 7; j++)
+        {
+            grid[12][j] = new Log();
+            addActorToGrid(grid[12][j], 12, j);  
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            grid[12][1] = new Leaf();
+            addActorToGrid(grid[12][1], 12, 1);  
+        }
     }
 }
 
