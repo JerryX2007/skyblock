@@ -17,7 +17,9 @@ public class Air extends Block
     private Color gold = new Color(255, 201, 14);
     public Air(){
         super(Color.WHITE,100);
-        GreenfootImage img = new GreenfootImage("block/air.png");
+
+        img = new GreenfootImage("block/air.png");
+
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
