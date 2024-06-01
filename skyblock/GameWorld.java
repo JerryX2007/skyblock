@@ -39,6 +39,8 @@ public class GameWorld extends World {
     private boolean keyPreviouslyDown = false;
     private boolean prevState = false;
     private boolean prevState1 = false;
+    private int tempX;
+    private int tempY;
 
     public void act() {
         //setPaintOrder(Items.class, Empty.class);
@@ -83,7 +85,17 @@ public class GameWorld extends World {
             if(openInventory){
                 Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
                 itemsList.add(temp);
-                addObject(temp, 424, getHeight()/2 + 27);
+                itemsList.add(temp);
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+                addObject(temp, tempX, tempY);
             }
         }
         prevState = currentDown;
@@ -93,7 +105,16 @@ public class GameWorld extends World {
             if(openInventory){
                 Items temp = new Items("block/cobblestone.png", this, 424, getHeight()/2 + 27, 32, 32, "cobblestone");
                 itemsList.add(temp);
-                addObject(temp, 424, getHeight()/2 + 27);
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+                addObject(temp, tempX, tempY);
             }
         }
         prevState1 = currentDown1;
