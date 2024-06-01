@@ -4,17 +4,21 @@ import java.util.ArrayList;
 /**
  * Write a description of class Items here.
  * 
- * @author (your name) 
+ * @author Benny, Jerry
  * @version (a version number or a date)
  */
 public class Items extends Actor
 {
-    private int X;
-    private int Y;
-    private MouseInfo mouse;
-    private boolean dragging  = false;
-    private boolean draggable = true;
-    private boolean snapped = false;
+    protected int X;
+    protected int Y;
+    protected MouseInfo mouse;
+    protected boolean dragging  = false;
+    protected boolean draggable = true;
+    protected boolean snapped = false;
+    protected String type;
+    protected int tempX;
+    protected int tempY;
+    protected World world;
     
     /**
      * Create an Items with given file name
@@ -22,11 +26,13 @@ public class Items extends Actor
      * @param file Location and name of file.
      * @param world World where items will reside in.
      */
-    public Items(String file, World world){
+    public Items(String file, World world, String type){
         this.setImage(file);
         getImage().scale(48, 48);
         X = world.getWidth()/2;
         Y = world.getHeight()/2;
+        this.type = type;
+        this.world = world;
     }
     
     /**
@@ -42,6 +48,8 @@ public class Items extends Actor
         getImage().scale(48, 48);
         this.X = X;
         this.Y = Y;
+        this.world = world;
+    
     }
     
     /**
@@ -54,20 +62,30 @@ public class Items extends Actor
      * @param length Length of the item
      * @param width Width of the item
      */
-    public Items(String file, World world, int X, int Y, int length, int width){
+    public Items(String file, World world, int X, int Y, int length, int width, String type){
         this.setImage(file);
         getImage().scale(length, width);
         this.X = X;
         this.Y = Y;
+        this.type = type;
+        tempX = X;
+        tempY = Y;
+        this.world = world;
     }
     
-    public Items(String file, int length, int width, World world, boolean draggable, int X, int Y){
+    public Items(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
         this.setImage(file);
         getImage().scale(length, width);
         this.draggable = draggable;
         this.X = X;
         this.Y = Y;
+        this.type = type;
+        tempX = X;
+        tempY = Y;
+        this.world = world;
     }
+    
+    private boolean firstTime = true;
     
     public void act(){
         if(draggable){
@@ -75,14 +93,26 @@ public class Items extends Actor
             if(Greenfoot.mousePressed(this) && !dragging){
                 dragging = true;
                 snapped = false;
+                if(firstTime){
+                    tempX = getX();
+                    tempY = getY();
+                    firstTime = false;
+                }
             } else if (Greenfoot.mousePressed(this) && dragging){
                 dragging = false;
+                firstTime = true;
             }
             if(Greenfoot.mouseDragged(this)){
                 dragging = true;
+                if(firstTime){
+                    tempX = getX();
+                    tempY = getY();
+                    firstTime = false;
+                }
                 snapped = false;
             } else if(Greenfoot.mouseDragEnded(this)){
                 dragging = false;
+                firstTime = true;
             }
             
             // mouse dragging
@@ -94,26 +124,64 @@ public class Items extends Actor
             }
             
             if(!dragging && !snapped){
-                if(!getObjectsInRange(500, Items.class).isEmpty()){
-                    int dist=500;
+                
+                if(!getObjectsInRange(1000, Empty.class).isEmpty()){
+                    int dist=1000;
                     
-                    while(!getObjectsInRange(dist, Items.class).isEmpty()){
+                    while(!getObjectsInRange(dist, Empty.class).isEmpty() && dist >= 0){
                         dist--;
                     }
                     dist++;
- 
-                    Actor temp = (Items) getObjectsInRange(dist,Items.class).get(0);
+                    ArrayList<Empty> itemList = (ArrayList<Empty>) getObjectsInRange(dist, Empty.class);
+                    Items temp = (Items) itemList.get(0);
+                    
                     X = temp.getX();
                     Y = temp.getY();
-                    snapped = true;
+                    
+                    ArrayList<Items> temp1 = (ArrayList<Items>) getIntersectingObjects(Items.class);
+                    
+                    for(Items i : temp1){
+                        if(i.getType().equals("air") || i.getType().equals(getType())){
+                            setLocation(X, Y);
+                            tempX = getX();
+                            tempY = getY();
+                            X = getX();
+                            Y = getY();
+                            snapped = true;
+                        } else {
+                            setLocation(tempX, tempY);
+                            X = getX();
+                            Y = getY();
+                            snapped = true;
+                            break;
+                        }
+                    }
                     setLocation(X, Y);
+                    temp1.clear();
                 }
             }
+        }
+        if(!draggable){
+            ArrayList<Items> temp2 = (ArrayList<Items>) getIntersectingObjects(Items.class);
+            if(temp2.size() == 0){
+                type = "air";
+            }
+            if(temp2.size() > 0){
+                Items test = (Items) getOneIntersectingObject(Items.class);
+                if(test.isSnapped()){
+                    type = test.getType();
+                }
+            }
+            temp2.clear();
         }
     }
     
     public boolean getDraggable(){
         return draggable;
+    }
+    
+    public void setType(String type){
+        this.type = type;
     }
     
     public String toString(){
@@ -124,7 +192,15 @@ public class Items extends Actor
         return X;
     }
     
+    public boolean isSnapped(){
+        return snapped;
+    }
+    
     public int getYPos(){
         return Y;
+    }
+    
+    public String getType(){
+        return type;
     }
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * Adds a grid of blocks to the screen. 
  * Grid coded by Dylan with the aid of ChatGPT
  * 
- * Dylan Dinesh
+ * Dylan Dinesh, Jerry, Benny
  * @version (a version number or a date)
  */
 
@@ -17,6 +17,8 @@ public class GameWorld extends World {
     private int xAdjust = 0;
     private int yAdjust = 0;
     private Items[][] slots = new Items[9][3];
+    
+    private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
@@ -31,21 +33,26 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
+        addObject(player, getWidth()/2, getHeight()/2);
     }
 
     private boolean keyPreviouslyDown = false;
     private boolean prevState = false;
+    private boolean prevState1 = false;
+    private int tempX;
+    private int tempY;
 
     public void act() {
+        //setPaintOrder(Items.class, Empty.class);
+        
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory) {
                 openInventory = true;
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                        Items temp = new Items("block/air.png", 16, 16, this, false, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
+                        Empty temp = new Empty(16, 16, this, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
                         addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
                         slots[j][i] = temp;
                         xAdjust += 54;
@@ -76,14 +83,41 @@ public class GameWorld extends World {
         boolean currentDown = Greenfoot.isKeyDown("p");
         if(currentDown && !prevState){
             if(openInventory){
-                int tempX = getWidth() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                int tempY = getHeight() / 2 - 20 + Greenfoot.getRandomNumber(20);
-                Items temp = new Items("block/wood.png", this, tempX, tempY, 32, 32);
+                Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
                 itemsList.add(temp);
+                itemsList.add(temp);
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
                 addObject(temp, tempX, tempY);
             }
         }
         prevState = currentDown;
+        
+        boolean currentDown1 = Greenfoot.isKeyDown("o");
+        if(currentDown1 && !prevState1){
+            if(openInventory){
+                Items temp = new Items("block/cobblestone.png", this, 424, getHeight()/2 + 27, 32, 32, "cobblestone");
+                itemsList.add(temp);
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+                addObject(temp, tempX, tempY);
+            }
+        }
+        prevState1 = currentDown1;
     }
 
     private void initializeGrid() {
@@ -120,6 +154,12 @@ public class GameWorld extends World {
     public void addActorToGrid(Actor actor, int gridX, int gridY) {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
+    }
+    
+    public void setSlot(int x, int y, String itemName){
+        int tempX = slots[x][y].getX();
+        int tempY = slots[x][y].getY();
+        slots[x][y] = new Items("block/air.png", 16, 16, this, false, tempX, tempY, itemName);
     }
 
     private void prepareWorld()

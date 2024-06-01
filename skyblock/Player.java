@@ -72,7 +72,10 @@ public abstract class Player extends SuperSmoothMover
         return false;
     }
     protected void checkFalling() {
-        if(!onGround()) {
+        if(onGround()) {
+            vSpeed = 0;
+        }
+        else {
             fall();
         }
     }
@@ -80,6 +83,7 @@ public abstract class Player extends SuperSmoothMover
     protected void jump() {
         vSpeed = vSpeed - jumpStrength;
         jumping = true;
+        fall();
     }
     
     public int getMoveSpeed() {
