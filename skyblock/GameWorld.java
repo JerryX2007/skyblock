@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * Adds a grid of blocks to the screen. 
  * Grid coded by Dylan with the aid of ChatGPT
  * 
- * Dylan Dinesh
+ * Dylan Dinesh, Jerry, Benny
  * @version (a version number or a date)
  */
 
@@ -17,6 +17,8 @@ public class GameWorld extends World {
     private int xAdjust = 0;
     private int yAdjust = 0;
     private Items[][] slots = new Items[9][3];
+    
+    private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
@@ -31,6 +33,7 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
+        addObject(player, getWidth()/2, getHeight()/2);
     }
 
     private boolean keyPreviouslyDown = false;
