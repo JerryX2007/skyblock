@@ -10,7 +10,7 @@ public class LeftLeg extends BodyPart
 {
     private GreenfootImage img;
     private Steve steve;
-    public LeftLeg(){
+    public LeftLeg(Steve steve){
         img = new GreenfootImage("steve/leg_left.png");
         img.scale(16,96);
         setImage(img);
@@ -23,5 +23,6 @@ public class LeftLeg extends BodyPart
     public void act()
     {
         // Add your action code here.
+        setLocation(steve.getX(), steve.getY()+16);
     }
 }

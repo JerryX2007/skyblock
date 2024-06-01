@@ -10,7 +10,7 @@ public class RightArm extends BodyPart
 {
     private GreenfootImage img;
     private Steve steve;
-    public RightArm(){
+    public RightArm(Steve steve){
         img = new GreenfootImage("steve/arm_right.png");
         img.scale(16,96);
         setImage(img);
@@ -23,5 +23,6 @@ public class RightArm extends BodyPart
     public void act()
     {
         // Add your action code here.
+        setLocation(steve.getX(), steve.getY()-32);
     }
 }
