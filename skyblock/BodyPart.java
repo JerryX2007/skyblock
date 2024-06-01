@@ -15,5 +15,6 @@ public class BodyPart extends SuperSmoothMover
     public void act()
     {
         // Add your action code here.
+        
     }
 }
