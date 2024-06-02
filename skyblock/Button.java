@@ -7,7 +7,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * 
  * <a href="https://www.youtube.com/watch?v=h8y0JMVwdmM">Link to sound</a>
  * Sounds by Minecraft<br>
- * Editied by Benny Wang, Andy Feng and Evan Xi
+ * Edited by Benny Wang, Andy Feng and Evan Xi
  * 
  * @author Felix Zhao
  * @version 1/18/2023

@@ -14,7 +14,7 @@ public class Grass extends Block
     private Color gold = new Color(255, 201, 14);
     public Grass(){
         super(brown,1);
-        img = new GreenfootImage("block/block of grass.png");
+        img = new GreenfootImage("block/grass_block.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
