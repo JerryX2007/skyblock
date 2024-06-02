@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Write a description of class Player here.
@@ -35,6 +36,7 @@ public abstract class Player extends SuperSmoothMover
     {
         checkKeys();
         checkFalling();
+        checkPickup();
     }
     
     public void checkKeys() {
@@ -70,6 +72,13 @@ public abstract class Player extends SuperSmoothMover
     protected void checkFalling() {
         if(!onGround()) {
             fall();
+        }
+    }
+    
+    protected void checkPickup(){
+        ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
+        for(ItemDrop item : dropsInRange){
+            
         }
     }
     
