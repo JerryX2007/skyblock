@@ -65,31 +65,29 @@ public class Steve extends Player
         getWorld().removeObject(rightBody);
         getWorld().removeObject(leftArm);
         getWorld().removeObject(rightArm);
-        getWorld().removeObject(leftHead);
-        getWorld().removeObject(rightHead);
 
         if (!direction) {
             // Facing Left
             getWorld().addObject(rightLeg, 0, 0);
             getWorld().addObject(rightBody, 0, 0);
             getWorld().addObject(rightArm, 0, 0);
-            getWorld().addObject(rightHead, 0, 0);
+            
 
             getWorld().addObject(leftLeg, 0, 0);
             getWorld().addObject(leftBody, 0, 0);
             getWorld().addObject(leftArm, 0, 0);
-            getWorld().addObject(leftHead, 0, 0);
+            
         } else {
             // Facing Right
             getWorld().addObject(leftLeg, 0, 0);
             getWorld().addObject(leftBody, 0, 0);
             getWorld().addObject(leftArm, 0, 0);
-            getWorld().addObject(leftHead, 0, 0);
+            
 
             getWorld().addObject(rightLeg, 0, 0);
             getWorld().addObject(rightBody, 0, 0);
             getWorld().addObject(rightArm, 0, 0);
-            getWorld().addObject(rightHead, 0, 0);
+            
         }
     }
     /**
