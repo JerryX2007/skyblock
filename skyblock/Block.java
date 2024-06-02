@@ -137,8 +137,9 @@ public abstract class  Block extends Actor
         getWorld().addObject(be, getX(),getY());
         //block is broken
         if(subBreakTime < 0){
+            drop(itemDrop);
             getWorld().removeObject(be);
-            getWorld().removeObject(this);
+            getWorld().removeObject(this);           
         }
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);

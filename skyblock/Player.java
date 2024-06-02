@@ -44,12 +44,12 @@ public abstract class Player extends SuperSmoothMover
     }
     
     public void checkKeys() {
-        if(Greenfoot.isKeyDown("d")) {
+        if(Greenfoot.isKeyDown("d") && rightClear()) {
             setLocation(getX()+moveSpeed, getY());
             direction = true;
             isMoving = true;
         }
-        else if(Greenfoot.isKeyDown("a")) {
+        else if(Greenfoot.isKeyDown("a") && leftClear()) {
             setLocation(getX()-moveSpeed, getY());
             direction = false;
             isMoving = true;
@@ -72,15 +72,48 @@ public abstract class Player extends SuperSmoothMover
     protected boolean onGround() {
         Actor under = getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
-            if(under instanceof Air|| under instanceof Sapling) {
+            if(under instanceof Air) {
                 return false;
             }
             else {
                 return true;
             }
         }
-        return false;
+        return true;
     }
+    
+    protected boolean rightClear(){ 
+        Actor right = getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
+        if(right != null) {
+            if(!(right instanceof Air)){
+                return false;
+            }
+        }
+        right = getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getWidth()/4) * -1, Block.class);
+        if(right != null) {
+            if(!(right instanceof Air)){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    protected boolean leftClear(){
+        Actor left = getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
+        if(left != null) {
+            if(!(left instanceof Air)){
+                return false;
+            }
+        }
+        left = getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getWidth()/4) * -1, Block.class);
+        if(left != null) {
+            if(!(left instanceof Air)){
+                return false;
+            }
+        }
+        return true;
+    }
+    
     protected void checkFalling() {
         if(onGround()) {
             vSpeed = 0;

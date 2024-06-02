@@ -11,7 +11,7 @@ public class ItemDrop extends SuperSmoothMover{
     private GreenfootImage img;
     
     private double vSpeed = 0;
-    private double acceleration = 0.1   ;
+    private double acceleration = 0.1;
     private double angle = 0;
     
     public ItemDrop(int type){
