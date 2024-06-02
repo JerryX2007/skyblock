@@ -12,7 +12,7 @@ public class RightHead extends BodyPart
     private Steve steve;
     public RightHead(Steve steve){
         img = new GreenfootImage("steve/head_right.png");
-        img.scale(32,32);
+        img.scale(32,64);
         setImage(img);
         this.steve = steve;
     }
@@ -23,6 +23,14 @@ public class RightHead extends BodyPart
     public void act()
     {
         // Add your action code here.
-        setLocation(steve.getX(), steve.getY()-48);
+        setLocation(steve.getX(), steve.getY()-32);
+    }
+    public void reflectImage(){
+        GreenfootImage img1 = new GreenfootImage("steve/head_right1.png");
+        img1.scale(32,64);
+        setImage(img1);
+    }
+    public void reflectBack(){
+        setImage(img);
     }
 }
