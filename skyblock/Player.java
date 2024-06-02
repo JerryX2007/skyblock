@@ -20,6 +20,7 @@ public abstract class Player extends SuperSmoothMover
     protected int vSpeed;
     protected int acceleration = 1;
     protected boolean direction; //true for facing right, false for left
+    protected boolean isMoving;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -28,6 +29,7 @@ public abstract class Player extends SuperSmoothMover
         this.pickUpRange = pickUpRange;
         this.jumping = jumping;
         direction = false;
+        isMoving = false;
     }
     /**
      * Act - do whatever the Player wants to do. This method is called whenever
@@ -43,14 +45,20 @@ public abstract class Player extends SuperSmoothMover
         if(Greenfoot.isKeyDown("d")) {
             setLocation(getX()+moveSpeed, getY());
             direction = true;
+            isMoving = true;
         }
-        if(Greenfoot.isKeyDown("a")) {
+        else if(Greenfoot.isKeyDown("a")) {
             setLocation(getX()-moveSpeed, getY());
             direction = false;
+            isMoving = true;
         }
-        if(Greenfoot.isKeyDown("shift")) {
+        else if(Greenfoot.isKeyDown("shift")) {
             //Do shift animation type shit
             jumpStrength = 15;
+            isMoving = false;
+        }
+        else{
+            isMoving = false;
         }
     }
     
