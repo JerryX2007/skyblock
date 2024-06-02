@@ -13,7 +13,7 @@ public abstract class  Block extends Actor
 {
 
     private static MouseInfo mouse;
-    private BreakingEffect be;
+    protected BreakingEffect be;
     private static int blockSize = 32;//how much pixels is a block
     protected Color color;//pls enter in "Color.RED"/"Color.LIGHT_GRAY" form
     protected double hardness;//how long will it take to break
@@ -52,6 +52,11 @@ public abstract class  Block extends Actor
                 subBreakTime--;
             }
             //System.out.println("breaking");
+            if(Greenfoot.getRandomNumber(3) ==0){
+                //particle effect
+                this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
+            }
+            
         }
     }
 
@@ -122,7 +127,7 @@ public abstract class  Block extends Actor
         //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
             isSelected = true;
-            breakMe(1,100);
+            breakMe(0,0);
         }
         else{
             stopBreaking();
@@ -132,7 +137,6 @@ public abstract class  Block extends Actor
         getWorld().addObject(be, getX(),getY());
         //block is broken
         if(subBreakTime < 0){
-            drop(itemDrop);
             getWorld().removeObject(be);
             getWorld().removeObject(this);
         }
@@ -178,6 +182,23 @@ public abstract class  Block extends Actor
         newImage.drawRect(0, 0, width - 1, height - 1);
 
         return newImage;
+    }
+    /**
+     * particle effect, break a block to see what it looks like idk :/
+     * 
+     * @param x                 x-coord to spawn particle
+     * @param y                 y-coord to spawn particle
+     * @param numOfParticles    number of particle
+     * @param color             color of the particle
+     */
+    public void particleEffect(int x, int y, int numOfParticles, Color color){
+        for(int i = 0; i < numOfParticles; i++){
+            double angle = Math.PI*Greenfoot.getRandomNumber(180)/180;
+            int speed = 4;
+            double xVel = (Math.cos(angle)*speed);
+            double yVel = (Math.sin(angle)*speed);
+            getWorld().addObject(new Particle(color,xVel,yVel), x, y);
+        }
     }
 }
 

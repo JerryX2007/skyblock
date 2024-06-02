@@ -14,7 +14,7 @@ public class GUI extends Actor
      * @param file Location and name of file.
      * @param scale Percentage size of relative to original size.
      */
-    public GUI(String file, int scale){
+    public GUI(String file, int scale, World world){
         this.setImage(file);
         getImage().scale((int) (getImage().getWidth() * scale * 0.01), (int) (getImage().getHeight() * scale * 0.01));
     }

@@ -20,6 +20,8 @@ public abstract class Player extends SuperSmoothMover
     protected final int gravity = 2;
     protected int vSpeed;
     protected int acceleration = 1;
+    protected boolean direction; //true for facing right, false for left
+    protected boolean isMoving;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -27,6 +29,8 @@ public abstract class Player extends SuperSmoothMover
         this.canDrop = canDrop;
         this.pickUpRange = pickUpRange;
         this.jumping = jumping;
+        direction = false;
+        isMoving = false;
     }
     /**
      * Act - do whatever the Player wants to do. This method is called whenever
@@ -42,13 +46,21 @@ public abstract class Player extends SuperSmoothMover
     public void checkKeys() {
         if(Greenfoot.isKeyDown("d")) {
             setLocation(getX()+moveSpeed, getY());
+            direction = true;
+            isMoving = true;
         }
-        if(Greenfoot.isKeyDown("a")) {
+        else if(Greenfoot.isKeyDown("a")) {
             setLocation(getX()-moveSpeed, getY());
+            direction = false;
+            isMoving = true;
         }
-        if(Greenfoot.isKeyDown("shift")) {
+        else if(Greenfoot.isKeyDown("shift")) {
             //Do shift animation type shit
             jumpStrength = 15;
+            isMoving = false;
+        }
+        else{
+            isMoving = false;
         }
     }
     
@@ -60,7 +72,7 @@ public abstract class Player extends SuperSmoothMover
     protected boolean onGround() {
         Actor under = getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
-            if(under instanceof Air) {
+            if(under instanceof Air|| under instanceof Sapling) {
                 return false;
             }
             else {
@@ -70,7 +82,10 @@ public abstract class Player extends SuperSmoothMover
         return false;
     }
     protected void checkFalling() {
-        if(!onGround()) {
+        if(onGround()) {
+            vSpeed = 0;
+        }
+        else {
             fall();
         }
     }
@@ -85,6 +100,7 @@ public abstract class Player extends SuperSmoothMover
     protected void jump() {
         vSpeed = vSpeed - jumpStrength;
         jumping = true;
+        fall();
     }
     
     public int getMoveSpeed() {
@@ -104,5 +120,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public boolean isJumping() {
         return this.jumping;
+    }
+    public boolean getDirection(){
+        return this.direction;
     }
 }

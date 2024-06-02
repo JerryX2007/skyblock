@@ -1,19 +1,15 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Inventory here.
+ * Write a description of class BodyPart here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Inventory extends GUI
+public class BodyPart extends SuperSmoothMover
 {
-    public Inventory (String file, int scale, World world){
-        super(file, scale, world);
-    }
-    
     /**
-     * Act - do whatever the Inventory wants to do. This method is called whenever
+     * Act - do whatever the BodyPart wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act()
