@@ -19,6 +19,7 @@ public class Log extends Block
         setImage(img);
         img2 = addBorder(img, gold);
         isWood = true;
+        itemDrop = 5;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
@@ -34,8 +35,5 @@ public class Log extends Block
         if(!isSelected){
             setImage(img);
         }
-    }
-    public void drop(){
-        
     }
 }

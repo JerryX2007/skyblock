@@ -34,7 +34,7 @@ public class Leaf extends Block
             setImage(img);
         }
     }
-    public void drop(){
+    public void drop(int itemDrop){
         
     }
 }
