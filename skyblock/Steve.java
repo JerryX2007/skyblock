@@ -41,6 +41,7 @@ public class Steve extends Player
             getWorld().addObject(leftArm,0,0);  getWorld().addObject(rightArm,0,0);
             getWorld().addObject(leftHead,0,0); getWorld().addObject(rightHead,0,0);
         }
+        rotateTowardsMouse();
         super.act();
         updateLayering();
         if(isMoving){
@@ -52,6 +53,7 @@ public class Steve extends Player
             leftArm.setRotation(0);
             rightArm.setRotation(0);
         }
+        //rotateTowardsMouse();
         actNum++;
     }
 
@@ -63,34 +65,34 @@ public class Steve extends Player
         getWorld().removeObject(rightBody);
         getWorld().removeObject(leftArm);
         getWorld().removeObject(rightArm);
-        getWorld().removeObject(leftHead);
-        getWorld().removeObject(rightHead);
 
         if (!direction) {
             // Facing Left
             getWorld().addObject(rightLeg, 0, 0);
             getWorld().addObject(rightBody, 0, 0);
             getWorld().addObject(rightArm, 0, 0);
-            getWorld().addObject(rightHead, 0, 0);
+            
 
             getWorld().addObject(leftLeg, 0, 0);
             getWorld().addObject(leftBody, 0, 0);
             getWorld().addObject(leftArm, 0, 0);
-            getWorld().addObject(leftHead, 0, 0);
+            
         } else {
             // Facing Right
             getWorld().addObject(leftLeg, 0, 0);
             getWorld().addObject(leftBody, 0, 0);
             getWorld().addObject(leftArm, 0, 0);
-            getWorld().addObject(leftHead, 0, 0);
+            
 
             getWorld().addObject(rightLeg, 0, 0);
             getWorld().addObject(rightBody, 0, 0);
             getWorld().addObject(rightArm, 0, 0);
-            getWorld().addObject(rightHead, 0, 0);
+            
         }
     }
-    
+    /**
+     * swing arms and legs
+     */
     public void swing(){
         int time = actNum/10;
         double radians = Math.sin(time);
@@ -103,5 +105,37 @@ public class Steve extends Player
         
         rightLeg.setRotation(45*oppositeRadians);
         leftArm.setRotation(40*oppositeRadians);
+    }
+    /**
+     * rotate head towards mouse
+     * implemented from chatgpt
+     */
+    public void rotateTowardsMouse() {
+        // Get the current mouse information
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+        // Check if the mouse information is available
+        if (mouse != null) {
+            // Get the coordinates of the mouse
+            int mouseX = mouse.getX();
+            int mouseY = mouse.getY();
+            
+            if(mouseX <= this.getX()){
+                direction = false;
+                leftHead.reflectImage();
+                rightHead.reflectImage();
+            }
+            else{
+                direction = true;
+                leftHead.reflectBack();
+                rightHead.reflectBack();
+            }
+            // Get the coordinates of the head
+            int headX = leftHead.getX();
+            int headY = leftHead.getY();
+            
+            // Set the rotation of the head
+            leftHead.turnTowards(mouseX, mouseY);
+            rightHead.turnTowards(mouseX, mouseY);
+        }
     }
 }
