@@ -26,7 +26,7 @@ public class Steve extends Player
         //add bodyparts
         leftHead = new LeftHead(this); leftArm = new LeftArm(this); leftBody = new LeftBody(this); leftLeg = new LeftLeg(this);
         rightHead = new RightHead(this); rightArm = new RightArm(this); rightBody = new RightBody(this); rightLeg = new RightLeg(this);
-        int actNum = 0;
+        int actNum = 0; 
     }
 
     /**
@@ -43,6 +43,16 @@ public class Steve extends Player
         }
         super.act();
         updateLayering();
+        if(isMoving){
+            swing();
+        }
+        else{
+            leftLeg.setRotation(0);
+            rightLeg.setRotation(0);
+            leftArm.setRotation(0);
+            rightArm.setRotation(0);
+        }
+        actNum++;
     }
 
     public void updateLayering() {
@@ -79,5 +89,19 @@ public class Steve extends Player
             getWorld().addObject(rightArm, 0, 0);
             getWorld().addObject(rightHead, 0, 0);
         }
+    }
+    
+    public void swing(){
+        int time = actNum/10;
+        double radians = Math.sin(time);
+        
+        
+        rightArm.setRotation(40*radians);
+        leftLeg.setRotation(45*radians);
+        
+        double oppositeRadians = Math.sin(time+ Math.PI);
+        
+        rightLeg.setRotation(45*oppositeRadians);
+        leftArm.setRotation(40*oppositeRadians);
     }
 }
