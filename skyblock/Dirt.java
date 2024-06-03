@@ -11,13 +11,13 @@ public class Dirt extends Block
     private static Color brown = new Color(185, 122, 87);
     private GreenfootImage img;
     private GreenfootImage img2;
-    private Color gold = new Color(255, 201, 14);
+
     public Dirt(){
         super(brown,1);
         img = new GreenfootImage("block/dirt.png");
         img.scale(64,64);
         setImage(img);
-        img2 = addBorder(img, gold);
+        img2 = addBorder(img, black);
         isDirt = true;
         itemDrop = 2;
     }

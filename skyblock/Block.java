@@ -25,6 +25,7 @@ public abstract class  Block extends Actor
     protected boolean isSelected;//the mouse have hovered over this block
     protected boolean isHoldingMouse;
     protected int itemDrop; // The item drop it will spawn when mined
+    protected Color black = new Color(0, 0, 0);
     
     public Block(Color color, double hardness){
         this.color = color;

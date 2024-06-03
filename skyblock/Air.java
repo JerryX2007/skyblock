@@ -14,7 +14,7 @@ public class Air extends Block
      */
     private GreenfootImage img;
     private GreenfootImage img2;
-    private Color gold = new Color(255, 201, 14);
+
     public Air(){
         super(null,100);
 
@@ -22,7 +22,7 @@ public class Air extends Block
 
         img.scale(64,64);
         setImage(img);
-        img2 = addBorder(img, gold);
+        img2 = addBorder(img, black);
         be.lockFrame();
     }
     

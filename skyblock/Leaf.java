@@ -11,12 +11,12 @@ public class Leaf extends Block
     private static Color green = new Color(23, 120, 51);
     private GreenfootImage img;
     private GreenfootImage img2;
-    private Color gold = new Color(255, 201, 14);
+
     public Leaf(){
         super(green,1);
         img = new GreenfootImage("block/leaves.png");
         img.scale(64,64);
-        img2 = addBorder(img, gold);
+        img2 = addBorder(img, black);
         setImage(img);
     }
     /**
