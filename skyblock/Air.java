@@ -16,30 +16,30 @@ public class Air extends Block
     private GreenfootImage img2;
     private Color gold = new Color(255, 201, 14);
     public Air(){
-        super(Color.WHITE,100);
+        super(null,100);
 
         img = new GreenfootImage("block/air.png");
 
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
+        be.lockFrame();
     }
     
     public void act()
     {
         //stop air from breaking
-        if(isHoldingMouse){
-            isHoldingMouse = false;
-        }
         super.act();
-        /**
+        
         if(isSelected){
             setImage(img2);
         }
         if(!isSelected){
             setImage(img);
         }
-        */
+        if(subBreakTime < 10){
+            subBreakTime = breakTime;
+        }
     }
     
     public void drop(int itemDrop){
