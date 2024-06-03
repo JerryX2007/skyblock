@@ -43,7 +43,7 @@ public class GameWorld extends World {
     private int tempY;
 
     public void act() {
-        //setPaintOrder(Items.class, Empty.class);
+        setPaintOrder(Label.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
@@ -84,7 +84,6 @@ public class GameWorld extends World {
         if(currentDown && !prevState){
             if(openInventory){
                 Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
-                itemsList.add(temp);
                 itemsList.add(temp);
                 for (int i = 2; i >= 0; i--) {
                     for (int j = 0; j < 9; j++) {

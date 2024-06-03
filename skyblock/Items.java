@@ -96,11 +96,14 @@ public class Items extends Actor {
     private ArrayList<Items> numItems;
     private Label counter = new Label(1, 20);
     private boolean addedCounter = false;
+    private int sizeOfNumItems = 1;
+    private boolean runOnlyFirstTime = true;
 
     public void act(){
-        counter.setLineColor(Label.getTransparent());
-        counter.setLocation(getX() + 15, getY() + 15);
         if(draggable){
+            counter.setLineColor(Label.getTransparent());
+            counter.setLocation(getX() + 15, getY() + 15);
+            
             numItems = (ArrayList<Items>) getIntersectingObjects(Items.class);
             Iterator<Items> test = numItems.iterator();
             while(test.hasNext()){
@@ -109,14 +112,13 @@ public class Items extends Actor {
                     test.remove();
                 }
             }
-            int sizeOfNumItems = numItems.size() + 1;
+            sizeOfNumItems = numItems.size() + 1;
             if(sizeOfNumItems > 1){
                 counter.setValue(sizeOfNumItems);
-                
                 getWorld().addObject(counter, getX() + 15, getY() + 15);
-                
             } else if(sizeOfNumItems == 1){
-                getWorld().removeObject(counter);
+                counter.setValue("");
+                getWorld().addObject(counter, getX() + 15, getY() + 15);
             }
             
             MouseInfo mouse = Greenfoot.getMouseInfo();
