@@ -70,14 +70,17 @@ public abstract class Player extends SuperSmoothMover
         vSpeed = vSpeed + acceleration;
     }
     protected void snapOnTop() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
-        if(under != null && !(under instanceof Air)) {
-            setLocation(getX(), getY() - under.getImage().getHeight()/4);
+        ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
+        if(!blocks.isEmpty()) {
+            for(Block b : blocks) {
+                if(!(b instanceof Air)) {
+                    Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+                    if(under != null && !(under instanceof Air)) {
+                        setLocation(getX(), getY() - under.getImage().getHeight()/4);
+                    }
+                }
+            }
         }
-        /**
-         * NOTE FOR SELF:
-         * TRY AND USE GETINTERSECTING OBJECTS AT HOME
-         */
     }
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
