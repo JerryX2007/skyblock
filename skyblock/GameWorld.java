@@ -12,11 +12,10 @@ import java.util.ArrayList;
 public class GameWorld extends World {
     private Block[][] grid;
     private boolean openInventory = false;
-    private GUI inventory;
-    private ArrayList<Items> itemsList;
-    private int xAdjust = 0;
-    private int yAdjust = 0;
-    private Items[][] slots = new Items[9][3];
+    private Inventory inventory;
+ 
+
+    
     
     private Steve player = new Steve(3, 3, 3, true, 3);
 
@@ -31,16 +30,13 @@ public class GameWorld extends World {
         initializeGrid();
         prepareWorld();
         // Inventory stuff
-        inventory = new GUI("inventory.png", 300, this);
-        itemsList = new ArrayList<>();
+        inventory = new Inventory(300, this);
+        
         addObject(player, getWidth()/2, getHeight()/4);
     }
 
     private boolean keyPreviouslyDown = false;
-    private boolean prevState = false;
-    private boolean prevState1 = false;
-    private int tempX;
-    private int tempY;
+    
 
     public void act() {
         setPaintOrder(Label.class, Items.class, GUI.class, SuperSmoothMover.class);
@@ -49,75 +45,19 @@ public class GameWorld extends World {
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory) {
                 openInventory = true;
+                inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 9; j++) {
-                        Empty temp = new Empty(16, 16, this, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
-                        addObject(temp, 424 + xAdjust, getHeight()/2 + 27 + yAdjust);
-                        slots[j][i] = temp;
-                        xAdjust += 54;
-                    }
-                    xAdjust = 0;
-                    yAdjust += 54;
-                }
-                for(Items i: itemsList){
-                    addObject(i, i.getXPos(), i.getYPos());
-                }
-                xAdjust = 0;
-                yAdjust = 0;
+                
+                
             } else {
                 openInventory = false;
+                inventory.removeInventory();
                 removeObject(inventory);
-                for(Items i: itemsList){
-                    removeObject(i);
-                    i.removeNum();
-                }
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 9; j++) {
-                        removeObject(slots[j][i]);
-                    }
-                }
             }
         }
 
         keyPreviouslyDown = keyCurrentlyDown;
-        boolean currentDown = Greenfoot.isKeyDown("p");
-        if(currentDown && !prevState){
-            if(openInventory){
-                Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
-                itemsList.add(temp);
-                for (int i = 2; i >= 0; i--) {
-                    for (int j = 0; j < 9; j++) {
-                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
-                            tempX = slots[j][i].getX();
-                            tempY = slots[j][i].getY();
-                            break;
-                        }
-                    }
-                }
-                addObject(temp, tempX, tempY);
-            }
-        }
-        prevState = currentDown;
         
-        boolean currentDown1 = Greenfoot.isKeyDown("o");
-        if(currentDown1 && !prevState1){
-            if(openInventory){
-                Items temp = new Items("block/cobblestone.png", this, 424, getHeight()/2 + 27, 32, 32, "cobblestone");
-                itemsList.add(temp);
-                for (int i = 2; i >= 0; i--) {
-                    for (int j = 0; j < 9; j++) {
-                        if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
-                            tempX = slots[j][i].getX();
-                            tempY = slots[j][i].getY();
-                            break;
-                        }
-                    }
-                }
-                addObject(temp, tempX, tempY);
-            }
-        }
-        prevState1 = currentDown1;
     }
 
     private void initializeGrid() {
@@ -156,11 +96,7 @@ public class GameWorld extends World {
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
     
-    public void setSlot(int x, int y, String itemName){
-        int tempX = slots[x][y].getX();
-        int tempY = slots[x][y].getY();
-        slots[x][y] = new Items("block/air.png", 16, 16, this, false, tempX, tempY, itemName);
-    }
+    
 
     private void prepareWorld()
     {
