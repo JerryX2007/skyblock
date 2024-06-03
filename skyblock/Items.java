@@ -249,6 +249,10 @@ public class Items extends Actor {
             temp2.clear();
         }
     }
+    
+    public void removeNum(){
+        world.removeObject(counter);
+    }
 
     public boolean getDraggable(){
         return draggable;

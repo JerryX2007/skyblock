@@ -70,6 +70,7 @@ public class GameWorld extends World {
                 removeObject(inventory);
                 for(Items i: itemsList){
                     removeObject(i);
+                    i.removeNum();
                 }
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
