@@ -98,6 +98,7 @@ public class Items extends Actor {
     private boolean addedCounter = false;
     private int sizeOfNumItems = 1;
     private boolean runOnlyFirstTime = true;
+    private boolean okToSnap = true;
 
     public void act(){
         if(draggable){
@@ -195,36 +196,45 @@ public class Items extends Actor {
                     ArrayList<Items> temp1 = (ArrayList<Items>) getIntersectingObjects(Items.class);
 
                     for(Items i : temp1){
-                        if(i.getType().equals("air") || i.getType().equals(getType())){
-                            if(gotItems){
-                                for(Items j: touchingItems){
-                                    j.setLocation(X, Y);
-                                }
-                            }
-                            if(sizeOfNumItems > 1){
-                                counter.setLocation(X + 15, Y + 15);
-                            }
-                            setLocation(X, Y);
-                            tempX = getX();
-                            tempY = getY();
-                            X = getX();
-                            Y = getY();
-                            snapped = true;
-
-                        } else {
-                            if(gotItems){
-                                for(Items j: touchingItems){
-                                    j.setLocation(tempX, tempY);
-                                }
-                            }
-                            if(sizeOfNumItems > 1){
-                                counter.setLocation(tempX + 15, tempY + 15);
-                            }
-                            setLocation(tempX, tempY);
-                            X = getX();
-                            Y = getY();
-                            snapped = true;
+                        if(i.getType().equals("air") || i.getType().equals(getType()) && okToSnap){
+                            ;
+                        } else  {
+                            okToSnap = false;
                             break;
+                        }
+                    }
+                    if(okToSnap){
+                        
+                        setLocation(X, Y);
+                        tempX = getX();
+                        tempY = getY();
+                        X = getX();
+                        Y = getY();
+                        
+                        snapped = true;
+                        
+                        if(gotItems){
+                            for(Items j: touchingItems){
+                                j.setLocation(X, Y);
+                                j.setXY(X, Y);
+                                j.setTempXY(tempX, tempY);
+                                j.setSnapped(true);
+                            }
+                        }
+                    } else {
+                        
+                        setLocation(tempX, tempY);
+                        X = getX();
+                        Y = getY();
+                        
+                        snapped = true;
+                        
+                        if(gotItems){
+                            for(Items j: touchingItems){
+                                j.setLocation(tempX, tempY);
+                                j.setXY(X, Y);
+                                j.setSnapped(true);
+                            }
                         }
                     }
                     setLocation(X, Y);
@@ -232,22 +242,40 @@ public class Items extends Actor {
                     if(gotItems){
                         touchingItems.clear();
                     }
+                    okToSnap = true;
                 }
             }
         }
         if(!draggable){
             ArrayList<Items> temp2 = (ArrayList<Items>) getIntersectingObjects(Items.class);
-            if(temp2.size() == 0){
+            if(temp2.isEmpty()){
                 type = "air";
-            }
-            if(temp2.size() > 0){
-                Items test = (Items) getOneIntersectingObject(Items.class);
-                if(test.isSnapped()){
-                    type = test.getType();
+            } else{
+                for(Items i : temp2){
+                    if(i.isSnapped()){
+                        type = i.getType();
+                        break;
+                    }
                 }
+
+                
             }
             temp2.clear();
         }
+    }
+    
+    public void setSnapped(boolean snapped){
+        this.snapped = snapped;
+    }
+    
+    public void setTempXY(int X, int Y){
+        tempX = X;
+        tempY = Y;
+    }
+    
+    public void setXY(int X, int Y){
+        this.X = X;
+        this.Y = Y;
     }
     
     public void removeNum(){
