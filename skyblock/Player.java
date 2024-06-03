@@ -18,8 +18,8 @@ public abstract class Player extends SuperSmoothMover
     
     protected static int jumpStrength = 20;
     protected final int gravity = 2;
-    protected int vSpeed;
-    protected int acceleration = 1;
+    protected double vSpeed;
+    protected double acceleration = 0.1;
     protected boolean direction; //true for facing right, false for left
     protected boolean isMoving;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
@@ -40,16 +40,17 @@ public abstract class Player extends SuperSmoothMover
     {
         checkKeys();
         checkFalling();
-        checkPickup();
+        //checkPickup();
+        snapOnTop();
     }
     
     public void checkKeys() {
-        if(Greenfoot.isKeyDown("d") && rightClear()) {
+        if(Greenfoot.isKeyDown("d")) {
             setLocation(getX()+moveSpeed, getY());
             //direction = true;
             isMoving = true;
         }
-        else if(Greenfoot.isKeyDown("a") && leftClear()) {
+        else if(Greenfoot.isKeyDown("a")) {
             setLocation(getX()-moveSpeed, getY());
             //direction = false;
             isMoving = true;
@@ -68,28 +69,38 @@ public abstract class Player extends SuperSmoothMover
         setLocation(getX(), getY() + vSpeed);
         vSpeed = vSpeed + acceleration;
     }
-    
+    protected void snapOnTop() {
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        if(under != null && !(under instanceof Air)) {
+            setLocation(getX(), getY() - under.getImage().getHeight()/4);
+        }
+        /**
+         * NOTE FOR SELF:
+         * TRY AND USE GETINTERSECTING OBJECTS AT HOME
+         */
+    }
     protected boolean onGround() {
-        Actor under = getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
             }
             else {
                 return true;
+                
             }
         }
-        return true;
+        return false;
     }
     
     protected boolean rightClear(){ 
-        Actor right = getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
+        Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
         if(right != null) {
             if(!(right instanceof Air)){
                 return false;
             }
         }
-        right = getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getWidth()/4) * -1, Block.class);
+        right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getWidth()/4) * -1, Block.class);
         if(right != null) {
             if(!(right instanceof Air)){
                 return false;
@@ -99,13 +110,13 @@ public abstract class Player extends SuperSmoothMover
     }
     
     protected boolean leftClear(){
-        Actor left = getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
+        Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
             if(!(left instanceof Air)){
                 return false;
             }
         }
-        left = getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getWidth()/4) * -1, Block.class);
+        left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getWidth()/4) * -1, Block.class);
         if(left != null) {
             if(!(left instanceof Air)){
                 return false;
