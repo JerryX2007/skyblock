@@ -33,7 +33,7 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
-        addObject(player, getWidth()/2, getHeight()/2);
+        addObject(player, getWidth()/2, getHeight()/4);
     }
 
     private boolean keyPreviouslyDown = false;
@@ -43,7 +43,7 @@ public class GameWorld extends World {
     private int tempY;
 
     public void act() {
-        //setPaintOrder(Items.class, Empty.class);
+        setPaintOrder(Label.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
@@ -70,6 +70,7 @@ public class GameWorld extends World {
                 removeObject(inventory);
                 for(Items i: itemsList){
                     removeObject(i);
+                    i.removeNum();
                 }
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
@@ -84,7 +85,6 @@ public class GameWorld extends World {
         if(currentDown && !prevState){
             if(openInventory){
                 Items temp = new Items("block/wood.png", this, 424, getHeight()/2 + 27, 32, 32, "wood");
-                itemsList.add(temp);
                 itemsList.add(temp);
                 for (int i = 2; i >= 0; i--) {
                     for (int j = 0; j < 9; j++) {

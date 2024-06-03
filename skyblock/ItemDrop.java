@@ -24,6 +24,7 @@ public class ItemDrop extends SuperSmoothMover{
             fall();
         }
         else{
+            vSpeed = 0;
             hover();
         }
     }
@@ -56,7 +57,7 @@ public class ItemDrop extends SuperSmoothMover{
     }
     
     private boolean onGround() {
-        Actor under = getOneObjectAtOffset(0, getImage().getHeight()*2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
@@ -70,6 +71,15 @@ public class ItemDrop extends SuperSmoothMover{
     private void fall() {
         setLocation(getX(), getY() + vSpeed);
         vSpeed = vSpeed + acceleration;
+    }
+    
+    private void checkFalling() {
+        if(onGround()) {
+            vSpeed = 0;
+        }
+        else {
+            fall();
+        }
     }
     
     public int getType(){
