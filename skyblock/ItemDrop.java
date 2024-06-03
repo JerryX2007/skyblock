@@ -11,7 +11,7 @@ public class ItemDrop extends SuperSmoothMover{
     private GreenfootImage img;
     
     private double vSpeed = 0;
-    private double acceleration = 1;
+    private double acceleration = 0.1;
     private double angle = 0;
     
     public ItemDrop(int type){
@@ -57,7 +57,7 @@ public class ItemDrop extends SuperSmoothMover{
     }
     
     private boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()*2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
