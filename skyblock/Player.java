@@ -45,14 +45,14 @@ public abstract class Player extends SuperSmoothMover
     }
     
     public void checkKeys() {
-        if(Greenfoot.isKeyDown("d")) {
+        if(Greenfoot.isKeyDown("d") && rightClear()) {
             setLocation(getX()+moveSpeed, getY());
-            //direction = true;
+            direction = true;
             isMoving = true;
         }
-        else if(Greenfoot.isKeyDown("a")) {
+        else if(Greenfoot.isKeyDown("a") && leftClear()) {
             setLocation(getX()-moveSpeed, getY());
-            //direction = false;
+            direction = false;
             isMoving = true;
         }
         else if(Greenfoot.isKeyDown("shift")) {
@@ -70,17 +70,20 @@ public abstract class Player extends SuperSmoothMover
         vSpeed = vSpeed + acceleration;
     }
     protected void snapOnTop() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
-        if(under != null && !(under instanceof Air)) {
-            setLocation(getX(), getY() - under.getImage().getHeight()/4);
+        ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
+        if(!blocks.isEmpty()) {
+            for(Block b : blocks) {
+                if(!(b instanceof Air)) {
+                    Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+                    if(under != null && !(under instanceof Air)) {
+                        setLocation(getX(), getY() - under.getImage().getHeight()/2);
+                    }
+                }
+            }
         }
-        /**
-         * NOTE FOR SELF:
-         * TRY AND USE GETINTERSECTING OBJECTS AT HOME
-         */
     }
     protected boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2+1, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
