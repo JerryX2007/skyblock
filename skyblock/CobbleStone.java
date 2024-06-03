@@ -13,11 +13,12 @@ public class CobbleStone extends Block
     private Color gold = new Color(255, 201, 14);
     public CobbleStone(){
         super(Color.GRAY,5);
-        img= new GreenfootImage("block/cobblestone.png");
+        img = new GreenfootImage("block/cobblestone.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, gold);
         isStone = true;
+        itemDrop = 1;
     }
     /**
      * Act - do whatever the Grass wants to do. This method is called whenever
@@ -33,8 +34,5 @@ public class CobbleStone extends Block
         if(!isSelected){
             setImage(img);
         }
-    }
-    public void drop(){
-        
     }
 }

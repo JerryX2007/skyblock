@@ -19,6 +19,7 @@ public class Dirt extends Block
         setImage(img);
         img2 = addBorder(img, gold);
         isDirt = true;
+        itemDrop = 2;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
@@ -34,8 +35,5 @@ public class Dirt extends Block
         if(!isSelected){
             setImage(img);
         }
-    }
-    public void drop(){
-        
     }
 }

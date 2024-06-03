@@ -1,4 +1,4 @@
-    import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
@@ -33,7 +33,7 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
-        addObject(player, getWidth()/2, getHeight()/2);
+        addObject(player, getWidth()/2, getHeight()/4);
     }
 
     private boolean keyPreviouslyDown = false;

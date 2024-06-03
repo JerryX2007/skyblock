@@ -24,6 +24,8 @@ public abstract class  Block extends Actor
     protected boolean isDirt;// i am a dirt and a shovel will break me faster
     protected boolean isSelected;//the mouse have hovered over this block
     protected boolean isHoldingMouse;
+    protected int itemDrop; // The item drop it will spawn when mined
+    
     public Block(Color color, double hardness){
         this.color = color;
         this.hardness = hardness;
@@ -73,7 +75,9 @@ public abstract class  Block extends Actor
     /**
      * every block needs to drop something after being broken
      */
-    protected abstract void drop();
+    protected void drop(int itemDrop){
+        getWorld().addObject(new ItemDrop(itemDrop), this.getX(), this.getY());
+    }
 
     /**
      * Act - do whatever the Block wants to do. This method is called whenever
@@ -106,7 +110,7 @@ public abstract class  Block extends Actor
                 isSelected = false;
             }
             */
-           isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+            isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
             
             if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
                 // Mouse button is pressed
@@ -133,10 +137,9 @@ public abstract class  Block extends Actor
         getWorld().addObject(be, getX(),getY());
         //block is broken
         if(subBreakTime < 0){
-            drop();
-            this.particleEffect(this.getX(),this.getY(), 10, this.color);
+            drop(itemDrop);
             getWorld().removeObject(be);
-            getWorld().removeObject(this);
+            getWorld().removeObject(this);           
         }
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);
