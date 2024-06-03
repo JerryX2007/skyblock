@@ -58,6 +58,7 @@ public class Steve extends Player
         //rotateTowardsMouse();
         actNum++;
     }
+
     /**
      * if player is moving, play swinging animation, else, reset it to idle position
      */
@@ -84,6 +85,7 @@ public class Steve extends Player
             rightArm.setRotation(0);
         }
     }
+
     public void updateLayering() {
         // Clear existing objects
         getWorld().removeObject(leftLeg);
@@ -122,16 +124,23 @@ public class Steve extends Player
     public void swing(){
         int time = actNum/10;
         double radians = Math.sin(time);
-
-        if(!isPunching){
-            rightArm.setRotation(40*radians);
-        }
-        leftLeg.setRotation(45*radians);
-
         double oppositeRadians = Math.sin(time+ Math.PI);
-
-        rightLeg.setRotation(45*oppositeRadians);
-        leftArm.setRotation(40*oppositeRadians);
+        if(isPunching && direction){
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(40*oppositeRadians);
+        }
+        else if(isPunching && !direction){
+            rightArm.setRotation(40*radians);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+        }
+        else{
+            rightArm.setRotation(40*radians);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(40*oppositeRadians);
+        }
     }
 
     /**
