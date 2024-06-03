@@ -43,7 +43,7 @@ public class GameWorld extends World {
     private int tempY;
 
     public void act() {
-        setPaintOrder(Label.class);
+        setPaintOrder(Label.class, Items.class, GUI.class, SuperSmoothMover.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
