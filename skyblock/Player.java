@@ -46,12 +46,12 @@ public abstract class Player extends SuperSmoothMover
     public void checkKeys() {
         if(Greenfoot.isKeyDown("d") && rightClear()) {
             setLocation(getX()+moveSpeed, getY());
-            direction = true;
+            //direction = true;
             isMoving = true;
         }
         else if(Greenfoot.isKeyDown("a") && leftClear()) {
             setLocation(getX()-moveSpeed, getY());
-            direction = false;
+            //direction = false;
             isMoving = true;
         }
         else if(Greenfoot.isKeyDown("shift")) {
