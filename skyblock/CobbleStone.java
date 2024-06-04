@@ -10,13 +10,13 @@ public class CobbleStone extends Block
 {
     private GreenfootImage img;
     private GreenfootImage img2;
-    private Color gold = new Color(255, 201, 14);
+    
     public CobbleStone(){
         super(Color.GRAY,5);
         img = new GreenfootImage("block/cobblestone.png");
         img.scale(64,64);
         setImage(img);
-        img2 = addBorder(img, gold);
+        img2 = addBorder(img, black);
         isStone = true;
         itemDrop = 1;
     }

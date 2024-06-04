@@ -13,14 +13,16 @@ public class Particle extends SuperSmoothMover
     private double xVel, yVel;
     private int duration;
     public Particle(Color color, double xVel, double yVel){
-        this.color = color;
         duration = 30;
         this.xVel = xVel;
         this.yVel = yVel;
         img = new GreenfootImage(4,4);
-        img.setColor(color);
-        img.fill();
-        img.setTransparency(Greenfoot.getRandomNumber(100) + 75);
+        if(color != null){
+            this.color = color;
+            img.setColor(color);
+            img.fill();
+            img.setTransparency(Greenfoot.getRandomNumber(100) + 75);
+        }
         setImage(img);
     }
     /**

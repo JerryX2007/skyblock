@@ -85,7 +85,9 @@ public class Steve extends Player
             rightArm.setRotation(0);
         }
     }
-
+    /**
+     * make the body parts into the right order when body turns
+     */
     public void updateLayering() {
         // Clear existing objects
         getWorld().removeObject(leftLeg);
@@ -175,7 +177,9 @@ public class Steve extends Player
             rightHead.turnTowards(mouseX, mouseY);
         }
     }
-
+    /**
+     * punching animation, kinda shit
+     */
     public void punching(){
         MouseInfo mouse = Greenfoot.getMouseInfo();
         // Check if the mouse information is available
@@ -185,7 +189,6 @@ public class Steve extends Player
             }
         }
         if(isPunching){
-
             if(!direction){
                 leftArm.setImage(img2);
                 if(counter >= 0 && counter < 5){
