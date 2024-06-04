@@ -82,7 +82,9 @@ public class Steve extends Player
             leftLeg.setRotation(0);
             rightLeg.setRotation(0);
             leftArm.setRotation(0);
+            leftArm.setImage(img3);
             rightArm.setRotation(0);
+            rightArm.setImage(img);
         }
     }
     /**
