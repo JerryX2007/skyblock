@@ -46,12 +46,12 @@ public abstract class Player extends SuperSmoothMover
     
     public void checkKeys() {
         if(Greenfoot.isKeyDown("d") && rightClear()) {
-            setLocation(getX()+moveSpeed, getY());
+            moveRight();
             direction = true;
             isMoving = true;
         }
         else if(Greenfoot.isKeyDown("a") && leftClear()) {
-            setLocation(getX()-moveSpeed, getY());
+            moveLeft();
             direction = false;
             isMoving = true;
         }
@@ -110,8 +110,7 @@ public abstract class Player extends SuperSmoothMover
             }
         }
         return true;
-    }
-    
+    }    
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
@@ -126,6 +125,23 @@ public abstract class Player extends SuperSmoothMover
             }
         }
         return true;
+    }
+    
+    protected void moveLeft(){
+        for(int i = 0; i < moveSpeed; i++){
+            setLocation(getX() - 1, getY());
+            if(!rightClear()){
+                return;
+            }
+        }
+    }
+    protected void moveRight(){
+        for(int i = 0; i < moveSpeed; i++){
+            setLocation(getX() + 1, getY());
+            if(!leftClear()){
+                return;
+            }
+        }
     }
     
     protected void checkFalling() {

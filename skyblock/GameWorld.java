@@ -33,7 +33,7 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new GUI("inventory.png", 300, this);
         itemsList = new ArrayList<>();
-        addObject(player, getWidth()/2, getHeight()/4);
+        addObject(player, getWidth()/2 - 50, getHeight()/4);
     }
 
     private boolean keyPreviouslyDown = false;

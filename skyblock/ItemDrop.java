@@ -57,7 +57,7 @@ public class ItemDrop extends SuperSmoothMover{
     }
     
     private boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2 + 20, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
