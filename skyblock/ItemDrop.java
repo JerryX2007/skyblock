@@ -8,6 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class ItemDrop extends SuperSmoothMover{
     private int type;
+    private String name;
     private GreenfootImage img;
     
     private double vSpeed = 0;
@@ -38,18 +39,23 @@ public class ItemDrop extends SuperSmoothMover{
         switch(type){
             case 1:
                 img = new GreenfootImage("block/cobblestone.png");
+                name = "cobblestone";
                 break;
             case 2:
                 img = new GreenfootImage("block/dirt.png");
+                name = "dirt";
                 break;
             case 3:
                 img = new GreenfootImage("block/grass_block.png");
+                name = "grass_block";
                 break;
             case 4: 
                 img = new GreenfootImage("block/leaves.png");
+                name = "leaves";
                 break;
             case 5:
                 img = new GreenfootImage("block/wood.png");
+                name = "wood";
                 break;
         }
         img.scale(15, 15);
@@ -84,5 +90,8 @@ public class ItemDrop extends SuperSmoothMover{
     
     public int getType(){
         return type;
+    }
+    public String getName(){
+        return name;
     }
 }
