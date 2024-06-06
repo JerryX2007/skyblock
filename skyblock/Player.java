@@ -40,8 +40,8 @@ public abstract class Player extends SuperSmoothMover
     {
         checkKeys();
         checkFalling();
-        checkPickup();
-        //snapOnTop();
+        //checkPickup();
+        snapOnTop();
     }
     
     public void checkKeys() {
@@ -154,10 +154,7 @@ public abstract class Player extends SuperSmoothMover
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
-            if(Inventory.hasSpaceFor(item.getName())){
-                Inventory.addItem(item.getName());
-                getWorld().removeObject(item);
-            }
+            
         }
     }
     
