@@ -19,8 +19,8 @@ public class Air extends Block
         super(null,100);
 
         img = new GreenfootImage("block/air.png");
-
-        img.scale(64,64);
+        img.setColor(new Color(0, 0, 0));
+        
         setImage(img);
         img2 = addBorder(img, black);
         be.lockFrame();
