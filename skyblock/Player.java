@@ -16,7 +16,7 @@ public abstract class Player extends SuperSmoothMover
     protected static int pickUpRange;
     protected static boolean jumping;
     
-    protected static int jumpStrength = 20;
+    protected static double jumpStrength = 1.3;
     protected final int gravity = 2;
     protected double vSpeed;
     protected double acceleration = 0.1;
@@ -45,20 +45,25 @@ public abstract class Player extends SuperSmoothMover
     }
     
     public void checkKeys() {
-        if(Greenfoot.isKeyDown("d") && rightClear()) {
+        if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
+            jumpStrength = 1.3;
             moveRight();
             direction = true;
             isMoving = true;
         }
-        else if(Greenfoot.isKeyDown("a") && leftClear()) {
+        else if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
+            jumpStrength = 1.3;
             moveLeft();
             direction = false;
             isMoving = true;
         }
         else if(Greenfoot.isKeyDown("shift")) {
             //Do shift animation type shit
-            jumpStrength = 15;
+            jumpStrength = 0.8;
             isMoving = false;
+        }
+        else if(Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) {
+            jump();  
         }
         else{
             isMoving = false;
