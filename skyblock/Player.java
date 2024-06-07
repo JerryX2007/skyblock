@@ -40,8 +40,8 @@ public abstract class Player extends SuperSmoothMover
     {
         checkKeys();
         checkFalling();
-        checkPickup();
-        //snapOnTop();
+        //checkPickup();
+        snapOnTop();
     }
     
     public void checkKeys() {
@@ -83,16 +83,16 @@ public abstract class Player extends SuperSmoothMover
         }
     }
     protected boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2+1, Block.class);
-        if(under != null) {
-            if(under instanceof Air) {
-                return false;
+        setLocation(getPreciseX(), getPreciseY()+1);
+        ArrayList<Block> under = (ArrayList<Block>) getIntersectingObjects(Block.class);
+        setLocation(getPreciseX(), getPreciseY()-1);
+        for (Block block : under) {
+            if (block instanceof Air) {
+                continue;
             }
-            else {
-                return true;
-                
-            }
+            return true;
         }
+        
         return false;
     }
     
@@ -156,10 +156,7 @@ public abstract class Player extends SuperSmoothMover
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
-            if(Inventory.hasSpaceFor(item.getName())){
-                Inventory.addItem(item.getName());
-                getWorld().removeObject(item);
-            }
+            
         }
     }
     
