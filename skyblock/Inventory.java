@@ -11,9 +11,9 @@ public class Inventory extends GUI
 {
     private int xAdjust = 0;
     private int yAdjust = 0;
-    private World world;
-    private ArrayList<Items> itemsList = new ArrayList<>();;
-    private Items[][] slots = new Items[9][3];
+    private static World world;
+    private static ArrayList<Items> itemsList = new ArrayList<>();;
+    private static Items[][] slots = new Items[9][3];
     private boolean prevState = false;
     private boolean prevState1 = false;
     private int tempX;
@@ -26,8 +26,6 @@ public class Inventory extends GUI
     }
     
     public void addInventory(){
-        
-        
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 27 + yAdjust);
@@ -104,9 +102,19 @@ public class Inventory extends GUI
         prevState1 = currentDown1;
     }
     
-    public void setSlot(int x, int y, String itemName){
+    public static void setSlot(int x, int y, String itemName){
         int tempX = slots[x][y].getX();
         int tempY = slots[x][y].getY();
         slots[x][y] = new Items("block/air.png", 16, 16, world, false, tempX, tempY, itemName);
+    }
+    
+    public static void addItem(String item){
+        Items temp = new Items("block/" + item + ".png", world, 424, world.getHeight()/2 + 27, 32, 32, item);
+        itemsList.add(temp);
+    }
+
+    public static boolean hasSpaceFor(String item){
+        
+        return true;
     }
 }
