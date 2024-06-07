@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class Inventory here.
  * 
- * @author (your name) 
+ * @author Benny Wang
  * @version (a version number or a date)
  */
 public class Inventory extends GUI
@@ -22,6 +22,7 @@ public class Inventory extends GUI
     public Inventory (int scale, World world){
         super("inventory.png", scale, world);
         this.world = world;
+        clearInv(); 
     }
     
     public void addInventory(){
@@ -54,6 +55,10 @@ public class Inventory extends GUI
                 world.removeObject(slots[j][i]);
             }
         }
+    }
+    
+    private void clearInv(){
+        itemsList.clear();
     }
     
     /**
