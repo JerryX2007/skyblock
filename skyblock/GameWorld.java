@@ -14,9 +14,6 @@ public class GameWorld extends World {
     private boolean openInventory = false;
     private Inventory inventory;
  
-
-    
-    
     private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
@@ -32,7 +29,7 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new Inventory(300, this);
         
-        addObject(player, getWidth()/2, getHeight()/4);
+        addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;
@@ -48,8 +45,8 @@ public class GameWorld extends World {
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 
-                
-            } else {
+            } 
+            else{
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
@@ -61,11 +58,10 @@ public class GameWorld extends World {
     }
 
     private void initializeGrid() {
-        // Example of initializing the grid with Air blocks
+        // Initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
-                grid[i][j] = new Air();
-                addActorToGrid(grid[i][j], i, j);           
+                grid[i][j] = new Air();           
             }
         }
     }
@@ -96,54 +92,52 @@ public class GameWorld extends World {
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
     
-    
-
-    private void prepareWorld()
-    {
-        for (int i = 2; i < 18; i++)
-        {
-            grid[i][8] = new Dirt();
-            addActorToGrid(grid[i][8], i, 8);  
+    public void updateBlock(int gridX, int gridY, Block newBlock){
+        ArrayList<Block> removingBlock = (ArrayList<Block>)getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
+        for(Block blocks : removingBlock){
+            removeObject(blocks);
         }
-        for (int i = 2; i < 18; i++)
-        {
-            grid[i][7] = new Grass();
-            addActorToGrid(grid[i][7], i, 7);  
-        }
-        for (int i = 3; i < 17; i++)
-        {
-            grid[i][9] = new CobbleStone();
-            addActorToGrid(grid[i][9], i, 9);  
-        }
-        for (int i = 5; i < 15; i++)
-        {
-            grid[i][10] = new CobbleStone();
-            addActorToGrid(grid[i][10], i, 10);  
-        }
-
-        for (int i = 10; i < 15; i++)
-        {
-            grid[i][4] = new Leaf();
-            addActorToGrid(grid[i][4], i, 3);  
-        }
-        for (int i = 10; i < 15; i++)
-        {
-            grid[i][5] = new Leaf();
-            addActorToGrid(grid[i][5], i, 4);  
-        }
-        for (int i = 11; i < 14; i++)
-        {
-            grid[i][3] = new Leaf();
-            addActorToGrid(grid[i][3], i, 2);  
-        }
-
-        for (int j = 4; j < 7; j++)
-        {
-            grid[12][j] = new Log();
-            addActorToGrid(grid[12][j], 12, j);  
-        }
-
         
+        setGridValue(gridX, gridY, newBlock);
+    }
+    
+    /**
+     * Refreshes the entire screen of blocks 
+     * 
+     */
+    public void updateEntireGrid(){
+        for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid.length; j++){
+                
+            }
+        }
+    }
+
+    private void prepareWorld(){
+        for (int i = 2; i < 18; i++){
+            updateBlock(i, 8, new Dirt());  
+        }
+        for (int i = 2; i < 18; i++){
+            updateBlock(i, 7, new Grass()); 
+        }
+        for (int i = 3; i < 17; i++){
+            updateBlock(i, 9, new CobbleStone()); 
+        }
+        for (int i = 5; i < 15; i++){
+            updateBlock(i, 10, new CobbleStone());
+        }
+        for (int i = 10; i < 15; i++){
+            updateBlock(i, 3, new Leaf());  
+        }
+        for (int i = 10; i < 15; i++){
+            updateBlock(i, 4, new Leaf());  
+        }
+        for (int i = 11; i < 14; i++){
+            updateBlock(i, 2, new Leaf()); 
+        }
+        for (int j = 4; j < 7; j++){
+            updateBlock(12, j, new Log());  
+        }        
     }
 }
 

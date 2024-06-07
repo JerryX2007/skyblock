@@ -73,6 +73,13 @@ public abstract class  Block extends Actor
         return subBreakTime;
     }
 
+    private int getGridNumX(){
+        return (this.getX() - 32) / 64;
+    }
+    private int getGridNumY(){
+        return (this.getY() - 32) / 64;
+    }
+    
     /**
      * every block needs to drop something after being broken
      */
@@ -84,18 +91,7 @@ public abstract class  Block extends Actor
      * Act - do whatever the Block wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public void act()
-    {
-        // Add your action code here.
-        /**
-        if (Greenfoot.mouseMoved(this)) {
-        isSelected = true;
-        //System.out.println("hovered");
-        }
-        else{
-        isSelected = false;
-        }
-         */
+    public void act(){
         MouseInfo mouse = Greenfoot.getMouseInfo();
 
         if (mouse != null) {
@@ -140,7 +136,7 @@ public abstract class  Block extends Actor
         if(subBreakTime < 0){
             drop(itemDrop);
             getWorld().removeObject(be);
-            getWorld().removeObject(this);           
+            getWorld().removeObject(this);
         }
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);
