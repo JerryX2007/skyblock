@@ -139,5 +139,12 @@ public class GameWorld extends World {
             updateBlock(12, j, new Log());  
         }        
     }
+    
+    public void started() {
+        TitleScreen.mainMenu.playLoop();
+    }
+    public void stopped() {
+        TitleScreen.mainMenu.pause();
+    }
 }
 
