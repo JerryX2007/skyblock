@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class Inventory here.
  * 
- * @author Benny Wang
+ * @author Benny Wang, Jerry Xing
  * @version (a version number or a date)
  */
 public class Inventory extends GUI
@@ -19,6 +19,7 @@ public class Inventory extends GUI
     private boolean prevState1 = false;
     private int tempX;
     private int tempY;
+    private boolean foundLocation = false;
     
     public Inventory (int scale, World world){
         super("inventory.png", scale, world);
@@ -38,9 +39,6 @@ public class Inventory extends GUI
             }
             xAdjust = 0;
             yAdjust += 54;
-        }
-        for(Item i: itemsList){
-            world.addObject(i, i.getXPos(), i.getYPos());
         }
         xAdjust = 0;
         yAdjust = 0;
@@ -80,7 +78,7 @@ public class Inventory extends GUI
         itemsList.clear();
     }
     
-    private boolean foundLocation = false;
+    
     
     /**
      * Act - do whatever the Inventory wants to do. This method is called whenever
@@ -172,5 +170,17 @@ public class Inventory extends GUI
     public static boolean hasSpaceFor(String item){
         
         return true;
+    }
+    
+    public static int numOfEmptySlots(Item[][] arr) {
+        int count = 0;
+        for(int i = 0; i < arr.length; i++) {
+            for(int j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] instanceof Empty) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
