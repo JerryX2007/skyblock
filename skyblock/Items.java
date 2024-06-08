@@ -94,14 +94,64 @@ public class Items extends Actor {
     private ArrayList<Items> touchingItems;
     private boolean gotItems = false;
     private ArrayList<Items> numItems;
-    private Label counter = new Label(1, 20);
-    private boolean addedCounter = false;
     private int sizeOfNumItems = 1;
+    private Label counter = new Label(sizeOfNumItems, 20);
+    private boolean addedCounter = false;
     private boolean runOnlyFirstTime = true;
     private boolean okToSnap = true;
+    private boolean firstAct = true;
+    private boolean foundEmptySlot = false;
+    private int testCount = 0;
 
     public void act(){
         if(draggable){
+            
+            // This is used to make sure that the stacks don't go over 64
+            if(firstAct){
+                
+                // I get a list of touching items and if any of them are over 64, I find a new location to put the stack
+                ArrayList<Items> test = (ArrayList<Items>) getIntersectingObjects(Items.class);
+                for(Items i : test){
+                    if(i.getCounterNum() > 64){
+                        
+                        // get a really big distance
+                        int dist = 1000;
+                        while(!getObjectsInRange(dist, Empty.class).isEmpty() && dist >= 0 && !foundEmptySlot){
+                            ArrayList<Empty> emptyList = (ArrayList<Empty>) getObjectsInRange(dist, Empty.class);
+                            for(Empty e : emptyList){
+                                if(e.getType().equals("air") || e.getCounterNum() < 64){
+                                    testCount++;
+                                }
+                            }
+                            if(testCount == 0){
+                                break;
+                            }
+                            testCount = 0;
+                            dist--;
+                            
+                        }
+                        dist++;
+                        ArrayList<Empty> emptyList = (ArrayList<Empty>) getObjectsInRange(dist, Empty.class);
+                        
+                        for(Empty e : emptyList){
+                            if(e.getType().equals("air")){
+                                X = e.getX();
+                                Y = e.getY();
+                                setLocation(X, Y);
+                                tempX = getX();
+                                tempY = getY();
+                                X = getX();
+                                Y = getY();
+                                break;
+                            }
+                        }
+                        emptyList.clear();
+                    }
+                    
+                }
+                firstAct = false;
+            }
+            
             counter.setLineColor(Label.getTransparent());
             counter.setLocation(getX() + 15, getY() + 15);
             
@@ -179,7 +229,8 @@ public class Items extends Actor {
                     counter.setLocation(mouse.getX() + 15, mouse.getY() + 15);
                 }
             }
-
+            
+            // snapping to slot
             if(!dragging && !snapped){
                 if(!getObjectsInRange(1000, Empty.class).isEmpty()){
                     int dist = 1000;
@@ -250,14 +301,15 @@ public class Items extends Actor {
             ArrayList<Items> temp2 = (ArrayList<Items>) getIntersectingObjects(Items.class);
             if(temp2.isEmpty()){
                 type = "air";
+                sizeOfNumItems = 0;
             } else{
                 for(Items i : temp2){
                     if(i.isSnapped()){
                         type = i.getType();
+                        sizeOfNumItems = i.getCounterNum();
                         break;
                     }
                 }
-
                 
             }
             temp2.clear();
@@ -280,6 +332,10 @@ public class Items extends Actor {
     
     public void removeNum(){
         world.removeObject(counter);
+    }
+    
+    public int getCounterNum(){
+        return sizeOfNumItems;
     }
 
     public boolean getDraggable(){
