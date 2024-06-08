@@ -14,6 +14,7 @@ public class Inventory extends GUI
     private static World world;
     private static ArrayList<Item> itemsList = new ArrayList<>();;
     private static Item[][] slots = new Item[9][3];
+    private static Item[][] crafting = new Item[2][2];
     private boolean prevState = false;
     private boolean prevState1 = false;
     private int tempX;
@@ -44,10 +45,23 @@ public class Inventory extends GUI
         xAdjust = 0;
         yAdjust = 0;
         
+        //System.out.println(world.getHeight()/2 + 27);
         //Crafting section in inventory
-        for (int i = 0; i<3;i++) {
-            
+        for (int i = 0; i < 2; i++) {
+            for(int j = 0; j < 2; j++) {
+                Empty temp = new Empty(16, 16, world, 694 + xAdjust, 212 + yAdjust);
+                world.addObject(temp, 694 + xAdjust, 212 + yAdjust);
+                crafting[j][i] = temp;
+                xAdjust += 54;
+            }
+            xAdjust = 0;
+            yAdjust += 54;
         }
+        for(Item i : itemsList) {
+            world.addObject(i, i.getXPos(), i.getYPos());
+        }
+        xAdjust = 0;
+        yAdjust = 0;
     }
     
     public void removeInventory(){
