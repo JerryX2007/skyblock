@@ -36,7 +36,7 @@ public class GameWorld extends World {
     
 
     public void act() {
-        setPaintOrder(Label.class, Items.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
@@ -138,6 +138,13 @@ public class GameWorld extends World {
         for (int j = 4; j < 7; j++){
             updateBlock(12, j, new Log());  
         }        
+    }
+    
+    public void started() {
+        TitleScreen.mainMenu.playLoop();
+    }
+    public void stopped() {
+        TitleScreen.mainMenu.pause();
     }
 }
 
