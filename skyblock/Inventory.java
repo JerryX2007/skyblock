@@ -59,6 +59,8 @@ public class Inventory extends GUI
         itemsList.clear();
     }
     
+    private boolean foundLocation = false;
+    
     /**
      * Act - do whatever the Inventory wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -70,15 +72,31 @@ public class Inventory extends GUI
             Items temp = new Items("block/wood.png", world, 424, world.getHeight()/2 + 27, 32, 32, "wood");
            
             itemsList.add(temp);
+            foundLocation = false;
             for (int i = 2; i >= 0; i--) {
                 for (int j = 0; j < 9; j++) {
-                    if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                    if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
                         tempX = slots[j][i].getX();
                         tempY = slots[j][i].getY();
+                        foundLocation = true;
                         break;
                     }
                 }
             }
+            
+            if(!foundLocation){
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air")){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            foundLocation = false;
             world.addObject(temp, tempX, tempY);
         }
         prevState = currentDown;
@@ -88,15 +106,32 @@ public class Inventory extends GUI
             Items temp = new Items("block/cobblestone.png", world, 424, world.getHeight()/2 + 27, 32, 32, "cobblestone");
             
             itemsList.add(temp);
+            foundLocation = false;
+            
             for (int i = 2; i >= 0; i--) {
                 for (int j = 0; j < 9; j++) {
-                    if(slots[j][i].getType().equals("air") || slots[j][i].getType().equals(temp.getType())){
+                    if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
                         tempX = slots[j][i].getX();
                         tempY = slots[j][i].getY();
+                        foundLocation = true;
                         break;
                     }
                 }
             }
+            
+            if(!foundLocation){
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air")){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            foundLocation = true;
             world.addObject(temp, tempX, tempY);
         }
         prevState1 = currentDown1;
