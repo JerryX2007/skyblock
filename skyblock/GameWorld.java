@@ -146,5 +146,9 @@ public class GameWorld extends World {
     public void stopped() {
         TitleScreen.mainMenu.pause();
     }
+    
+    public Player getPlayer() {
+        return player;
+    }
 }
 
