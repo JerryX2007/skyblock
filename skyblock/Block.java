@@ -26,6 +26,7 @@ public abstract class  Block extends Actor
     protected boolean isHoldingMouse;
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
+    protected Player player;
     
     public Block(Color color, double hardness){
         this.color = color;
@@ -43,21 +44,23 @@ public abstract class  Block extends Actor
      * @param tooltype      0 for fist, 1 for picaxe, 2 for axe, 3 for shovel
      * @param efficiency    the effeciency bonus of this tool in percent% 
      */
-    public void breakMe(int toolType, double efficiency){
-        if(isSelected){
-            boolean toolsAreMatching = (toolType == 1 && isStone)||(toolType == 2 && isWood)||(toolType == 3 && isDirt);
-            if(toolsAreMatching){
-                subBreakTime -= 1 *(1 + efficiency/100);
+    public void breakMe(Player playerf, int toolType, double efficiency){
+        //&& player.isBlockVisible(this)
+        if(playerf != null) {
+            if(isSelected && playerf.isBlockVisible(this) && playerf.isBlockWithinRange(this)) {
+                boolean toolsAreMatching = (toolType == 1 && isStone)||(toolType == 2 && isWood)||(toolType == 3 && isDirt);
+                if(toolsAreMatching){
+                    subBreakTime -= 1 *(1 + efficiency/100);
+                }
+                else{
+                    subBreakTime--;
+                }
+                //System.out.println("breaking");
+                if(Greenfoot.getRandomNumber(3) ==0){
+                    //particle effect
+                    this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
+                }
             }
-            else{
-                subBreakTime--;
-            }
-            //System.out.println("breaking");
-            if(Greenfoot.getRandomNumber(3) ==0){
-                //particle effect
-                this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
-            }
-            
         }
     }
 
@@ -73,6 +76,13 @@ public abstract class  Block extends Actor
         return subBreakTime;
     }
 
+    private int getGridNumX(){
+        return (this.getX() - 32) / 64;
+    }
+    private int getGridNumY(){
+        return (this.getY() - 32) / 64;
+    }
+    
     /**
      * every block needs to drop something after being broken
      */
@@ -84,18 +94,7 @@ public abstract class  Block extends Actor
      * Act - do whatever the Block wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public void act()
-    {
-        // Add your action code here.
-        /**
-        if (Greenfoot.mouseMoved(this)) {
-        isSelected = true;
-        //System.out.println("hovered");
-        }
-        else{
-        isSelected = false;
-        }
-         */
+    public void act(){
         MouseInfo mouse = Greenfoot.getMouseInfo();
 
         if (mouse != null) {
@@ -128,8 +127,9 @@ public abstract class  Block extends Actor
         //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
             isSelected = true;
-            breakMe(0,0);
+            breakMe(player, 0,0);
         }
+
         else{
             stopBreaking();
             isSelected = false;
@@ -140,7 +140,7 @@ public abstract class  Block extends Actor
         if(subBreakTime < 0){
             drop(itemDrop);
             getWorld().removeObject(be);
-            getWorld().removeObject(this);           
+            getWorld().removeObject(this);
         }
         //System.out.println(isSelected);
         //System.out.println((int)subBreakTime);
@@ -201,6 +201,10 @@ public abstract class  Block extends Actor
             double yVel = (Math.sin(angle)*speed);
             getWorld().addObject(new Particle(color,xVel,yVel), x, y);
         }
+    }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
 
