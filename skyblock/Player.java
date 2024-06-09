@@ -231,8 +231,8 @@ public abstract class Player extends SuperSmoothMover
         //Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
-        System.out.println(dirX);
-        System.out.println(dirY);
+        // System.out.println(dirX);
+        // System.out.println(dirY);
         if(dirX - dirY < 270) {
             return true;
         }

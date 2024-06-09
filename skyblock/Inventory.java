@@ -12,7 +12,7 @@ public class Inventory extends GUI
     private int xAdjust = 0;
     private int yAdjust = 0;
     private static World world;
-    private static ArrayList<Item> itemsList = new ArrayList<>();;
+    private static ArrayList<Item> itemsList = new ArrayList<>();
     private static Item[][] slots = new Item[9][3];
     private static Item[][] crafting = new Item[2][2];
     private boolean prevState = false;
@@ -21,12 +21,23 @@ public class Inventory extends GUI
     private int tempY;
     private boolean foundLocation = false;
     
+    public static ArrayList<Item> getItemsList(){
+        return itemsList;
+    }
+    
     public Inventory (int scale, World world){
         super("inventory.png", scale, world);
         this.world = world;
         clearInv(); 
     }
     
+    public static void addItem(Item item) {
+        itemsList.add(item);
+    }
+
+    public static void removeItem(Item item) {
+        itemsList.remove(item);
+    }
     
     public void addInventory(){
         //Actual inventory
