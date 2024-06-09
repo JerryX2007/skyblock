@@ -15,7 +15,6 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
-    protected boolean blockFound = false;
     
     protected static double jumpStrength = 1.3;
     protected final int gravity = 2;
@@ -231,8 +230,8 @@ public abstract class Player extends SuperSmoothMover
         //Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
-        System.out.println(dirX);
-        System.out.println(dirY);
+        //System.out.println(dirX);
+        //System.out.println(dirY);
         if(dirX - dirY < 270) {
             return true;
         }
