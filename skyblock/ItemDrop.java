@@ -51,6 +51,14 @@ public class ItemDrop extends SuperSmoothMover{
             case 5:
                 img = new GreenfootImage("block/wood.png");
                 break;
+            case 6:
+                img = new GreenfootImage("block/wood_plank.jpeg");
+                name = "woodPlank";
+                break;
+            case 7:
+                img = new GreenfootImage("block/chest.png");
+                name = "chest";
+                break;
         }
         img.scale(15, 15);
         setImage(img);
