@@ -27,6 +27,7 @@ public class CraftingTable extends Block
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
+        itemDrop = 9;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever

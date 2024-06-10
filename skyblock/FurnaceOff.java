@@ -22,11 +22,12 @@ public class FurnaceOff extends Block
 
     public FurnaceOff(){
         super(lightYellow,2);
-        img = new GreenfootImage("block/furnance_off.jpeg");
+        img = new GreenfootImage("block/furnace_off.jpeg");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
+        itemDrop = 8;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever

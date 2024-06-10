@@ -10,16 +10,16 @@ public class ItemDrop extends SuperSmoothMover{
     private int type;
     private String name;
     private GreenfootImage img;
-    
+
     private double vSpeed = 0;
     private double acceleration = 0.1;
     private double angle = 0;
-    
+
     public ItemDrop(int type){
         this.type = type;
         setType();
     }
-    
+
     public void act(){
         if(!onGround()){
             fall();
@@ -29,12 +29,12 @@ public class ItemDrop extends SuperSmoothMover{
             hover();
         }
     }
-    
+
     private void hover(){
         setLocation(getPreciseX(), getPreciseY() + Math.sin(angle) * 0.5);
         angle += Math.PI/60;
     }
-    
+
     private void setType(){
         switch(type){
             case 1:
@@ -59,17 +59,25 @@ public class ItemDrop extends SuperSmoothMover{
                 break;
             case 6:
                 img = new GreenfootImage("block/wood_plank.jpeg");
-                name = "woodPlank";
+                name = "wood_plank";
                 break;
             case 7:
                 img = new GreenfootImage("block/chest.png");
                 name = "chest";
                 break;
+            case 8:
+                img = new GreenfootImage("block/furnace_off.jpeg");
+                name = "furnace_off";
+                break;
+            case 9:
+                img = new GreenfootImage("block/crafting table.png");
+                name = "crafting_table";
+                break;
         }
         img.scale(15, 15);
         setImage(img);
     }
-    
+
     private boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2 + 20, Block.class);
         if(under != null) {
@@ -82,11 +90,12 @@ public class ItemDrop extends SuperSmoothMover{
         }
         return false;
     }
+
     private void fall() {
         setLocation(getX(), getY() + vSpeed);
         vSpeed = vSpeed + acceleration;
     }
-    
+
     private void checkFalling() {
         if(onGround()) {
             vSpeed = 0;
@@ -95,11 +104,11 @@ public class ItemDrop extends SuperSmoothMover{
             fall();
         }
     }
-    
+
     public int getType(){
         return type;
     }
-    
+
     public String getName(){
         return name;
     }

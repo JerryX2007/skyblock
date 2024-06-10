@@ -27,6 +27,7 @@ public class FurnaceOn extends Block
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
+        itemDrop = 8;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
