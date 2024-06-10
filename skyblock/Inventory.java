@@ -44,6 +44,7 @@ public class Inventory extends GUI
         yAdjust = 0;
         
         //System.out.println(world.getHeight()/2 + 27);
+        
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
