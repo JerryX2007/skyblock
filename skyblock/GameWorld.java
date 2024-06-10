@@ -37,8 +37,8 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new Inventory(300, this);
         chest = new ChestGUI(300, this);
-        craftingSystem = new CraftingSystem();
-        addObject(craftingSystem, getHeight(), getWidth());
+        craftingSystem = new CraftingSystem(300, this);
+        addObject(craftingSystem, getWidth()/2, getHeight()/2);
         addObject(player, 512, 384);
     }
 
