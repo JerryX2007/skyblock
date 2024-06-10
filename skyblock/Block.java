@@ -61,6 +61,9 @@ public abstract class  Block extends Actor
                     this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
                 }
             }
+            else {
+                stopBreaking();
+            }
         }
     }
 
