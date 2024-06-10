@@ -43,6 +43,10 @@ public class CraftingTable extends Block
         if(!isSelected){
             setImage(img);
         }
+        if (Greenfoot.mouseClicked(this)) {
+            // Open crafting interface
+            ((GameWorld) getWorld()).openCraftingInterface();
+        }
     }
 
     public void drop(){
