@@ -15,17 +15,17 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
-    
+
     protected final int gravity = 2;
     protected double yVelocity;
     protected double xVelocity;
     protected double acceleration = 0.15;
     protected boolean direction; //true for facing right, false for left
     protected boolean isMoving;
-    
+
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    
+
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -36,6 +36,7 @@ public abstract class Player extends SuperSmoothMover
         direction = false;
         isMoving = false;
     }
+
     /**
      * Act - do whatever the Player wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -46,9 +47,9 @@ public abstract class Player extends SuperSmoothMover
         checkFalling();
         checkPickup();
         //snapOnTop();
-        
+
     }
-    
+
     public void checkKeys() {
         isMoving = false;
         if(((Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
@@ -67,9 +68,9 @@ public abstract class Player extends SuperSmoothMover
         if(Greenfoot.isKeyDown("shift")) {
             isMoving = false;
         }
-        
+
         MouseInfo mi = Greenfoot.getMouseInfo();
-        
+
         if(mi != null) {
             int button = mi.getButton();
             if(button == 1) {
@@ -80,7 +81,7 @@ public abstract class Player extends SuperSmoothMover
             }
         }
     }
-    
+
     protected Block getBlockUnderCursor() {
         MouseInfo mouse = Greenfoot.getMouseInfo();
         if (mouse != null) {
@@ -94,20 +95,7 @@ public abstract class Player extends SuperSmoothMover
         }
         return null;
     }
-    
-    protected void snapOnTop() {
-        ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
-        if(!blocks.isEmpty()) {
-            for(Block b : blocks) {
-                if(!(b instanceof Air)) {
-                    Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
-                    if(under != null && !(under instanceof Air)) {
-                        setLocation(getX(), getY() - under.getImage().getHeight()/2);
-                    }
-                }
-            }
-        }
-    }
+
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2+1, Block.class);
         if(under != null) {
@@ -120,7 +108,7 @@ public abstract class Player extends SuperSmoothMover
         }        
         return false;
     }
-    
+
     protected boolean headClear(){
         Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+2), Block.class);
         if(above != null) {
@@ -133,7 +121,7 @@ public abstract class Player extends SuperSmoothMover
         }        
         return true;        
     }
-    
+
     protected boolean rightClear(){ 
         Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
         if(right != null) {
@@ -161,6 +149,7 @@ public abstract class Player extends SuperSmoothMover
         }
         return true;
     }    
+
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
@@ -186,10 +175,10 @@ public abstract class Player extends SuperSmoothMover
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     protected void moveLeft(){
         for(int i = 0; i < moveSpeed; i++){
             setLocation(getX() - 1, getY());
@@ -198,6 +187,7 @@ public abstract class Player extends SuperSmoothMover
             }
         }
     }
+
     protected void moveRight(){
         for(int i = 0; i < moveSpeed; i++){
             setLocation(getX() + 1, getY());
@@ -206,7 +196,7 @@ public abstract class Player extends SuperSmoothMover
             }
         }
     }
-    
+
     protected void checkFalling() {
         if(onGround()) {
             yVelocity = 0;
@@ -215,17 +205,17 @@ public abstract class Player extends SuperSmoothMover
             fall();
         }
     }
-    
+
     protected void fall() {
         setLocation(getX(), getY() + yVelocity);
         yVelocity = yVelocity + acceleration;
     }
-    
+
     protected void jump() {
         yVelocity -= 4.5;
         setLocation(getX(), getY() + yVelocity);
     }
-    
+
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
@@ -240,11 +230,11 @@ public abstract class Player extends SuperSmoothMover
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY();
-        
+
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-        
+
         //Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
@@ -257,37 +247,37 @@ public abstract class Player extends SuperSmoothMover
             return false;
         }
     }
-    
+
     public boolean isBlockVisible(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY();
-    
+
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-    
+
         // Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
         int steps = Math.max(Math.abs(dirX), Math.abs(dirY));
-        
+
         // Normalize the direction vector
         double stepX = dirX / (double) steps;
         double stepY = dirY / (double) steps;
-    
+
         // Cast the ray
         double currentX = playerX;
         double currentY = playerY;
         for (int i = 0; i < steps; i++) {
             currentX += stepX;
             currentY += stepY;
-    
+
             // Check if there is a block at the current position
             Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - playerX), (int) Math.round(currentY - playerY), Block.class);
             if (block != null && block != targetBlock && !(block instanceof Air)) {
                 return false; // Block is obstructing the view
-                
+
             }
         }
         return true; // No obstructions
@@ -296,21 +286,27 @@ public abstract class Player extends SuperSmoothMover
     public int getMoveSpeed() {
         return this.moveSpeed;
     }
+
     public int getJumpHeight() {
         return this.jumpHeight;
     }
+
     public int getReach() {
         return this.reach;
     }
+
     public boolean getCanDrop() {
         return this.canDrop;
     }
+
     public int getPickUpRange() {
         return this.pickUpRange;
     }
+
     public boolean isJumping() {
         return this.jumping;
     }
+
     public boolean getDirection(){
         return this.direction;
     }
