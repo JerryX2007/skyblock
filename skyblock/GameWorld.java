@@ -11,9 +11,15 @@ import java.util.ArrayList;
 
 public class GameWorld extends World {
     private Block[][] grid;
+    
     private boolean openInventory = false;
     private Inventory inventory;
+    
+    private ChestGUI chest;
+    private boolean openChest = false;
  
+    private boolean GUIOpened = false;
+    
     private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
@@ -28,32 +34,53 @@ public class GameWorld extends World {
         prepareWorld();
         // Inventory stuff
         inventory = new Inventory(300, this);
+        chest = new ChestGUI(300, this);
         
         addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;
+    private boolean keyPreviouslyDown1 = false;
     
-
+    
     public void act() {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
-            if (!openInventory) {
+            if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
-                
+                GUIOpened = true;
             } 
-            else{
+            else if(openInventory && GUIOpened){
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-            }
+                GUIOpened = false;
+            } 
         }
 
         keyPreviouslyDown = keyCurrentlyDown;
+        
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
+        if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
+            if (!openChest && !GUIOpened) {
+                openChest = true;
+                chest.addChest();
+                addObject(chest, getWidth() / 2, getHeight() / 2);
+                GUIOpened = true;
+            } 
+            else if(openChest && GUIOpened){
+                openChest = false;
+                chest.removeChest();
+                removeObject(chest);
+                GUIOpened = false;
+            }
+        }
+
+        keyPreviouslyDown1 = keyCurrentlyDown1;
         
     }
 

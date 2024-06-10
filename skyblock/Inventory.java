@@ -12,7 +12,7 @@ public class Inventory extends GUI
     private int xAdjust = 0;
     private int yAdjust = 0;
     private static World world;
-    private static ArrayList<Item> itemsList = new ArrayList<>();;
+    private static ArrayList<Item> itemsList = new ArrayList<>();
     private static Item[][] slots = new Item[9][3];
     private static Item[][] crafting = new Item[2][2];
     private boolean prevState = false;
@@ -21,12 +21,23 @@ public class Inventory extends GUI
     private int tempY;
     private boolean foundLocation = false;
     
+    public static ArrayList<Item> getItemsList(){
+        return itemsList;
+    }
+    
     public Inventory (int scale, World world){
         super("inventory.png", scale, world);
         this.world = world;
         clearInv(); 
     }
     
+    public static void addItem(Item item) {
+        itemsList.add(item);
+    }
+
+    public static void removeItem(Item item) {
+        itemsList.remove(item);
+    }
     
     public void addInventory(){
         //Actual inventory
@@ -44,6 +55,7 @@ public class Inventory extends GUI
         yAdjust = 0;
         
         //System.out.println(world.getHeight()/2 + 27);
+        
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
@@ -55,6 +67,8 @@ public class Inventory extends GUI
             xAdjust = 0;
             yAdjust += 54;
         }
+        
+        
         for(Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
@@ -87,6 +101,7 @@ public class Inventory extends GUI
     public void act()
     {
         boolean currentDown = Greenfoot.isKeyDown("p");
+        boolean currentDown1 = Greenfoot.isKeyDown("o");
         if(currentDown && !prevState){
             Item temp = new Item("block/wood.png", world, 424, world.getHeight()/2 + 27, 32, 32, "wood");
            
@@ -116,12 +131,10 @@ public class Inventory extends GUI
             }
             
             foundLocation = false;
+            temp.setTempXY(tempX, tempY);
+            temp.setXY(tempX, tempY);
             world.addObject(temp, tempX, tempY);
-        }
-        prevState = currentDown;
-        
-        boolean currentDown1 = Greenfoot.isKeyDown("o");
-        if(currentDown1 && !prevState1){
+        } else if(currentDown1 && !prevState1){
             Item temp = new Item("block/cobblestone.png", world, 424, world.getHeight()/2 + 27, 32, 32, "cobblestone");
             
             itemsList.add(temp);
@@ -151,8 +164,11 @@ public class Inventory extends GUI
             }
             
             foundLocation = true;
+            temp.setTempXY(tempX, tempY);
+            temp.setXY(tempX, tempY);
             world.addObject(temp, tempX, tempY);
         }
+        prevState = currentDown;
         prevState1 = currentDown1;
     }
     
