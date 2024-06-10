@@ -25,7 +25,7 @@ public class Item extends Actor {
     private ArrayList<Item> touchingItems;
     private boolean gotItems = false;
     private ArrayList<Item> numItems;
-    private int sizeOfNumItems = 1;
+    public int sizeOfNumItems = 1;
     private Label counter = new Label(sizeOfNumItems, 20);
     private boolean addedCounter = false;
     private boolean runOnlyFirstTime = true;
