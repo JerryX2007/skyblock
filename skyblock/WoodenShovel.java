@@ -3,7 +3,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class WoodenShovel here.
  * 
- * @author (your name) 
+ * Dylan Dinesh
  * @version (a version number or a date)
  */
 public class WoodenShovel extends Item

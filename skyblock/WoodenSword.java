@@ -2,8 +2,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
  * Write a description of class WoodenSword here.
- * 
- * @author (your name) 
+* 
+ * Dylan Dinesh
  * @version (a version number or a date)
  */
 public class WoodenSword extends Item

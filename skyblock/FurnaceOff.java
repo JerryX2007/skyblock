@@ -1,9 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class alsjflsa here.
+ * Write a description of class FurnanceOff here.
  * 
- * @author (your name) 
+* 
+ * Dylan Dinesh
  * @version (a version number or a date)
  */
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
