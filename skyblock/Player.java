@@ -94,10 +94,6 @@ public abstract class Player extends SuperSmoothMover
         }
         return null;
     }
-    protected void fall() {
-        setLocation(getX(), getY() + vSpeed);
-        vSpeed = vSpeed + acceleration;
-    }
     protected void snapOnTop() {
         ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
         if(!blocks.isEmpty()) {
@@ -297,12 +293,13 @@ public abstract class Player extends SuperSmoothMover
         return true; // No obstructions
     }
 
-    
+    /**
     protected void jump() {
         vSpeed = vSpeed - jumpStrength;
         jumping = true;
         fall();
     }
+    */
     public int getMoveSpeed() {
         return this.moveSpeed;
     }
