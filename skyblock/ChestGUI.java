@@ -94,19 +94,34 @@ public class ChestGUI extends GUI
     }
     
     private void manageItems(){
-    
-        for (Item item : Inventory.getItemsList()) {
-            if (item.getY() > 366) {
-                Inventory.removeItem(item);
-                contents.add(item);
+        for(int i = 0; i < Inventory.getItemsList().size(); i++){
+            if(Inventory.getItemsList().get(i).getY() <= 366){
+                contents.add(Inventory.getItemsList().get(i));
+                Inventory.removeItem(Inventory.getItemsList().get(i));
+                
             }
         }
         
-        for (Item item : contents) {
-            if (item.getY() <= 366) {
-                contents.remove(item);
-                Inventory.addItem(item);
+        for(int i = 0; i < contents.size(); i++){
+            if(contents.get(i).getY() > 366){
+                Inventory.getItemsList().add(contents.get(i));
+                contents.remove(contents.get(i));
             }
         }
+        
+        
+        // for (Item item : Inventory.getItemsList()) {
+            // if (item.getY() > 366) {
+                // Inventory.removeItem(item);
+                // contents.add(item);
+            // }
+        // }
+        
+        // for (Item item : contents) {
+            // if (item.getY() <= 366) {
+                // contents.remove(item);
+                // Inventory.addItem(item);
+            // }
+        // }
     }
 }

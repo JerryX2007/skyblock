@@ -66,6 +66,8 @@ public class Inventory extends GUI
             xAdjust = 0;
             yAdjust += 54;
         }
+        
+        
         for(Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
@@ -98,6 +100,7 @@ public class Inventory extends GUI
     public void act()
     {
         boolean currentDown = Greenfoot.isKeyDown("p");
+        boolean currentDown1 = Greenfoot.isKeyDown("o");
         if(currentDown && !prevState){
             Item temp = new Item("block/wood.png", world, 424, world.getHeight()/2 + 27, 32, 32, "wood");
            
@@ -127,12 +130,10 @@ public class Inventory extends GUI
             }
             
             foundLocation = false;
+            temp.setTempXY(tempX, tempY);
+            temp.setXY(tempX, tempY);
             world.addObject(temp, tempX, tempY);
-        }
-        prevState = currentDown;
-        
-        boolean currentDown1 = Greenfoot.isKeyDown("o");
-        if(currentDown1 && !prevState1){
+        } else if(currentDown1 && !prevState1){
             Item temp = new Item("block/cobblestone.png", world, 424, world.getHeight()/2 + 27, 32, 32, "cobblestone");
             
             itemsList.add(temp);
@@ -162,8 +163,11 @@ public class Inventory extends GUI
             }
             
             foundLocation = true;
+            temp.setTempXY(tempX, tempY);
+            temp.setXY(tempX, tempY);
             world.addObject(temp, tempX, tempY);
         }
+        prevState = currentDown;
         prevState1 = currentDown1;
     }
     
