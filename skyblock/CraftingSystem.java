@@ -7,16 +7,18 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @version (a version number or a date)
  * Help from https://www.youtube.com/watch?v=LmQ6U3YkHHk
  */
-public class CraftingSystem extends Actor
+public class CraftingSystem extends GUI
 {
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private Item[][] itemArray;
     private Item outputItem;
     private Block outputBlock;
+    private static World world;
     
     
-    public CraftingSystem() {
+    public CraftingSystem(int scale, World world) {
+        super("craftingTableInterface", scale, world);
         itemArray = new Item[GRID_SIZE][GRID_SIZE];
         isVisible = false;
     }
