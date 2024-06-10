@@ -34,8 +34,8 @@ public class GameWorld extends World {
         prepareWorld();
         // Inventory stuff
         inventory = new Inventory(300, this);
-        chest = new ChestGUI(300, this);
-        
+        chest = new ChestGUI(300, this, inventory);
+
         addObject(player, 512, 384);
     }
 
@@ -47,6 +47,7 @@ public class GameWorld extends World {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
         
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
@@ -60,14 +61,10 @@ public class GameWorld extends World {
                 removeObject(inventory);
                 GUIOpened = false;
             } 
-        }
-
-        keyPreviouslyDown = keyCurrentlyDown;
-        
-        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
-        if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
+        } else if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
             if (!openChest && !GUIOpened) {
                 openChest = true;
+                spoofInventory();
                 chest.addChest();
                 addObject(chest, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
@@ -81,7 +78,14 @@ public class GameWorld extends World {
         }
 
         keyPreviouslyDown1 = keyCurrentlyDown1;
-        
+        keyPreviouslyDown = keyCurrentlyDown;
+    }
+    
+    public void spoofInventory(){
+        inventory.addInventory();
+        inventory.act();
+        inventory.removeInventory();
+        removeObject(inventory);
     }
 
     private void initializeGrid() {

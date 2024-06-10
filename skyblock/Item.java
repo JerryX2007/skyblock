@@ -33,6 +33,8 @@ public class Item extends Actor {
     private boolean firstAct = true;
     private boolean foundEmptySlot = false;
     private int testCount = 0;
+    private int invX;
+    private int invY;
 
     /**
      * Create an Items with given file name
@@ -56,7 +58,7 @@ public class Item extends Actor {
         image = file;
     }
 
-    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
+    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type, int invX, int invY){
         this.setImage(file);
         getImage().scale(length, width);
         this.draggable = draggable;
@@ -67,9 +69,9 @@ public class Item extends Actor {
         tempY = Y;
         this.world = world;
         image = file;
+        this.invX = invX;
+        this.invY = invY;
     }
-
-    
 
     public void act(){
         if(draggable){
@@ -108,8 +110,6 @@ public class Item extends Actor {
                                 setLocation(X, Y);
                                 tempX = getX();
                                 tempY = getY();
-                                X = getX();
-                                Y = getY();
                                 break;
                             }
                         }
@@ -190,14 +190,20 @@ public class Item extends Actor {
             // mouse dragging
             if (dragging){
                 snapped = false;
-                X = mouse.getX();
-                Y = mouse.getY();
-                for(Item i: touchingItems){
-                    i.setLocation(mouse.getX(), mouse.getY());
+                try{
+                    X = mouse.getX();
+                    Y = mouse.getY();
+                } catch (NullPointerException e){
+                    X = world.getWidth()/2;
+                    Y = world.getHeight()/2;
                 }
-                setLocation(mouse.getX(), mouse.getY());
+                
+                for(Item i: touchingItems){
+                    i.setLocation(X, Y);
+                }
+                setLocation(X, Y);
                 if(sizeOfNumItems > 1){
-                    counter.setLocation(mouse.getX() + 15, mouse.getY() + 15);
+                    counter.setLocation(X + 15, Y + 15);
                 }
             }
             
@@ -238,6 +244,8 @@ public class Item extends Actor {
                         if(gotItems){
                             for(Item j: touchingItems){
                                 j.setLocation(X, Y);
+                                
+                                
                                 j.setXY(X, Y);
                                 j.setTempXY(tempX, tempY);
                                 j.setSnapped(true);
@@ -281,10 +289,17 @@ public class Item extends Actor {
                         break;
                     }
                 }
-                
             }
             temp2.clear();
         }
+    }
+    
+    public int getInvX(){
+        return invX;
+    }
+    
+    public int getInvY(){
+        return invY;
     }
     
     public void setSnapped(boolean snapped){
