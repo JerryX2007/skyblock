@@ -168,10 +168,10 @@ public class GameWorld extends World {
     }
     
     public void started() {
-        TitleScreen.mainMenu.playLoop();
+        TitleScreen.getMainMenuMusic().playLoop();
     }
     public void stopped() {
-        TitleScreen.mainMenu.pause();
+        TitleScreen.getMainMenuMusic().pause();
     }
     
     public Player getPlayer() {

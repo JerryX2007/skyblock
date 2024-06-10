@@ -51,7 +51,7 @@ public abstract class Player extends SuperSmoothMover
     
     public void checkKeys() {
         isMoving = false;
-        if(((Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
+        if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
         }
         if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
@@ -94,19 +94,7 @@ public abstract class Player extends SuperSmoothMover
         }
         return null;
     }
-    protected void snapOnTop() {
-        ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
-        if(!blocks.isEmpty()) {
-            for(Block b : blocks) {
-                if(!(b instanceof Air)) {
-                    Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
-                    if(under != null && !(under instanceof Air)) {
-                        setLocation(getX(), getY() - under.getImage().getHeight()/2);
-                    }
-                }
-            }
-        }
-    }
+    
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2+1, Block.class);
         if(under != null) {

@@ -100,76 +100,7 @@ public class Inventory extends GUI
      */
     public void act()
     {
-        boolean currentDown = Greenfoot.isKeyDown("p");
-        boolean currentDown1 = Greenfoot.isKeyDown("o");
-        if(currentDown && !prevState){
-            Item temp = new Item("block/wood.png", world, 424, world.getHeight()/2 + 27, 32, 32, "wood");
-           
-            itemsList.add(temp);
-            foundLocation = false;
-            for (int i = 2; i >= 0; i--) {
-                for (int j = 0; j < 9; j++) {
-                    if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
-                        tempX = slots[j][i].getX();
-                        tempY = slots[j][i].getY();
-                        foundLocation = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(!foundLocation){
-                for (int i = 2; i >= 0; i--) {
-                    for (int j = 0; j < 9; j++) {
-                        if(slots[j][i].getType().equals("air")){
-                            tempX = slots[j][i].getX();
-                            tempY = slots[j][i].getY();
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            foundLocation = false;
-            temp.setTempXY(tempX, tempY);
-            temp.setXY(tempX, tempY);
-            world.addObject(temp, tempX, tempY);
-        } else if(currentDown1 && !prevState1){
-            Item temp = new Item("block/cobblestone.png", world, 424, world.getHeight()/2 + 27, 32, 32, "cobblestone");
-            
-            itemsList.add(temp);
-            foundLocation = false;
-            
-            for (int i = 2; i >= 0; i--) {
-                for (int j = 0; j < 9; j++) {
-                    if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
-                        tempX = slots[j][i].getX();
-                        tempY = slots[j][i].getY();
-                        foundLocation = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(!foundLocation){
-                for (int i = 2; i >= 0; i--) {
-                    for (int j = 0; j < 9; j++) {
-                        if(slots[j][i].getType().equals("air")){
-                            tempX = slots[j][i].getX();
-                            tempY = slots[j][i].getY();
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            foundLocation = true;
-            temp.setTempXY(tempX, tempY);
-            temp.setXY(tempX, tempY);
-            world.addObject(temp, tempX, tempY);
-        }
-        prevState = currentDown;
-        prevState1 = currentDown1;
+        // nothing
     }
     
     public static void setSlot(int x, int y, String itemName){
