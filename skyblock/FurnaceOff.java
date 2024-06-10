@@ -3,7 +3,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class FurnanceOff here.
  * 
-* 
+ * 
  * Dylan Dinesh
  * @version (a version number or a date)
  */
@@ -30,6 +30,7 @@ public class FurnaceOff extends Block
         isWood = true;
         itemDrop = 8;
     }
+
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -45,7 +46,8 @@ public class FurnaceOff extends Block
             setImage(img);
         }
     }
+
     public void drop(){
-        
+
     }
 }
