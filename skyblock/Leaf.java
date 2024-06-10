@@ -19,6 +19,7 @@ public class Leaf extends Block
         img2 = addBorder(img, black);
         setImage(img);
     }
+
     /**
      * Act - do whatever the Grass wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -34,7 +35,8 @@ public class Leaf extends Block
             setImage(img);
         }
     }
+
     public void drop(int itemDrop){
-        
+
     }
 }

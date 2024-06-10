@@ -20,17 +20,17 @@ public class Air extends Block
 
         img = new GreenfootImage("block/air.png");
         img.setColor(new Color(0, 0, 0));
-        
+
         setImage(img);
         img2 = addBorder(img, black);
         be.lockFrame();
     }
-    
+
     public void act()
     {
         //stop air from breaking
         super.act();
-        
+
         if(isSelected){
             setImage(img2);
         }
@@ -41,8 +41,8 @@ public class Air extends Block
             subBreakTime = breakTime;
         }
     }
-    
+
     public void drop(int itemDrop){
-        
+
     }
 }

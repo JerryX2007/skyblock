@@ -10,16 +10,18 @@ import java.util.ArrayList;
  */
 
 public class GameWorld extends World {
+    private CraftingSystem craftingSystem;
+    private boolean isCraftingVisible = false;
     private Block[][] grid;
-    
+
     private boolean openInventory = false;
     private Inventory inventory;
-    
+
     private ChestGUI chest;
     private boolean openChest = false;
- 
+
     private boolean GUIOpened = false;
-    
+
     private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
@@ -35,17 +37,18 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new Inventory(300, this);
         chest = new ChestGUI(300, this, inventory);
+        craftingSystem = new CraftingSystem(300, this);
+        addObject(craftingSystem, getWidth()/2, getHeight()/2);
 
         addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;
     private boolean keyPreviouslyDown1 = false;
-    
-    
+
     public void act() {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-        
+
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
@@ -122,16 +125,16 @@ public class GameWorld extends World {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
-    
+
     public void updateBlock(int gridX, int gridY, Block newBlock){
         ArrayList<Block> removingBlock = (ArrayList<Block>)getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
         for(Block blocks : removingBlock){
             removeObject(blocks);
         }
-        
+
         setGridValue(gridX, gridY, newBlock);
     }
-    
+
     /**
      * Refreshes the entire screen of blocks 
      * 
@@ -139,7 +142,7 @@ public class GameWorld extends World {
     public void updateEntireGrid(){
         for(int i = 0; i < grid.length; i++){
             for(int j = 0; j < grid.length; j++){
-                
+
             }
         }
     }
@@ -170,16 +173,33 @@ public class GameWorld extends World {
             updateBlock(12, j, new Log());  
         }        
     }
-    
+
     public void started() {
         TitleScreen.getMainMenuMusic().playLoop();
     }
+
     public void stopped() {
         TitleScreen.getMainMenuMusic().pause();
     }
-    
+
     public Player getPlayer() {
         return player;
+    }
+    
+    public void openCraftingInterface() {
+        if (!isCraftingVisible) {
+            addObject(craftingSystem, 400, 300); // Center of the screen, for example
+            craftingSystem.showCrafting();
+            isCraftingVisible = true;
+        }
+    }
+
+    public void closeCraftingInterface() {
+        if (isCraftingVisible) {
+            removeObject(craftingSystem);
+            craftingSystem.hideCrafting();
+            isCraftingVisible = false;
+        }
     }
 }
 

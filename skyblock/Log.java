@@ -21,6 +21,7 @@ public class Log extends Block
         isWood = true;
         itemDrop = 5;
     }
+
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
