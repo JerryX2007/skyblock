@@ -262,6 +262,7 @@ public abstract class Player extends SuperSmoothMover
         double currentX = playerX;
         double currentY = playerY;
         for (int i = 0; i < steps; i++) {
+            //Increment to the position of the block
             currentX += stepX;
             currentY += stepY;
     
