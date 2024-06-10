@@ -60,7 +60,7 @@ public class Item extends Actor {
         //this.name = name;
     }
 
-    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type, int invX, int invY){
+    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
         this.setImage(file);
         getImage().scale(length, width);
         this.draggable = draggable;

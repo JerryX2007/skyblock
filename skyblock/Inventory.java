@@ -33,7 +33,7 @@ public class Inventory extends GUI
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 slots[j][i] = temp;
                 xAdjust += 54;
@@ -50,7 +50,7 @@ public class Inventory extends GUI
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
-                Empty temp = new Empty(16, 16, world, 694 + xAdjust, 212 + yAdjust, 694 + xAdjust, 212 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 694 + xAdjust, 212 + yAdjust);
                 world.addObject(temp, 694 + xAdjust, 212 + yAdjust);
                 crafting[j][i] = temp;
                 xAdjust += 54;
@@ -195,7 +195,7 @@ public class Inventory extends GUI
     public static void setSlot(int x, int y, String itemName){
         int tempX = slots[x][y].getX();
         int tempY = slots[x][y].getY();
-        slots[x][y] = new Item("block/air.png", 16, 16, world, false, tempX, tempY, itemName, tempX, tempY);
+        slots[x][y] = new Item("block/air.png", 16, 16, world, false, tempX, tempY, itemName);
     }
     
     public static void addItem(String item){

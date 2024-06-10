@@ -28,7 +28,7 @@ public class ChestGUI extends GUI
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 slots[j][i] = temp;
                 xAdjust += 54;
@@ -45,7 +45,7 @@ public class ChestGUI extends GUI
         //Chest inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust);
                 world.addObject(temp, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust);
                 chestSlots[j][i] = temp;
                 xAdjust += 54;
