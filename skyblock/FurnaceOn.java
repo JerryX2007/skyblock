@@ -1,25 +1,32 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class WoodPlank here.
+ * Write a description of class alsjflsa here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class WoodPlank extends Block
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Log here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class FurnaceOn extends Block
 {
-    private static Color brown = new Color(77, 50, 36);
+    private static Color lightYellow = new Color(235, 198, 109);
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public WoodPlank(){
-        super(brown,2);
-        img = new GreenfootImage("block/wood_plank.jpeg");
+    public FurnaceOn(){
+        super(lightYellow,2);
+        img = new GreenfootImage("block/furnace_on.jpeg");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
-        itemDrop = 6;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
@@ -35,5 +42,8 @@ public class WoodPlank extends Block
         if(!isSelected){
             setImage(img);
         }
+    }
+    public void drop(){
+        
     }
 }
