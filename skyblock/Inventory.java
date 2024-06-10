@@ -20,6 +20,7 @@ public class Inventory extends GUI
     private int tempX;
     private int tempY;
     private boolean foundLocation = false;
+    private static boolean addedSomethingToInventory = false;
     
     public static ArrayList<Item> getItemsList(){
         return itemsList;
@@ -100,7 +101,41 @@ public class Inventory extends GUI
      */
     public void act()
     {
-        // nothing
+        
+        if(addedSomethingToInventory){
+            System.out.println("Run");
+            Item temp = itemsList.get(itemsList.size()-1);
+            foundLocation = false;
+            for (int i = 2; i >= 0; i--) {
+                for (int j = 0; j < 9; j++) {
+                    if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
+                        tempX = slots[j][i].getX();
+                        tempY = slots[j][i].getY();
+                        foundLocation = true;
+                        break;
+                    }
+                }
+            }
+            
+            if(!foundLocation){
+                for (int i = 2; i >= 0; i--) {
+                    for (int j = 0; j < 9; j++) {
+                        if(slots[j][i].getType().equals("air")){
+                            tempX = slots[j][i].getX();
+                            tempY = slots[j][i].getY();
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            foundLocation = false;
+            temp.setTempXY(tempX, tempY);
+            temp.setXY(tempX, tempY);
+            world.addObject(temp, tempX, tempY);
+            addedSomethingToInventory = false;
+        }   
+        
     }
     
     public static void setSlot(int x, int y, String itemName){
@@ -112,6 +147,7 @@ public class Inventory extends GUI
     public static void addItem(String item){
         Item temp = new Item("block/" + item + ".png", world, 424, world.getHeight()/2 + 27, 32, 32, item);
         itemsList.add(temp);
+        addedSomethingToInventory = true;
     }
 
     public static boolean hasSpaceFor(String item){
