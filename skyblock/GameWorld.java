@@ -11,10 +11,11 @@ import java.util.ArrayList;
 
 public class GameWorld extends World {
     private Block[][] grid;
-
+    private TitleScreen titleScreen;
     private boolean openInventory = false;
     private Inventory inventory;
-
+    private ArrayList<Actor> actorList;
+    private Fader blackScreen;
     private ChestGUI chest;
     private boolean openChest = false;
 
@@ -44,7 +45,7 @@ public class GameWorld extends World {
 
     public void act() {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-
+        pause();
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
@@ -89,6 +90,13 @@ public class GameWorld extends World {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();           
             }
+        }
+    }
+
+    private void pause(){
+        if(Greenfoot.isKeyDown("p")){
+            //    MrCohen.pauseSounds();
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList, blackScreen));
         }
     }
 
