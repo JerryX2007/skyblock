@@ -47,4 +47,20 @@ public class CraftingSystem extends Actor
     private void decreaseItemAmount(int x, int y, int increment) {
         itemArray[y][x].sizeOfNumItems -= increment;
     }
+    
+    private boolean tryAddItem(Item item, int x, int y) {
+        if(isEmpty(x, y)) {
+            setItem(item, x, y);
+            return true;
+        }
+        else {
+            if (getItem(x, y).equals(item)) {
+                increaseItemAmount(x, y);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
 }
