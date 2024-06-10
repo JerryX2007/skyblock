@@ -1,27 +1,26 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Dirt here.
+ * Write a description of class WoodPlank here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Dirt extends Block
+public class WoodenPlank extends Block
 {
-    private static Color brown = new Color(185, 122, 87);
+    private static Color brown = new Color(77, 50, 36);
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public Dirt(){
-        super(brown,1);
-        img = new GreenfootImage("block/dirt.png");
+    public WoodenPlank(){
+        super(brown,2);
+        img = new GreenfootImage("block/wood_plank.jpeg");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
-        isDirt = true;
-        itemDrop = 2;
+        isWood = true;
+        itemDrop = 6;
     }
-
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.

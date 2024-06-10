@@ -16,6 +16,7 @@ public class LeftArm extends BodyPart
         setImage(img);
         this.steve = steve;
     }
+
     /**
      * Act - do whatever the LeftArm wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.

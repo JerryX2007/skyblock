@@ -10,6 +10,7 @@ import com.google.common.collect.Iterators;
  * Thank to ChatGPT for helping me write this at 11:46pm
  */
 public class Item extends Actor {
+    protected String name;
     protected int X;
     protected int Y;
     protected MouseInfo mouse;
@@ -25,7 +26,7 @@ public class Item extends Actor {
     private ArrayList<Item> touchingItems;
     private boolean gotItems = false;
     private ArrayList<Item> numItems;
-    private int sizeOfNumItems = 1;
+    public int sizeOfNumItems = 1;
     private Label counter = new Label(sizeOfNumItems, 20);
     private boolean addedCounter = false;
     private boolean runOnlyFirstTime = true;
@@ -54,6 +55,7 @@ public class Item extends Actor {
         tempY = Y;
         this.world = world;
         image = file;
+        //this.name = name;
     }
 
     public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
@@ -343,5 +345,9 @@ public class Item extends Actor {
 
     public String getItemImage(){
         return image;
+    }
+    
+    public boolean equals(Item item) {
+        return this.name.equals(item.name);
     }
 }

@@ -27,7 +27,7 @@ public abstract class  Block extends Actor
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
     protected Player player;
-    
+
     public Block(Color color, double hardness){
         this.color = color;
         this.hardness = hardness;
@@ -82,10 +82,11 @@ public abstract class  Block extends Actor
     private int getGridNumX(){
         return (this.getX() - 32) / 64;
     }
+
     private int getGridNumY(){
         return (this.getY() - 32) / 64;
     }
-    
+
     /**
      * every block needs to drop something after being broken
      */
@@ -107,14 +108,14 @@ public abstract class  Block extends Actor
             /**
             //borrowed mouseover code from Mr. Cohen
             if(!isSelected && (Greenfoot.mouseMoved(be)||Greenfoot.mouseMoved(this))){
-                isSelected = true;
+            isSelected = true;
             }
             else if(isSelected && Greenfoot.mouseMoved(null) && (!Greenfoot.mouseMoved(this)||!Greenfoot.mouseMoved(be))){
-                isSelected = false;
+            isSelected = false;
             }
-            */
+             */
             isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
-            
+
             if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
                 // Mouse button is pressed
                 isHoldingMouse = true;
@@ -188,6 +189,7 @@ public abstract class  Block extends Actor
 
         return newImage;
     }
+
     /**
      * particle effect, break a block to see what it looks like idk :/
      * 
@@ -205,7 +207,7 @@ public abstract class  Block extends Actor
             getWorld().addObject(new Particle(color,xVel,yVel), x, y);
         }
     }
-    
+
     public void setPlayer(Player player) {
         this.player = player;
     }
