@@ -3,20 +3,38 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class CraftingSystem here.
  * 
- * @author (your name) 
+ * @author Jerry Xing
  * @version (a version number or a date)
  * Help from https://www.youtube.com/watch?v=LmQ6U3YkHHk
  */
 public class CraftingSystem extends Actor
 {
+    private boolean isVisible;
     private final int GRID_SIZE = 3;
     private Item[][] itemArray;
+    private Item outputItem;
+    private Block outputBlock;
+    
+    
+    public CraftingSystem() {
+        itemArray = new Item[GRID_SIZE][GRID_SIZE];
+        isVisible = false;
+    }
+    
     /**
      * Act - do whatever the CraftingSystem wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public CraftingSystem() {
-        itemArray = new Item[GRID_SIZE][GRID_SIZE];
+    public void act() {
+        if(isVisible) {
+            checkCrafting();
+        }
+    }
+    
+    private void checkCrafting() {
+        //Hard code recipes
+        //Also try to hard code the possible positions of every single combination ;-;
+        
     }
     
     private boolean isEmpty(int x, int y) {
@@ -62,5 +80,21 @@ public class CraftingSystem extends Actor
                 return false;
             }
         }
+    }
+    
+    public void showCrafting() {
+        isVisible = true;
+    }
+
+    public void hideCrafting() {
+        isVisible = false;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+    
+    public Item getOutputItem() {
+        return outputItem;
     }
 }
