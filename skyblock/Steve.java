@@ -21,6 +21,7 @@ public class Steve extends Player
     private boolean isPunching;
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true);
+        //hitBox
         hitBox = new GreenfootImage("steve/hitBox.png");
         hitBox.scale(40,128);
         setImage(hitBox);
@@ -82,7 +83,9 @@ public class Steve extends Player
             leftLeg.setRotation(0);
             rightLeg.setRotation(0);
             leftArm.setRotation(0);
+            leftArm.setImage(img3);
             rightArm.setRotation(0);
+            rightArm.setImage(img);
         }
     }
     /**
@@ -124,8 +127,9 @@ public class Steve extends Player
      * swing arms and legs
      */
     public void swing(){
-        int time = actNum/10;
-        double radians = Math.sin(time);
+        // function y = sinx where actNum is x and angle radians is y
+        int time = actNum/10;//swing speed
+        double radians = Math.sin(time);//swing angle
         double oppositeRadians = Math.sin(time+ Math.PI);
         if(isPunching && direction){
             leftLeg.setRotation(45*radians);
@@ -136,9 +140,6 @@ public class Steve extends Player
             rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
-        }
-        else{
-            rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
             leftArm.setRotation(40*oppositeRadians);
@@ -185,10 +186,12 @@ public class Steve extends Player
         // Check if the mouse information is available
         if (mouse != null && mouse.getButton() != 0) {
             if(!isPunching){
+                //punch when mouse clicks
                 isPunching = true;
             }
         }
         if(isPunching){
+            //play the correct animatin depending on the state of steve
             if(!direction){
                 leftArm.setImage(img2);
                 if(counter >= 0 && counter < 5){

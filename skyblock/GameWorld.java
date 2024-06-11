@@ -24,7 +24,7 @@ public class GameWorld extends World {
     private boolean GUIOpened = false;
 
     private Steve player = new Steve(3, 3, 3, true, 3);
-
+    private HealthBar hpBar;
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
@@ -41,6 +41,8 @@ public class GameWorld extends World {
         craftingSystem = new CraftingSystem(300, this);
         //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         addObject(player, 512, 384);
+        hpBar = new HealthBar(player);
+        addObject(hpBar, 0, 0);
     }
 
     private boolean keyPreviouslyDown = false;
@@ -86,6 +88,8 @@ public class GameWorld extends World {
 
         keyPreviouslyDown1 = keyCurrentlyDown1;
         keyPreviouslyDown = keyCurrentlyDown;
+        
+        hpBar.setLocation(player.getX(),player.getY() - 90);
     }
     
     public void spoofInventory(){
