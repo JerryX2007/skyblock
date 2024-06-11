@@ -5,10 +5,10 @@ import java.util.ArrayList;
  * Write a description of class Inventory here.
  * 
  * @author Benny Wang, Jerry Xing
+ * edited by Evan Xi
  * @version (a version number or a date)
  */
-public class Inventory extends GUI
-{
+public class Inventory extends GUI{
     private int xAdjust = 0;
     private int yAdjust = 0;
     private static World world;

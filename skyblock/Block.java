@@ -9,8 +9,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public abstract class  Block extends Actor
-{
+public abstract class  Block extends Actor{
 
     private static MouseInfo mouse;
     protected BreakingEffect be;
@@ -45,7 +44,6 @@ public abstract class  Block extends Actor
      * @param efficiency    the effeciency bonus of this tool in percent% 
      */
     public void breakMe(Player playerf, int toolType, double efficiency){
-        //&& player.isBlockVisible(this)
         if(playerf != null) {
             if(isSelected && playerf.isBlockVisible(this) && playerf.isBlockWithinRange(this)) {
                 boolean toolsAreMatching = (toolType == 1 && isStone)||(toolType == 2 && isWood)||(toolType == 3 && isDirt);
@@ -55,7 +53,6 @@ public abstract class  Block extends Actor
                 else{
                     subBreakTime--;
                 }
-                //System.out.println("breaking");
                 if(Greenfoot.getRandomNumber(3) ==0){
                     //particle effect
                     this.particleEffect(this.getX(),this.getY() - 25, 1, this.color);
@@ -67,28 +64,8 @@ public abstract class  Block extends Actor
         }
     }
 
-    public void stopBreaking(){
-        subBreakTime = breakTime;
-    }
-
-    public double getBreakTime(){
-        return breakTime;
-    }
-
-    public double getSubBreakTime(){
-        return subBreakTime;
-    }
-
-    private int getGridNumX(){
-        return (this.getX() - 32) / 64;
-    }
-
-    private int getGridNumY(){
-        return (this.getY() - 32) / 64;
-    }
-
     /**
-     * every block needs to drop something after being broken
+     * Most blocks will drop something in its location upon being destroyed
      */
     protected void drop(int itemDrop){
         getWorld().addObject(new ItemDrop(itemDrop), this.getX(), this.getY());
@@ -105,15 +82,8 @@ public abstract class  Block extends Actor
             // Extract the x and y coordinates of the mouse
             int mouseX = mouse.getX();
             int mouseY = mouse.getY();
-            /**
+            
             //borrowed mouseover code from Mr. Cohen
-            if(!isSelected && (Greenfoot.mouseMoved(be)||Greenfoot.mouseMoved(this))){
-            isSelected = true;
-            }
-            else if(isSelected && Greenfoot.mouseMoved(null) && (!Greenfoot.mouseMoved(this)||!Greenfoot.mouseMoved(be))){
-            isSelected = false;
-            }
-             */
             isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
 
             if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
@@ -146,8 +116,6 @@ public abstract class  Block extends Actor
             getWorld().removeObject(be);
             getWorld().removeObject(this);
         }
-        //System.out.println(isSelected);
-        //System.out.println((int)subBreakTime);
     }
 
     /**
@@ -210,6 +178,21 @@ public abstract class  Block extends Actor
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+    public void stopBreaking(){
+        subBreakTime = breakTime;
+    }
+    public double getBreakTime(){
+        return breakTime;
+    }
+    public double getSubBreakTime(){
+        return subBreakTime;
+    }
+    private int getGridNumX(){
+        return (this.getX() - 32) / 64;
+    }
+    private int getGridNumY(){
+        return (this.getY() - 32) / 64;
     }
 }
 
