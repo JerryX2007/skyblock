@@ -2,11 +2,11 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Adds a grid of blocks to the screen. 
- * Grid coded by Dylan with the aid of ChatGPT
+ * Keeps track of everything that happens inside the world
+ * All block information is stored in a massive 2d array system
+ * The user is able to see a portion of the world using a "camera" system cenetered around the player
  * 
- * Dylan Dinesh, Jerry, Benny
- * @version (a version number or a date)
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
  */
 
 public class GameWorld extends World {
@@ -25,8 +25,8 @@ public class GameWorld extends World {
     private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
-        // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
-        super(1280, 768, 1);
+        // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
+        super(1280, 768, 1, false);
 
         // Initialize the grid
         grid = new Block[20][12];
@@ -45,8 +45,12 @@ public class GameWorld extends World {
     private boolean keyPreviouslyDown = false;
     private boolean keyPreviouslyDown1 = false;
 
+    /**
+     * Checks for things happening in the world
+     * Tracks chests, inventory, blocks, and more
+     */
     public void act() {
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
@@ -85,9 +89,11 @@ public class GameWorld extends World {
         keyPreviouslyDown1 = keyCurrentlyDown1;
 
     }
-
+    
+    /**
+     * Fill out the entire world with air blocks
+     */
     private void initializeGrid() {
-        // Initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();           
@@ -141,7 +147,11 @@ public class GameWorld extends World {
             }
         }
     }
-
+    
+    /**
+     * Load in the initial island by placing associated blocks
+     * Called when the world is generated
+     */
     private void prepareWorld(){
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
