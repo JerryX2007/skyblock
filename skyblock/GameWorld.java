@@ -99,7 +99,7 @@ public class GameWorld extends World {
     private void pause(){
         if(Greenfoot.isKeyDown("p")){
             //    MrCohen.pauseSounds();
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList, blackScreen));
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
         }
     }
 
