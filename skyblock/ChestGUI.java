@@ -46,7 +46,7 @@ public class ChestGUI extends GUI
         xAdjust = 0;
         yAdjust = 0;
         for(Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos() + 2);
+            world.addObject(i, i.getXPos(), i.getYPos());
         }
         
         //Chest inventory
