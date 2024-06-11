@@ -110,7 +110,7 @@ public abstract class Player extends SuperSmoothMover
     }
 
     protected boolean headClear(){
-        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+2), Block.class);
+        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
         if(above != null) {
             if(above instanceof Air) {
                 return true;
