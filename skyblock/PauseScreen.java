@@ -27,7 +27,7 @@ public class PauseScreen extends World
     private Button resume = new Button("resume", 3, ".png");
     private ArrayList<Actor> pauseLocation;
     private GreenfootImage overlay = new GreenfootImage("images/overlay.png");
-    private GreenfootImage classroom = new GreenfootImage("school_image.png");
+    private GreenfootImage classroom = new GreenfootImage("images/overlay.png");
     private ValueBox volumeSlider;
     private Image soundOnImg = new Image("sound_on.png");; 
     private Image soundOffImg = new Image("sound_off.png");;
@@ -60,7 +60,7 @@ public class PauseScreen extends World
         addObject(menu, getWidth()/2, getHeight()/2);
         addObject(resume, getWidth()/2, getHeight()/2 + 150);
         pauseLocation = actors;
-        getActorImage(blackScreen);
+        // getActorImage(blackScreen);
         volumeSlider = new ValueBox(0, 100, 35);
         // volumeSlider.update(1);
         addObject(volumeSlider, getWidth()/2, getHeight()-70);
