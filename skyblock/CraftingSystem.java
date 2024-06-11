@@ -11,7 +11,7 @@ public class CraftingSystem extends GUI
 {
     private boolean isVisible;
     private final int GRID_SIZE = 3;
-    private Item[][] itemArray;
+    private CraftingSlot[][] itemArray;
     private Item outputItem;
     private Block outputBlock;
     private static World world;
@@ -19,7 +19,7 @@ public class CraftingSystem extends GUI
     
     public CraftingSystem(int scale, World world) {
         super("craftingTableInterface.png", scale, world);
-        itemArray = new Item[GRID_SIZE][GRID_SIZE];
+        itemArray = new CraftingSlot[GRID_SIZE][GRID_SIZE];
         isVisible = false;
     }
     
@@ -43,29 +43,29 @@ public class CraftingSystem extends GUI
         return itemArray[y][x] == null;
     }
     
-    private Item getItem(int x, int y) {
+    private CraftingSlot getSlot(int x, int y) {
         return itemArray[y][x];
     }
     
     private void setItem(Item item, int x, int y) {
-        itemArray[y][x] = item;
+        itemArray[y][x].setItem(item);
     }
     
     private void increaseItemAmount(int x, int y) {
-        itemArray[y][x].sizeOfNumItems++;
+        itemArray[y][x].getItem().sizeOfNumItems++;
     }
     
     private void decreaseItemAmount(int x, int y) {
-        itemArray[y][x].sizeOfNumItems--;
+        itemArray[y][x].getItem().sizeOfNumItems--;
     }
     
     //Overload the methods
     private void increaseItemAmount(int x, int y, int increment) {
-        itemArray[y][x].sizeOfNumItems += increment;
+        itemArray[y][x].getItem().sizeOfNumItems += increment;
     }
     
     private void decreaseItemAmount(int x, int y, int increment) {
-        itemArray[y][x].sizeOfNumItems -= increment;
+        itemArray[y][x].getItem().sizeOfNumItems -= increment;
     }
     
     private boolean tryAddItem(Item item, int x, int y) {
@@ -74,7 +74,7 @@ public class CraftingSystem extends GUI
             return true;
         }
         else {
-            if (getItem(x, y).equals(item)) {
+            if (getSlot(x, y).equals(item)) {
                 increaseItemAmount(x, y);
                 return true;
             }
@@ -98,5 +98,29 @@ public class CraftingSystem extends GUI
     
     public Item getOutputItem() {
         return outputItem;
+    }
+    
+    private boolean isCraftingPlanks() {
+        // Recipe for planks: a single wood block in the top-left corner
+        boolean satisfied = false;
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                if (!isEmpty(x, y) && getSlot(x, y).getItem().getType().equals("Log")) {
+                    if(satisfied) {
+                        return false;
+                    }
+                    satisfied = true;
+                }
+            }
+        }
+        return satisfied;
+    }
+
+    private boolean isCraftingSticks() {
+        // Recipe for sticks: two planks vertically aligned in the middle column
+        // Fix later
+        return !isEmpty(1, 0) && !isEmpty(1, 1) && isEmpty(1, 2) &&
+               getSlot(1, 0).getItem().getType().equals("Planks") &&
+               getSlot(1, 1).getItem().getType().equals("Planks");
     }
 }
