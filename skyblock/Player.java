@@ -22,6 +22,7 @@ public abstract class Player extends SuperSmoothMover
     protected boolean direction; //true for facing right, false for left
     protected boolean isMoving;
     protected boolean isSprinting = false;
+    protected int sprintToggleCD = 50;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
@@ -69,7 +70,7 @@ public abstract class Player extends SuperSmoothMover
         if(Greenfoot.isKeyDown("shift")) {
             isMoving = false;
         }
-        if(Greenfoot.isKeyDown("control")){
+        if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
             if(isSprinting){
                 moveSpeed -= 1;
                 isSprinting = false;
@@ -78,7 +79,10 @@ public abstract class Player extends SuperSmoothMover
                 moveSpeed += 1;
                 isSprinting = true;
             }
+            sprintToggleCD = 50;
+            System.out.println("e");
         }
+        sprintToggleCD--;
 
         MouseInfo mi = Greenfoot.getMouseInfo();
         if(mi != null) {
