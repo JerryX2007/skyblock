@@ -18,7 +18,7 @@ public class CraftingSystem extends GUI
     
     
     public CraftingSystem(int scale, World world) {
-        super("craftingTableInterface", scale, world);
+        super("craftingTableInterface.png", scale, world);
         itemArray = new Item[GRID_SIZE][GRID_SIZE];
         isVisible = false;
     }
