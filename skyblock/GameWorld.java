@@ -2,23 +2,32 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Adds a grid of blocks to the screen. 
- * Grid coded by Dylan with the aid of ChatGPT
+ * Keeps track of everything that happens inside the world
+ * All block information is stored in a massive 2d array system
+ * The user is able to see a portion of the world using a "camera" system cenetered around the player
  * 
- * Dylan Dinesh, Jerry, Benny
- * @version (a version number or a date)
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @version 1.0.0
  */
 
 public class GameWorld extends World {
+    private CraftingSystem craftingSystem;
+    private boolean isCraftingVisible = false;
     private Block[][] grid;
+
     private boolean openInventory = false;
     private Inventory inventory;
- 
+
+    private ChestGUI chest;
+    private boolean openChest = false;
+
+    private boolean GUIOpened = false;
+
     private Steve player = new Steve(3, 3, 3, true, 3);
 
     public GameWorld() {    
-        // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
-        super(1280, 768, 1);
+        // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
+        super(1280, 768, 1, false);
 
         // Initialize the grid
         grid = new Block[20][12];
@@ -28,37 +37,69 @@ public class GameWorld extends World {
         prepareWorld();
         // Inventory stuff
         inventory = new Inventory(300, this);
-        
+        chest = new ChestGUI(300, this, inventory);
+        craftingSystem = new CraftingSystem(300, this);
+        //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;
-    
+    private boolean keyPreviouslyDown1 = false;
 
+    /**
+     * Checks for things happening in the world
+     * Tracks chests, inventory, blocks, and more
+     */
     public void act() {
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-        
+        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
+
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
-            if (!openInventory) {
+            if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
-                
+                GUIOpened = true;
             } 
-            else{
+            else if(openInventory && GUIOpened){
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
+                GUIOpened = false;
+            } 
+        } else if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
+            if (!openChest && !GUIOpened) {
+                openChest = true;
+                spoofInventory();
+                chest.addChest();
+                addObject(chest, getWidth() / 2, getHeight() / 2);
+                GUIOpened = true;
+            } 
+            else if(openChest && GUIOpened){
+                openChest = false;
+                chest.removeChest();
+                removeObject(chest);
+                GUIOpened = false;
             }
         }
 
+        keyPreviouslyDown1 = keyCurrentlyDown1;
         keyPreviouslyDown = keyCurrentlyDown;
-        
     }
-
+    
+    public void spoofInventory(){
+        inventory.addInventory();
+        addObject(inventory, getWidth() / 2, getHeight() / 2);
+        inventory.act();
+        inventory.removeInventory();
+        removeObject(inventory);
+    }
+    
+    /**
+     * Fill out the entire world with air blocks
+     */
     private void initializeGrid() {
-        // Initializing the grid with Air blocks
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();           
@@ -91,16 +132,16 @@ public class GameWorld extends World {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
-    
+
     public void updateBlock(int gridX, int gridY, Block newBlock){
         ArrayList<Block> removingBlock = (ArrayList<Block>)getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
         for(Block blocks : removingBlock){
             removeObject(blocks);
         }
-        
+
         setGridValue(gridX, gridY, newBlock);
     }
-    
+
     /**
      * Refreshes the entire screen of blocks 
      * 
@@ -108,11 +149,15 @@ public class GameWorld extends World {
     public void updateEntireGrid(){
         for(int i = 0; i < grid.length; i++){
             for(int j = 0; j < grid.length; j++){
-                
+
             }
         }
     }
-
+    
+    /**
+     * Load in the initial island by placing associated blocks
+     * Called when the world is generated
+     */
     private void prepareWorld(){
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
@@ -139,16 +184,33 @@ public class GameWorld extends World {
             updateBlock(12, j, new Log());  
         }        
     }
-    
+
     public void started() {
-        TitleScreen.mainMenu.playLoop();
+        TitleScreen.getMainMenuMusic().playLoop();
     }
+
     public void stopped() {
-        TitleScreen.mainMenu.pause();
+        TitleScreen.getMainMenuMusic().pause();
     }
-    
+
     public Player getPlayer() {
         return player;
+    }
+    
+    public void openCraftingInterface() {
+        if (!isCraftingVisible) {
+            addObject(craftingSystem, 400, 300); // Center of the screen, for example
+            craftingSystem.showCrafting();
+            isCraftingVisible = true;
+        }
+    }
+
+    public void closeCraftingInterface() {
+        if (isCraftingVisible) {
+            removeObject(craftingSystem);
+            craftingSystem.hideCrafting();
+            isCraftingVisible = false;
+        }
     }
 }
 

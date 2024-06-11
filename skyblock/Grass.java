@@ -21,6 +21,7 @@ public class Grass extends Block
         isDirt = true;
         itemDrop = 2;
     }
+
     /**
      * Act - do whatever the Grass wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.

@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.time.LocalTime;
+import greenfoot.GreenfootSound;
 
 /**
  * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
@@ -12,7 +13,7 @@ public class TitleScreen extends World
     private GreenfootImage background;
     private Button play;
     private GameWorld game;
-    public static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
+    private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
     
     /**
@@ -57,6 +58,10 @@ public class TitleScreen extends World
      */
     public void started() {
         mainMenu.playLoop();
+    }
+    
+    public static GreenfootSound getMainMenuMusic(){
+        return mainMenu;
     }
     
     public void act(){

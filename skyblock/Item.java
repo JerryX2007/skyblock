@@ -10,6 +10,7 @@ import com.google.common.collect.Iterators;
  * Thank to ChatGPT for helping me write this at 11:46pm
  */
 public class Item extends Actor {
+    protected String name;
     protected int X;
     protected int Y;
     protected MouseInfo mouse;
@@ -25,7 +26,7 @@ public class Item extends Actor {
     private ArrayList<Item> touchingItems;
     private boolean gotItems = false;
     private ArrayList<Item> numItems;
-    private int sizeOfNumItems = 1;
+    public int sizeOfNumItems = 1;
     private Label counter = new Label(sizeOfNumItems, 20);
     private boolean addedCounter = false;
     private boolean runOnlyFirstTime = true;
@@ -33,6 +34,8 @@ public class Item extends Actor {
     private boolean firstAct = true;
     private boolean foundEmptySlot = false;
     private int testCount = 0;
+    private int invX;
+    private int invY;
 
     /**
      * Create an Items with given file name
@@ -54,6 +57,7 @@ public class Item extends Actor {
         tempY = Y;
         this.world = world;
         image = file;
+        //this.name = name;
     }
 
     public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
@@ -67,9 +71,9 @@ public class Item extends Actor {
         tempY = Y;
         this.world = world;
         image = file;
+        this.invX = invX;
+        this.invY = invY;
     }
-
-    
 
     public void act(){
         if(draggable){
@@ -108,8 +112,6 @@ public class Item extends Actor {
                                 setLocation(X, Y);
                                 tempX = getX();
                                 tempY = getY();
-                                X = getX();
-                                Y = getY();
                                 break;
                             }
                         }
@@ -190,14 +192,20 @@ public class Item extends Actor {
             // mouse dragging
             if (dragging){
                 snapped = false;
-                X = mouse.getX();
-                Y = mouse.getY();
-                for(Item i: touchingItems){
-                    i.setLocation(mouse.getX(), mouse.getY());
+                try{
+                    X = mouse.getX();
+                    Y = mouse.getY();
+                } catch (NullPointerException e){
+                    X = world.getWidth()/2;
+                    Y = world.getHeight()/2;
                 }
-                setLocation(mouse.getX(), mouse.getY());
+                
+                for(Item i: touchingItems){
+                    i.setLocation(X, Y);
+                }
+                setLocation(X, Y);
                 if(sizeOfNumItems > 1){
-                    counter.setLocation(mouse.getX() + 15, mouse.getY() + 15);
+                    counter.setLocation(X + 15, Y + 15);
                 }
             }
             
@@ -238,6 +246,8 @@ public class Item extends Actor {
                         if(gotItems){
                             for(Item j: touchingItems){
                                 j.setLocation(X, Y);
+                                
+                                
                                 j.setXY(X, Y);
                                 j.setTempXY(tempX, tempY);
                                 j.setSnapped(true);
@@ -281,10 +291,17 @@ public class Item extends Actor {
                         break;
                     }
                 }
-                
             }
             temp2.clear();
         }
+    }
+    
+    public int getInvX(){
+        return invX;
+    }
+    
+    public int getInvY(){
+        return invY;
     }
     
     public void setSnapped(boolean snapped){
@@ -343,5 +360,9 @@ public class Item extends Actor {
 
     public String getItemImage(){
         return image;
+    }
+    
+    public boolean equals(Item item) {
+        return this.name.equals(item.name);
     }
 }

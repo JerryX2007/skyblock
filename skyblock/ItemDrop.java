@@ -1,7 +1,9 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class ItemDrop here.
+ * Most items will drop something upon being destroyed
+ * Most drops will take form of a smaller version of the original that hovers, waiting to be picked up by the user
+ * Gravity applies to item drops
  * 
  * @author Evan Xi 
  * @version (a version number or a date)
@@ -10,16 +12,21 @@ public class ItemDrop extends SuperSmoothMover{
     private int type;
     private String name;
     private GreenfootImage img;
-    
+
     private double vSpeed = 0;
     private double acceleration = 0.1;
     private double angle = 0;
-    
+
     public ItemDrop(int type){
         this.type = type;
         setType();
     }
-    
+
+    /**
+     * Simply checks the status of the item drop
+     * If it isn't on the ground, fall until it is
+     * While on the ground, constantly hover up and down
+     */
     public void act(){
         if(!onGround()){
             fall();
@@ -29,12 +36,18 @@ public class ItemDrop extends SuperSmoothMover{
             hover();
         }
     }
-    
+
+    /**
+     * Using a sinusoidal function, make the item drop hover right above ground
+     */
     private void hover(){
         setLocation(getPreciseX(), getPreciseY() + Math.sin(angle) * 0.5);
         angle += Math.PI/60;
     }
-    
+
+    /**
+     * Sets the image and drop based on the input received
+     */
     private void setType(){
         switch(type){
             case 1:
@@ -58,10 +71,10 @@ public class ItemDrop extends SuperSmoothMover{
                 name = "wood";
                 break;
         }
-        img.scale(15, 15);
+        img.scale(15, 15); // Scales the item drop to be a mini version of the original 64x64 block
         setImage(img);
     }
-    
+
     private boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2 + 20, Block.class);
         if(under != null) {
@@ -74,11 +87,18 @@ public class ItemDrop extends SuperSmoothMover{
         }
         return false;
     }
+
+    /**
+     * Accelerate downwards to fall
+     */
     private void fall() {
         setLocation(getX(), getY() + vSpeed);
         vSpeed = vSpeed + acceleration;
     }
-    
+
+    /**
+     * If it isn't on the ground, start falling
+     */    
     private void checkFalling() {
         if(onGround()) {
             vSpeed = 0;
@@ -87,11 +107,10 @@ public class ItemDrop extends SuperSmoothMover{
             fall();
         }
     }
-    
+
     public int getType(){
         return type;
     }
-    
     public String getName(){
         return name;
     }

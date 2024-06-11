@@ -2,10 +2,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Write a description of class Player here.
+ * Description to be added
  * 
- * @author Jerry Xing
- * @version (a version number or a date)
+ * @author Jerry Xing, Evan Xi
  */
 public abstract class Player extends SuperSmoothMover
 {
@@ -15,14 +14,19 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
-    protected boolean blockFound = false;
-    
-    protected static double jumpStrength = 1.3;
+
     protected final int gravity = 2;
-    protected double vSpeed;
-    protected double acceleration = 0.1;
+    protected double yVelocity;
+    protected double xVelocity;
+    protected double acceleration = 0.15;
     protected boolean direction; //true for facing right, false for left
     protected boolean isMoving;
+    protected boolean isSprinting = false;
+    protected int sprintToggleCD = 50;
+
+    protected int moveLeftCounter;
+    protected int moveRightCounter;
+
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -33,44 +37,52 @@ public abstract class Player extends SuperSmoothMover
         direction = false;
         isMoving = false;
     }
+
     /**
-     * Act - do whatever the Player wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Constantly checks for movement input and possible pickups around it
      */
-    public void act()
-    {
+    public void act(){
         checkKeys();
         checkFalling();
         checkPickup();
-        //snapOnTop();
-        
     }
-    
+
+    /**
+     * Check movement input 
+     * Uses a WASD system and checks respective conditions to see if they can be executed
+     * Can toggle sneaking and sprinting
+     */
     public void checkKeys() {
+        isMoving = false;
+        if(( (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
+            jump();  
+        }
         if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
-            jumpStrength = 1.3;
             moveRight();
             isMoving = true;
         }
-        else if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
-            jumpStrength = 1.3;
+        if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
             moveLeft();
             isMoving = true;
         }
-        else if(Greenfoot.isKeyDown("shift")) {
-            //Do shift animation type shit
-            jumpStrength = 0.8;
+        if(Greenfoot.isKeyDown("shift")) {
             isMoving = false;
         }
-        else if(Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) {
-            jump();  
+        if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
+            if(isSprinting){
+                moveSpeed -= 1;
+                isSprinting = false;
+            }
+            else{
+                moveSpeed += 1;
+                isSprinting = true;
+            }
+            sprintToggleCD = 50;
+            System.out.println("e");
         }
-        else{
-            isMoving = false;
-        }
-        
+        sprintToggleCD--;
+
         MouseInfo mi = Greenfoot.getMouseInfo();
-        
         if(mi != null) {
             int button = mi.getButton();
             if(button == 1) {
@@ -81,7 +93,10 @@ public abstract class Player extends SuperSmoothMover
             }
         }
     }
-    
+
+    /**
+     * Checks for blocks being mined by the user
+     */
     protected Block getBlockUnderCursor() {
         MouseInfo mouse = Greenfoot.getMouseInfo();
         if (mouse != null) {
@@ -89,31 +104,18 @@ public abstract class Player extends SuperSmoothMover
             int mouseY = mouse.getY();
             ArrayList<Block> blocks = (ArrayList<Block>) getWorld().getObjectsAt(mouseX, mouseY, Block.class);
             if (!blocks.isEmpty()) {
-                //System.out.println("Got block");
                 return blocks.get(0); // Assuming only one block can be at this position
             }
         }
         return null;
     }
-    protected void fall() {
-        setLocation(getX(), getY() + vSpeed);
-        vSpeed = vSpeed + acceleration;
-    }
-    protected void snapOnTop() {
-        ArrayList<Block> blocks = (ArrayList<Block>) getIntersectingObjects(Block.class);
-        if(!blocks.isEmpty()) {
-            for(Block b : blocks) {
-                if(!(b instanceof Air)) {
-                    Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
-                    if(under != null && !(under instanceof Air)) {
-                        setLocation(getX(), getY() - under.getImage().getHeight()/2);
-                    }
-                }
-            }
-        }
-    }
+
+    /**
+     * Checks if the player in on solid ground
+     * Gets the block directly under the user.  If there exists a block and it isn't an air block, return true.
+     */
     protected boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2+1, Block.class);
+        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
             if(under instanceof Air) {
                 return false;
@@ -124,7 +126,29 @@ public abstract class Player extends SuperSmoothMover
         }        
         return false;
     }
-    
+
+    /**
+     * Checks if the player's head is clear and determines if it can jump
+     * Gets the block directly above the user.  If there exists a block that isn't an air block, return false.  Otherwise return true.
+     */
+    protected boolean headClear(){
+        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
+        if(above != null) {
+            if(above instanceof Air) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }        
+        return true;        
+    }
+
+    /**
+     * Checks if the user can continue moving right
+     * Uses 4 collision points to the right of the user to detect any non-air blocks
+     * If either of the 4 collision points detect a non-air block, immediately return false
+     */
     protected boolean rightClear(){ 
         Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
         if(right != null) {
@@ -152,6 +176,12 @@ public abstract class Player extends SuperSmoothMover
         }
         return true;
     }    
+    
+    /**
+     * Checks if the user can continue moving left
+     * Uses 4 collision points to the left of the user to detect any non-air blocks
+     * If either of the 4 collision points detect a non-air block, immediately return false
+     */
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
@@ -177,36 +207,68 @@ public abstract class Player extends SuperSmoothMover
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
+    /**
+     * Moves left by a pixel for each move speed
+     * The loop is broken early if the left side is no longer clear for movement
+     */
     protected void moveLeft(){
         for(int i = 0; i < moveSpeed; i++){
             setLocation(getX() - 1, getY());
-            if(!rightClear()){
-                return;
-            }
-        }
-    }
-    protected void moveRight(){
-        for(int i = 0; i < moveSpeed; i++){
-            setLocation(getX() + 1, getY());
             if(!leftClear()){
                 return;
             }
         }
     }
+        
+    /**
+     * Moves right by a pixel for each move speed
+     * The loop is broken early if the left side is no longer clear for movement
+     */
+    protected void moveRight(){
+        for(int i = 0; i < moveSpeed; i++){
+            setLocation(getX() + 1, getY());
+            if(!rightClear()){
+                return;
+            }
+        }
+    }
     
+    /**
+     * If it isn't on the ground, start falling
+     */
     protected void checkFalling() {
         if(onGround()) {
-            vSpeed = 0;
+            yVelocity = 0;
         }
         else {
             fall();
         }
     }
-    
+
+    /**
+     * Accelerate downwards to fall
+     */
+    protected void fall() {
+        setLocation(getX(), getY() + yVelocity);
+        yVelocity = yVelocity + acceleration;
+    }
+
+    /**
+     * Gains a small amount of momentum upwards to jump
+     */
+    protected void jump() {
+        yVelocity -= 4.9;
+        setLocation(getX(), getY() + yVelocity);
+    }
+
+    /**
+     * Gets a list of all items in a radius for pick up
+     * If there is space in the inventory, pick it up
+     */
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
@@ -216,69 +278,63 @@ public abstract class Player extends SuperSmoothMover
             }
         }
     }
-    
+
     public boolean isBlockWithinRange(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY();
-        
+
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-        
+
         //Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
-        System.out.println(dirX);
-        System.out.println(dirY);
-        if(dirX - dirY < 270) {
+        //System.out.println(dirX);
+        //System.out.println(dirY);
+        if(dirX - dirY < 324) {
             return true;
         }
         else {
             return false;
         }
     }
-    
+
     public boolean isBlockVisible(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY();
-    
+
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-    
+
         // Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
         int steps = Math.max(Math.abs(dirX), Math.abs(dirY));
-        
+
         // Normalize the direction vector
         double stepX = dirX / (double) steps;
         double stepY = dirY / (double) steps;
-    
+
         // Cast the ray
         double currentX = playerX;
-        double currentY = playerY;
+        double currentY = playerY - 40;
         for (int i = 0; i < steps; i++) {
+            //Increment to the position of the block
             currentX += stepX;
             currentY += stepY;
-    
+
             // Check if there is a block at the current position
             Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - playerX), (int) Math.round(currentY - playerY), Block.class);
             if (block != null && block != targetBlock && !(block instanceof Air)) {
                 return false; // Block is obstructing the view
-                
+
             }
         }
         return true; // No obstructions
-    }
-
-    
-    protected void jump() {
-        vSpeed = vSpeed - jumpStrength;
-        jumping = true;
-        fall();
     }
     
     public int getMoveSpeed() {

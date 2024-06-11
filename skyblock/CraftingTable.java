@@ -28,6 +28,7 @@ public class CraftingTable extends Block
         img2 = addBorder(img, black);
         isWood = true;
     }
+
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -42,8 +43,13 @@ public class CraftingTable extends Block
         if(!isSelected){
             setImage(img);
         }
+        if (Greenfoot.mouseClicked(this)) {
+            // Open crafting interface
+            ((GameWorld) getWorld()).openCraftingInterface();
+        }
     }
+
     public void drop(){
-        
+
     }
 }

@@ -23,6 +23,7 @@ public class RightArm extends BodyPart
         img1.scale(16,96);
         actNum = 0;
     }
+
     /**
      * Act - do whatever the LeftArm wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
