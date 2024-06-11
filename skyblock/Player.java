@@ -26,7 +26,7 @@ public abstract class Player extends SuperSmoothMover
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-
+    protected int hp;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -36,6 +36,7 @@ public abstract class Player extends SuperSmoothMover
         this.jumping = jumping;
         direction = false;
         isMoving = false;
+        this.hp = 20;
     }
 
     /**
@@ -337,6 +338,12 @@ public abstract class Player extends SuperSmoothMover
         return true; // No obstructions
     }
     
+    //this is just a testing class
+    public void doDamage(int damage){
+        this.hp -= damage;
+    }
+    
+    
     public int getMoveSpeed() {
         return this.moveSpeed;
     }
@@ -357,5 +364,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public boolean getDirection(){
         return this.direction;
+    }
+    public int getHp(){
+        return this.hp;
     }
 }

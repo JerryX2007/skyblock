@@ -2,8 +2,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
  * Write a description of class HealthBar here.
- * 
- * @author (your name) 
+ * health bar of player
+ * @author Nick
  * @version (a version number or a date)
  */
 public class HealthBar extends Actor
@@ -14,22 +14,43 @@ public class HealthBar extends Actor
     private static final int maxHp = 20;
     private static final int heartSize = 18;//needs to be multiple of 9
     
-    private int hp;
     private GreenfootImage image;
-    /**
-    private Player player;
-    public HealthBar(Player player){
-        this.player = player;
-    }
-    */
-    public HealthBar(int hp){
+    private Steve player;
+    private int actNum;
+    public HealthBar(Steve player){
         fullHeart.scale(heartSize,heartSize);
         halfHeart.scale(heartSize,heartSize);
         emptyHeart.scale(heartSize,heartSize);
-        this.hp = hp;
         image = new GreenfootImage(heartSize*10,heartSize);
+        actNum = 0;
+    }
+    /**
+     * Act - do whatever the HealthBar wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public void act()
+    {
+        // Add your action code here.
+        if(actNum > 2){
+            updateHpBar();
+        }
+        actNum++;
+    }
+    //updates hp bar
+    private void updateHpBar(){
+        
+        image.clear();
+        
+        int hp ;
+        if(player == null){
+            hp = Greenfoot.getRandomNumber(21);
+        }
+        else{
+            hp = player.getHp();
+        }
+        
         for (int i = 0; i < 10; i++) {
-            int xPosition = i * 18;
+            int xPosition = i * heartSize;
             if(hp > 1){
                 image.drawImage(fullHeart, xPosition, 0);
             }
@@ -44,13 +65,5 @@ public class HealthBar extends Actor
 
         // Set the big image as the image of this actor
         setImage(image);
-    }
-    /**
-     * Act - do whatever the HealthBar wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
-    {
-        // Add your action code here.
     }
 }
