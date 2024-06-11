@@ -240,7 +240,7 @@ public abstract class Player extends SuperSmoothMover
         int dirY = blockY - playerY;
         //System.out.println(dirX);
         //System.out.println(dirY);
-        if(dirX - dirY < 270) {
+        if(dirX - dirY < 324) {
             return true;
         }
         else {

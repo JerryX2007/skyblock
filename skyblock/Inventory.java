@@ -43,8 +43,8 @@ public class Inventory extends GUI
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 27 + yAdjust);
-                world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 27 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
+                world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 slots[j][i] = temp;
                 xAdjust += 54;
             }
@@ -59,8 +59,8 @@ public class Inventory extends GUI
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
-                Empty temp = new Empty(16, 16, world, 694 + xAdjust, 212 + yAdjust);
-                world.addObject(temp, 694 + xAdjust, 212 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 694 + xAdjust, 216 + yAdjust);
+                world.addObject(temp, 694 + xAdjust, 216 + yAdjust);
                 crafting[j][i] = temp;
                 xAdjust += 54;
             }
@@ -92,7 +92,7 @@ public class Inventory extends GUI
         itemsList.clear();
     }
     
-    
+        
     
     /**
      * Act - do whatever the Inventory wants to do. This method is called whenever

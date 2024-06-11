@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 
 public class GameWorld extends World {
+    private CraftingSystem craftingSystem;
+    private boolean isCraftingVisible = false;
     private Block[][] grid;
     private TitleScreen titleScreen;
     private boolean openInventory = false;
@@ -36,7 +38,8 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new Inventory(300, this);
         chest = new ChestGUI(300, this);
-
+        craftingSystem = new CraftingSystem(300, this);
+        //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         addObject(player, 512, 384);
     }
 
@@ -184,6 +187,22 @@ public class GameWorld extends World {
 
     public Player getPlayer() {
         return player;
+    }
+    
+    public void openCraftingInterface() {
+        if (!isCraftingVisible) {
+            addObject(craftingSystem, 400, 300); // Center of the screen, for example
+            craftingSystem.showCrafting();
+            isCraftingVisible = true;
+        }
+    }
+
+    public void closeCraftingInterface() {
+        if (isCraftingVisible) {
+            removeObject(craftingSystem);
+            craftingSystem.hideCrafting();
+            isCraftingVisible = false;
+        }
     }
 }
 
