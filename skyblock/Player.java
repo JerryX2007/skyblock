@@ -294,7 +294,7 @@ public abstract class Player extends SuperSmoothMover
         int dirY = blockY - playerY;
         //System.out.println(dirX);
         //System.out.println(dirY);
-        if(dirX - dirY < 324) {
+        if(dirX - dirY < 378) {
             return true;
         }
         else {
@@ -305,7 +305,7 @@ public abstract class Player extends SuperSmoothMover
     public boolean isBlockVisible(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
-        int playerY = this.getY();
+        int playerY = this.getY() -20;
 
         // Get block's position
         int blockX = targetBlock.getX();
@@ -322,7 +322,7 @@ public abstract class Player extends SuperSmoothMover
 
         // Cast the ray
         double currentX = playerX;
-        double currentY = playerY - 40;
+        double currentY = playerY;
         for (int i = 0; i < steps; i++) {
             //Increment to the position of the block
             currentX += stepX;
