@@ -23,7 +23,7 @@ public class GameWorld extends World {
 
     private boolean GUIOpened = false;
 
-    private Steve player = new Steve(3, 3, 3, true, 3);
+    private Steve player;
     private HealthBar hpBar;
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
@@ -40,9 +40,12 @@ public class GameWorld extends World {
         chest = new ChestGUI(300, this);
         craftingSystem = new CraftingSystem(300, this);
         //addObject(craftingSystem, getWidth()/2, getHeight()/2);
-        addObject(player, 512, 384);
+        
+        
+        player = new Steve(3, 3, 3, true, 3);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
+        addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;

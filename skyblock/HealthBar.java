@@ -22,6 +22,7 @@ public class HealthBar extends Actor
         halfHeart.scale(heartSize,heartSize);
         emptyHeart.scale(heartSize,heartSize);
         image = new GreenfootImage(heartSize*10,heartSize);
+        this.player = player;
         actNum = 0;
     }
     /**
@@ -31,8 +32,9 @@ public class HealthBar extends Actor
     public void act()
     {
         // Add your action code here.
-        if(actNum > 2){
+        if(actNum >= 20){
             updateHpBar();
+            actNum = 0;
         }
         actNum++;
     }
