@@ -5,8 +5,8 @@ import java.util.ArrayList;
  * Adds a grid of blocks to the screen. 
  * Grid coded by Dylan with the aid of ChatGPT
  * 
- * Dylan Dinesh, Jerry, Benny
- * @version (a version number or a date)
+ * @author Benny, Dylan Dinesh, Jerry
+ * @version 1.0.0
  */
 
 public class GameWorld extends World {
@@ -85,6 +85,7 @@ public class GameWorld extends World {
     
     public void spoofInventory(){
         inventory.addInventory();
+        addObject(inventory, getWidth() / 2, getHeight() / 2);
         inventory.act();
         inventory.removeInventory();
         removeObject(inventory);

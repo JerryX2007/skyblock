@@ -29,7 +29,6 @@ public class ChestGUI extends GUI
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
-                world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
                 slots[j][i] = temp;
                 xAdjust += 54;
             }
@@ -38,15 +37,11 @@ public class ChestGUI extends GUI
         }
         xAdjust = 0;
         yAdjust = 0;
-        for(Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos());
-        }
         
         //Chest inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust);
-                world.addObject(temp, 424 + xAdjust, world.getHeight()/2 - 174 + yAdjust);
                 chestSlots[j][i] = temp;
                 xAdjust += 54;
             }
@@ -55,9 +50,6 @@ public class ChestGUI extends GUI
         }
         xAdjust = 0;
         yAdjust = 0;
-        for(Item i : contents){
-            world.addObject(i, i.getXPos(), i.getYPos());
-        }
     }
     
     /**
@@ -82,7 +74,7 @@ public class ChestGUI extends GUI
         xAdjust = 0;
         yAdjust = 0;
         for(Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos() + 2);
+            world.addObject(i, i.getXPos(), i.getYPos());
         }
         
         //Chest inventory

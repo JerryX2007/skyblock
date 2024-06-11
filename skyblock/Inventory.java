@@ -29,12 +29,13 @@ public class Inventory extends GUI
         this.world = world;
         clearInv();
         
-        //Actual inventory
+        xAdjust = 0;
+        yAdjust = 0;
+        
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
-                world.addObject(temp, 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, 414 + yAdjust);
                 slots[j][i] = temp;
                 xAdjust += 54;
             }
@@ -43,26 +44,16 @@ public class Inventory extends GUI
         }
         xAdjust = 0;
         yAdjust = 0;
-        for(Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos() + 2);
-        }
         
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
                 Empty temp = new Empty(16, 16, world, 694 + xAdjust, 216 + yAdjust);
-                world.addObject(temp, 694 + xAdjust, 216 + yAdjust);
                 crafting[j][i] = temp;
                 xAdjust += 54;
             }
             xAdjust = 0;
             yAdjust += 54;
-        }
-        xAdjust = 0;
-        yAdjust = 0;
-        
-        for(Item i : itemsList) {
-            world.addObject(i, i.getXPos(), i.getYPos() + 2);
         }
     }
     
@@ -83,7 +74,7 @@ public class Inventory extends GUI
                         if(slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64){
                             tempX = slots[j][i].getX();
                             tempY = slots[j][i].getY();
-                            slots[j][i].setType(temp.getType());
+                            //System.out.println("Found!");
                             foundLocation = true;
                             
                             break outerloop1;
@@ -100,7 +91,7 @@ public class Inventory extends GUI
                                 tempX = slots[j][i].getX();
                                 tempY = slots[j][i].getY();
                                 slots[j][i].setType(temp.getType());
-                                //System.out.println(j + ", " + i + " Slot type: " + slots[j][i].getType());
+                                //System.out.println(j + ", " + i + " Slot type: " + slots[j][i].getType() + " DID NOT FIND");
                                 break outerloop2;
                             }
                         }
@@ -118,10 +109,13 @@ public class Inventory extends GUI
     }
     
     public void addInventory(){
+        xAdjust = 0;
+        yAdjust = 0;
+        
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                world.addObject(slots[j][i], 424 + xAdjust, world.getHeight()/2 + 30 + yAdjust);
+                world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -133,7 +127,7 @@ public class Inventory extends GUI
         //Crafting section in inventory
         for (int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
-                world.addObject(crafting[j][i], 694 + xAdjust, 212 + yAdjust);
+                world.addObject(crafting[j][i], 694 + xAdjust, 216 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -142,8 +136,8 @@ public class Inventory extends GUI
         xAdjust = 0;
         yAdjust = 0;
         
-        for(Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos() + 2);
+        for(Item i : itemsList) {
+            world.addObject(i, i.getXPos(), i.getYPos());
         }
     }
     
