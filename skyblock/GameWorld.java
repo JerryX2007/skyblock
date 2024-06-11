@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * The user is able to see a portion of the world using a "camera" system cenetered around the player
  * 
  * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @version 1.0.0
  */
 
 public class GameWorld extends World {
@@ -36,9 +37,9 @@ public class GameWorld extends World {
         prepareWorld();
         // Inventory stuff
         inventory = new Inventory(300, this);
-        chest = new ChestGUI(300, this);
+        chest = new ChestGUI(300, this, inventory);
         craftingSystem = new CraftingSystem(300, this);
-        addObject(craftingSystem, getWidth()/2, getHeight()/2);
+        //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         addObject(player, 512, 384);
     }
 
@@ -53,6 +54,7 @@ public class GameWorld extends World {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
@@ -66,14 +68,10 @@ public class GameWorld extends World {
                 removeObject(inventory);
                 GUIOpened = false;
             } 
-        }
-
-        keyPreviouslyDown = keyCurrentlyDown;
-
-        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
-        if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
+        } else if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
             if (!openChest && !GUIOpened) {
                 openChest = true;
+                spoofInventory();
                 chest.addChest();
                 addObject(chest, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
@@ -87,7 +85,15 @@ public class GameWorld extends World {
         }
 
         keyPreviouslyDown1 = keyCurrentlyDown1;
-
+        keyPreviouslyDown = keyCurrentlyDown;
+    }
+    
+    public void spoofInventory(){
+        inventory.addInventory();
+        addObject(inventory, getWidth() / 2, getHeight() / 2);
+        inventory.act();
+        inventory.removeInventory();
+        removeObject(inventory);
     }
     
     /**
