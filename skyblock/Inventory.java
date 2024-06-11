@@ -11,11 +11,6 @@ import java.util.ArrayList;
 public class Inventory extends GUI{
     private int xAdjust = 0;
     private int yAdjust = 0;
-    private static World world;
-    private static ArrayList<Item> itemsList = new ArrayList<>();
-    private static ArrayList<Item> tempItemsList = new ArrayList<>();
-    private static Item[][] slots = new Item[9][3];
-    private static Item[][] crafting = new Item[2][2];
     private boolean prevState = false;
     private boolean prevState1 = false;
     private int tempX;

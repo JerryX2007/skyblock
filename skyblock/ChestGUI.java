@@ -13,18 +13,13 @@ public class ChestGUI extends GUI
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
-    private Item[][] slots = new Item[9][3];
-    private Item[][] chestSlots = new Item[9][3];
-    private ArrayList<Item> contents = new ArrayList<>();
     private boolean foundLocation = false;
     private int tempX;
     private int tempY;
-    private Inventory inventory;
     
-    public ChestGUI (int scale, World world, Inventory inventory){
+    public ChestGUI (int scale, World world){
         super("chestGUI.png", scale, world);
         this.world = world;
-        this.inventory = inventory;
         //Actual inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
