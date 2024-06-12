@@ -133,6 +133,9 @@ public class GameWorld extends World {
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
 
+    /**
+     * Replaces the given block on the 2d grid system with another block
+     */
     public void updateBlock(int gridX, int gridY, Block newBlock){
         ArrayList<Block> removingBlock = (ArrayList<Block>)getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
         for(Block blocks : removingBlock){
