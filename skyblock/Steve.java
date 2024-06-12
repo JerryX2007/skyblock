@@ -140,6 +140,9 @@ public class Steve extends Player
             rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
+        }
+        else{
+            rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
             leftArm.setRotation(40*oppositeRadians);
