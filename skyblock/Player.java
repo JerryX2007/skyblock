@@ -269,8 +269,6 @@ public abstract class Player extends SuperSmoothMover
     protected void jump() {
         yVelocity -= 4.9;
         setLocation(getX(), getY() + yVelocity);
-        System.out.println(getX());
-        System.out.println(getY());
     }
 
     /**
