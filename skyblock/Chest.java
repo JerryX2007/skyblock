@@ -22,14 +22,14 @@ public class Chest extends Block
     private ChestGUI chestGUI;
     private World world;
 
-    public Chest(){
+    public Chest(World world){
         super(tan,2);
         img = new GreenfootImage("block/chest.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
-        world = getWorld();
+        this.world = world;
         chestGUI = new ChestGUI(300, world);
     }
 
@@ -54,6 +54,6 @@ public class Chest extends Block
     }
     
     public void openChestGUI() {
-        
+        chestGUI.addChest();
     }
 }
