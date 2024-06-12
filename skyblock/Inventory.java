@@ -188,7 +188,7 @@ public class Inventory extends GUI{
     }
     
     public static void addItem(String item){
-        Item temp = new Item("block/" + item + ".png", world, 424, world.getHeight()/2 + 27, 32, 32, item);
+        Item temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight()/2 + 27, item);
         tempItemsList.add(temp);
         addedYet = false;
     }
