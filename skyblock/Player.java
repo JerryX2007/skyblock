@@ -79,7 +79,6 @@ public abstract class Player extends SuperSmoothMover
                 isSprinting = true;
             }
             sprintToggleCD = 50;
-            System.out.println("e");
         }
         sprintToggleCD--;
 
