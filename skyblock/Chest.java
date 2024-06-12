@@ -47,6 +47,7 @@ public class Chest extends Block
         if(!isSelected){
             setImage(img);
         }
+        
     }
 
     public void drop(){

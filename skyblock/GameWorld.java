@@ -57,10 +57,16 @@ public class GameWorld extends World {
      */
     public void act() {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
+        MouseInfo mouse = Greenfoot.getMouseInfo();
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("f");
-        if (keyCurrentlyDown && !keyPreviouslyDown) {
+        boolean keyCurrentlyDown1 = mouse != null && mouse.getButton() == 3 && Greenfoot.mouseClicked(Chest.class);
+        if(openChest && GUIOpened && keyCurrentlyDown && !keyPreviouslyDown){
+            openChest = false;
+            chest.removeChest();
+            removeObject(chest);
+            GUIOpened = false;
+        } else if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
@@ -74,20 +80,14 @@ public class GameWorld extends World {
                 GUIOpened = false;
             } 
         } else if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
-            if (!openChest && !GUIOpened) {
-                openChest = true;
-                spoofInventory();
-                chest.addChest();
-                addObject(chest, getWidth() / 2, getHeight() / 2);
-                GUIOpened = true;
-            } 
-            else if(openChest && GUIOpened){
-                openChest = false;
-                chest.removeChest();
-                removeObject(chest);
-                GUIOpened = false;
-            }
-        }
+            openChest = true;
+            spoofInventory();
+            chest.addChest();
+            addObject(chest, getWidth() / 2, getHeight() / 2);
+            GUIOpened = true;
+        } 
+            
+        
 
         keyPreviouslyDown1 = keyCurrentlyDown1;
         keyPreviouslyDown = keyCurrentlyDown;
