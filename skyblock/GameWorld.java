@@ -168,7 +168,8 @@ public class GameWorld extends World {
      * Load in the initial island by placing associated blocks
      * Called when the world is generated
      */
-    private void prepareWorld(){
+    private void prepareWorld() {
+        updateBlock(2, 6, new Chest(this));
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
         }

@@ -23,6 +23,7 @@ public abstract class Player extends SuperSmoothMover
     protected boolean isMoving;
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
+    protected boolean activated;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
@@ -37,6 +38,7 @@ public abstract class Player extends SuperSmoothMover
         direction = false;
         isMoving = false;
         this.hp = 20;
+        activated = false;
     }
 
     /**
@@ -93,7 +95,9 @@ public abstract class Player extends SuperSmoothMover
             }
             if(button == 3) {
                 Chest block = (Chest) getBlockUnderCursor();
-                if(block != null) {
+                if(block != null && !activated) {
+                    System.out.println("chest");
+                    activated = true;
                     block.openChestGUI();
                 }
             }
@@ -375,5 +379,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public int getHp(){
         return this.hp;
+    }
+    public void deactivate() {
+        activated = false;
     }
 }
