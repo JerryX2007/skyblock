@@ -26,7 +26,7 @@ public abstract class Player extends SuperSmoothMover
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-
+    protected int hp;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -36,6 +36,7 @@ public abstract class Player extends SuperSmoothMover
         this.jumping = jumping;
         direction = false;
         isMoving = false;
+        this.hp = 20;
     }
 
     /**
@@ -59,12 +60,10 @@ public abstract class Player extends SuperSmoothMover
         }
         if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
             moveRight();
-            direction = true;
             isMoving = true;
         }
         if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
             moveLeft();
-            direction = false;
             isMoving = true;
         }
         if(Greenfoot.isKeyDown("shift")) {
@@ -295,7 +294,7 @@ public abstract class Player extends SuperSmoothMover
         int dirY = blockY - playerY;
         //System.out.println(dirX);
         //System.out.println(dirY);
-        if(dirX - dirY < 324) {
+        if(dirX - dirY < 378) {
             return true;
         }
         else {
@@ -306,7 +305,7 @@ public abstract class Player extends SuperSmoothMover
     public boolean isBlockVisible(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
-        int playerY = this.getY();
+        int playerY = this.getY() -20;
 
         // Get block's position
         int blockX = targetBlock.getX();
@@ -323,7 +322,7 @@ public abstract class Player extends SuperSmoothMover
 
         // Cast the ray
         double currentX = playerX;
-        double currentY = playerY - 40;
+        double currentY = playerY;
         for (int i = 0; i < steps; i++) {
             //Increment to the position of the block
             currentX += stepX;
@@ -338,6 +337,12 @@ public abstract class Player extends SuperSmoothMover
         }
         return true; // No obstructions
     }
+    
+    //this is just a testing class
+    public void doDamage(int damage){
+        this.hp -= damage;
+    }
+    
     
     public int getMoveSpeed() {
         return this.moveSpeed;
@@ -359,5 +364,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public boolean getDirection(){
         return this.direction;
+    }
+    public int getHp(){
+        return this.hp;
     }
 }

@@ -3,7 +3,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class ParticleEffect here.
  * modifies the particle effect in minecraft
- * @author (your name) 
+ * @author Nick 
  * @version (a version number or a date)
  */
 public class Particle extends SuperSmoothMover
