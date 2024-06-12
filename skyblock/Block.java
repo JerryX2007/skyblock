@@ -65,7 +65,9 @@ public abstract class  Block extends Actor{
     }
 
     /**
-     * Most blocks will drop something in its location upon being destroyed
+     * Add the itemDrop object to the current world
+     * 
+     * @param itemDrop The itemDrop Object to put in the current world
      */
     protected void drop(int itemDrop){
         getWorld().addObject(new ItemDrop(itemDrop), this.getX(), this.getY());
@@ -120,6 +122,7 @@ public abstract class  Block extends Actor{
 
     /**
      * Check if the actor is intersecting with a given coordinate.
+     * 
      * @param x The x-coordinate to check.
      * @param y The y-coordinate to check.
      * @return true if the actor intersects with the coordinate, false otherwise.
