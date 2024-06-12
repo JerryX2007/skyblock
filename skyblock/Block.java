@@ -45,7 +45,7 @@ public abstract class  Block extends Actor{
      */
     public void breakMe(Player playerf, int toolType, double efficiency){
         if(playerf != null) {
-            if(isSelected && playerf.isBlockVisible(this) && playerf.isBlockWithinRange(this)) {
+            if(isSelected && (playerf.isBlockVisible(this, 40) || playerf.isBlockVisible(this, 0) || playerf.isBlockVisible(this, -40)) && playerf.isBlockWithinRange(this)) {
                 boolean toolsAreMatching = (toolType == 1 && isStone)||(toolType == 2 && isWood)||(toolType == 3 && isDirt);
                 if(toolsAreMatching){
                     subBreakTime -= 1 *(1 + efficiency/100);
