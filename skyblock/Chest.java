@@ -19,6 +19,8 @@ public class Chest extends Block
     private static Color tan = new Color(198, 122, 70);
     private GreenfootImage img;
     private GreenfootImage img2;
+    private ChestGUI chestGUI;
+    private World world;
 
     public Chest(){
         super(tan,2);
@@ -27,6 +29,8 @@ public class Chest extends Block
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
+        world = getWorld();
+        chestGUI = new ChestGUI(300, world);
     }
 
     /**
@@ -47,5 +51,9 @@ public class Chest extends Block
 
     public void drop(){
 
+    }
+    
+    public void openChestGUI() {
+        
     }
 }

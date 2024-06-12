@@ -91,6 +91,12 @@ public abstract class Player extends SuperSmoothMover
                     block.setPlayer(this);
                 }
             }
+            if(button == 3) {
+                Chest block = (Chest) getBlockUnderCursor();
+                if(block != null) {
+                    block.openChestGUI();
+                }
+            }
         }
     }
 
@@ -263,6 +269,8 @@ public abstract class Player extends SuperSmoothMover
     protected void jump() {
         yVelocity -= 4.9;
         setLocation(getX(), getY() + yVelocity);
+        System.out.println(getX());
+        System.out.println(getY());
     }
 
     /**
@@ -301,10 +309,10 @@ public abstract class Player extends SuperSmoothMover
         }
     }
 
-    public boolean isBlockVisible(Block targetBlock) {
+    public boolean isBlockVisible(Block targetBlock, int increment) {
         // Get player's position
         int playerX = this.getX();
-        int playerY = this.getY() -20;
+        int playerY = this.getY() - increment;
 
         // Get block's position
         int blockX = targetBlock.getX();
@@ -340,6 +348,9 @@ public abstract class Player extends SuperSmoothMover
     //this is just a testing class
     public void doDamage(int damage){
         this.hp -= damage;
+        if(hp <= 0) {
+            getWorld().removeObject(this);
+        }
     }
     
     
