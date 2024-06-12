@@ -44,9 +44,13 @@ public class TitleScreen extends World
         addObject(logo, getWidth() / 2, 100);
     }
     
+     public void act(){
+        checkClick();
+        startMusic();
+    }
+    
     /**
      * Stops music when greenfoot is stopped
-     *
      */
     public void stopped() {
         mainMenu.pause();
@@ -60,13 +64,11 @@ public class TitleScreen extends World
         mainMenu.playLoop();
     }
     
+    /*
+     * @return the mainMenu music
+     */
     public static GreenfootSound getMainMenuMusic(){
         return mainMenu;
-    }
-    
-    public void act(){
-        checkClick();
-        startMusic();
     }
     
     /**
@@ -103,7 +105,9 @@ public class TitleScreen extends World
         }
     }
 
-    // Checks if buttons are pressed
+    /*
+     * Checks if buttons are pressed
+     */
     private void checkClick(){
         if(play.isPressed()){
             game = new GameWorld();
