@@ -28,6 +28,8 @@ public class GameWorld extends World {
     private HealthBar hpBar;
     private int xAdjust = 0;
     
+    private boolean firstTime = true;
+    
     private boolean keyPreviouslyDown = false;
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
@@ -75,12 +77,16 @@ public class GameWorld extends World {
                 GUIOpened = false;
             } 
         }
-        if(!GUIOpened){
+        if(!GUIOpened && firstTime){
             for (int i = 0; i < 9; i++) {
-                addObject(GUI.getSlots()[i][0], 401 + xAdjust, getHeight() - 50);
+                addObject(Hotbar.getHotbarSlots()[i], 401 + xAdjust, getHeight() - 50);
                 xAdjust += 60;
             }
             xAdjust = 0;
+            firstTime = false;
+        }
+        if(GUIOpened){
+            firstTime = true;
         }
         keyPreviouslyDown = keyCurrentlyDown;
         
