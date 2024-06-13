@@ -69,6 +69,7 @@ public class GameWorld extends World {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
+                Hotbar.removeHotbar();
                 GUIOpened = true;
             } else if(openInventory && GUIOpened){
                 openInventory = false;
@@ -78,15 +79,15 @@ public class GameWorld extends World {
             } 
         }
         if(!GUIOpened && firstTime){
-            for (int i = 0; i < 9; i++) {
-                addObject(Hotbar.getHotbarSlots()[i], 401 + xAdjust, 718);
-                xAdjust += 60;
-            }
+            addObject(hotbar, getWidth() / 2, getHeight() - 50);
+            Hotbar.addHotbar();
             xAdjust = 0;
             firstTime = false;
         }
         if(GUIOpened){
             firstTime = true;
+            removeObject(hotbar);
+            Hotbar.removeHotbar();
         }
         keyPreviouslyDown = keyCurrentlyDown;
         
