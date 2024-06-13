@@ -103,7 +103,7 @@ public abstract class Player extends SuperSmoothMover
             }
             if(button == 3) {
                 block = (Chest) getBlockUnderCursor();
-                if(block != null && !activated) {
+                if(block != null && !activated && !GameWorld.getGUIOpened()) {
                     //System.out.println("test");
                     activated = true;
                     
