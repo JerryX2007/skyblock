@@ -37,6 +37,21 @@ public class CraftingSystem extends GUI
         //Hard code recipes
         //Also try to hard code the possible positions of every single combination ;-;
         
+        // Check for plank recipe (wood block anywhere in the grid)
+        if (isCraftingPlanks()) {
+            outputBlock = new WoodenPlank(); // Example output: 4 planks
+            //outputBlock.increaseBlockAmount();
+            outputItem = null;
+            
+        } 
+        // Check for stick recipe (two planks vertically aligned)
+        else if (isCraftingSticks()) {
+            //outputItem = new Item("Sticks", 4); // Example output: 4 sticks
+        } else {
+            outputItem = null;
+            outputBlock = null;
+        }
+        
     }
     
     private boolean isEmpty(int x, int y) {
@@ -55,8 +70,8 @@ public class CraftingSystem extends GUI
         itemArray[y][x].getItem().addSizeOfNumItems(1);
     }
     
-    private void decreaseItemAmount(int x, int y) {
-        itemArray[y][x].getItem().addSizeOfNumItems(-1);
+    private void decreaseBlockAmount(int x, int y) {
+        //itemArray[y][x].getBlock().addSizeOfNumItems(-1);
     }
     
     //Overload the methods
