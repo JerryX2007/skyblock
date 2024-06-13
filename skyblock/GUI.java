@@ -17,6 +17,8 @@ public class GUI extends Actor
     protected static Item[][] slots = new Item[9][4];
     protected static Item[][] crafting = new Item[2][2];
     protected Item[][] chestSlots = new Item[9][3];
+    protected static Item[] hotbarSlots = new Item[9];
+    private static Item[] temp = new Item[9];
     
     /**
      * Create an image with given file name and size
@@ -27,9 +29,16 @@ public class GUI extends Actor
     public GUI(String file, int scale, World world){
         this.setImage(file);
         getImage().scale((int) (getImage().getWidth() * scale * 0.01), (int) (getImage().getHeight() * scale * 0.01));
+        for(int i = 0; i < 9; i++){
+            temp[i] = slots[i][0];
+        }
+        hotbarSlots = temp.clone();
     }
     
-    public static Item[][] getSlots(){
-        return slots;
+    public void act(){
+        for(int i = 0; i < 9; i++){
+            temp[i] = slots[i][0];
+        }
+        hotbarSlots = temp.clone();
     }
 }
