@@ -49,8 +49,8 @@ public class PauseScreen extends World
         // Capture the background of the current game world
         GreenfootImage background = new GreenfootImage(world.getBackground());
 
-        // Apply a gray overlay
-        overlay.setColor(new Color(0, 0, 0, 128)); // 128 is the alpha for semi-transparency
+        // Apply a mostly transparent gray overlay
+        overlay.setColor(new Color(0, 0, 0, 50)); // 50 is the alpha for more transparency
         overlay.fill();
         background.drawImage(overlay, 0, 0);
         setBackground(background);
@@ -125,7 +125,30 @@ public class PauseScreen extends World
             volumeSlider.update((double) volume / 100.0);
         }
     }
+   /*
+     * method which gets the image of actors in the simulation, and draw their 
+     * picture at their location before the simulation is paused
+     */
+    private void getActorImage(Fader blackScreen){
+        for(Actor actor : pauseLocation){
+            if (actor == blackScreen) {
+                continue;
+            }
+            GreenfootImage image = new GreenfootImage(actor.getImage());
+            if (!(actor instanceof Mouse)) {
+                image.rotate(actor.getRotation());
+            }
 
+            image.setTransparency(actor.getImage().getTransparency());
+            drawImage(image, actor.getX() - image.getWidth()/2, actor.getY() - image.getHeight()/2);
+        }
+        if(blackScreen.getWorld() == null) {
+            return;
+        }
+        GreenfootImage fader = new GreenfootImage(blackScreen.getImage());
+        fader.setTransparency(blackScreen.getImage().getTransparency());
+        drawImage(fader, blackScreen.getX() - fader.getWidth()/2, blackScreen.getY() - fader.getHeight()/2);
+    }
     /**
      * Returns the volume
      * 
