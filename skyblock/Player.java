@@ -6,8 +6,7 @@ import java.util.ArrayList;
  * 
  * @author Jerry Xing, Evan Xi
  */
-public abstract class Player extends SuperSmoothMover
-{
+public abstract class Player extends SuperSmoothMover{
     protected static int moveSpeed;
     protected static int jumpHeight;
     protected static int reach;
@@ -64,7 +63,16 @@ public abstract class Player extends SuperSmoothMover
     public void checkKeys() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         
+        GameWorld world = (GameWorld) getWorld();
         isMoving = false;
+        if(Greenfoot.isKeyDown("t")){
+            world.shiftWorld(1, 0);
+            world.reverseShiftPlayer(1, 0);
+        }
+        if(Greenfoot.isKeyDown("y")){
+            world.shiftWorld(-1, 0);
+            world.reverseShiftPlayer(-1, 0);
+        }
         if(( (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
         }
@@ -247,8 +255,10 @@ public abstract class Player extends SuperSmoothMover
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveLeft(){
+        GameWorld world = (GameWorld) getWorld();
         for(int i = 0; i < moveSpeed; i++){
-            setLocation(getX() - 1, getY());
+            world.shiftWorld(1, 0);
+            world.reverseShiftPlayer(1, 0);
             if(!leftClear()){
                 return;
             }
@@ -260,8 +270,10 @@ public abstract class Player extends SuperSmoothMover
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveRight(){
+        GameWorld world = (GameWorld) getWorld();
         for(int i = 0; i < moveSpeed; i++){
-            setLocation(getX() + 1, getY());
+            world.shiftWorld(-1, 0);
+            world.reverseShiftPlayer(-1, 0);
             if(!rightClear()){
                 return;
             }
@@ -284,7 +296,9 @@ public abstract class Player extends SuperSmoothMover
      * Accelerate downwards to fall
      */
     protected void fall() {
-        setLocation(getX(), getY() + yVelocity);
+        GameWorld world = (GameWorld) getWorld();
+        world.shiftWorld(0, - yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity);
         yVelocity = yVelocity + acceleration;
     }
 
@@ -292,12 +306,14 @@ public abstract class Player extends SuperSmoothMover
      * Gains a small amount of momentum upwards to jump
      */
     protected void jump() {
+        GameWorld world = (GameWorld) getWorld();
         yVelocity -= 4.9;
-        setLocation(getX(), getY() + yVelocity);
+        world.shiftWorld(0, -yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity);
     }
 
     /**
-     * Gets a list of all items in a radius for pick up
+     * Gets a list of all items in a radius for pick up 
      * If there is space in the inventory, pick it up
      */
     protected void checkPickup(){
