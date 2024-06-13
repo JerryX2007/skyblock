@@ -36,25 +36,24 @@ public class Inventory extends GUI {
         yAdjust = 0;
         
         // Initialize player's inventory slots
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
-                if(i == 0){
-                    Empty temp = new Empty(16, 16, world, 424 + xAdjust, 590);
-                    slots[j][i] = temp;
-                    xAdjust += 54;
-                } else {
-                    Empty temp = new Empty(16, 16, world, 424 + xAdjust, 414 + yAdjust);
-                    slots[j][i] = temp;
-                    xAdjust += 54;
-                }
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, 414 + yAdjust);
+                slots[j][i] = temp;
+                xAdjust += 54;
             }
-            if(i != 0){
-                xAdjust = 0;
-                yAdjust += 54;
-            }
+            xAdjust = 0;
+            yAdjust += 54;
         }
         xAdjust = 0;
         yAdjust = 0;
+        
+        for(int j = 0; j < 9; j++){
+            Empty temp = new Empty(16, 16, world, 424 + xAdjust, 590);
+            slots[j][0] = temp;
+            xAdjust += 54;
+        }
+        xAdjust = 0;
         
         // Initialize crafting section slots
         for (int i = 0; i < 2; i++) {
@@ -125,23 +124,22 @@ public class Inventory extends GUI {
         yAdjust = 0;
         
         // Add player's inventory slots to the world
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
-                if(i == 0){
-                    world.addObject(slots[j][i], 424 + xAdjust, 588);
-                    xAdjust += 54;
-                } else {
-                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
-                    xAdjust += 54;
-                }
+                world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
+                xAdjust += 54;
             }
             xAdjust = 0;
-            if(i != 0){
-                yAdjust += 54;
-            }
+            yAdjust += 54;
         }
         xAdjust = 0;
         yAdjust = 0;
+        
+        for(int j = 0; j < 9; j++){
+            world.addObject(slots[j][0], 424 + xAdjust, 588);
+            xAdjust += 54;
+        }
+        xAdjust = 0;
         
         // Add crafting section slots to the world
         for (int i = 0; i < 2; i++) {
