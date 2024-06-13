@@ -14,6 +14,7 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
+    protected Inventory inventory;
 
     protected final int gravity = 2;
     protected double yVelocity;
@@ -23,11 +24,16 @@ public abstract class Player extends SuperSmoothMover
     protected boolean isMoving;
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
+    protected boolean activated;
+    
+    protected Chest block;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
-    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
+    
+    private boolean keyPreviouslyDown;
+    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
         this.reach = reach;
@@ -37,6 +43,8 @@ public abstract class Player extends SuperSmoothMover
         direction = false;
         isMoving = false;
         this.hp = 20;
+        activated = false;
+        this.inventory = inventory;
     }
 
     /**
@@ -54,6 +62,8 @@ public abstract class Player extends SuperSmoothMover
      * Can toggle sneaking and sprinting
      */
     public void checkKeys() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        
         isMoving = false;
         if(( (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
@@ -91,7 +101,28 @@ public abstract class Player extends SuperSmoothMover
                     block.setPlayer(this);
                 }
             }
+            if(button == 3) {
+                block = (Chest) getBlockUnderCursor();
+                if(block != null && !activated) {
+                    //System.out.println("test");
+                    activated = true;
+                    
+                    block.addChest();
+                    getWorld().addObject(block.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                    inventory.act();
+                    GameWorld.setGUIOpened(true);
+                    GameWorld.setOpenChest(true);
+                }
+            }
         }
+        if(GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenChest(false);
+            block.removeChest();
+            getWorld().removeObject(block.getChestGUI());
+            activated = false;
+        }
+        keyPreviouslyDown = keyCurrentlyDown;
     }
 
     /**
@@ -301,10 +332,10 @@ public abstract class Player extends SuperSmoothMover
         }
     }
 
-    public boolean isBlockVisible(Block targetBlock) {
+    public boolean isBlockVisible(Block targetBlock, int increment) {
         // Get player's position
         int playerX = this.getX();
-        int playerY = this.getY() -20;
+        int playerY = this.getY() - increment;
 
         // Get block's position
         int blockX = targetBlock.getX();
@@ -340,6 +371,9 @@ public abstract class Player extends SuperSmoothMover
     //this is just a testing class
     public void doDamage(int damage){
         this.hp -= damage;
+        if(hp <= 0) {
+            getWorld().removeObject(this);
+        }
     }
     
     
@@ -366,5 +400,8 @@ public abstract class Player extends SuperSmoothMover
     }
     public int getHp(){
         return this.hp;
+    }
+    public void deactivate() {
+        activated = false;
     }
 }

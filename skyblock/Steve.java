@@ -19,8 +19,8 @@ public class Steve extends Player
     private RightLeg rightLeg;
     private int actNum, counter;
     private boolean isPunching;
-    public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange) {
-        super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true);
+    public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
+        super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
         //hitBox
         hitBox = new GreenfootImage("steve/hitBox.png");
         hitBox.scale(40,128);
@@ -140,6 +140,9 @@ public class Steve extends Player
             rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
+        }
+        else{
+            rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
             leftArm.setRotation(40*oppositeRadians);

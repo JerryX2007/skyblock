@@ -52,20 +52,20 @@ public class CraftingSystem extends GUI
     }
     
     private void increaseItemAmount(int x, int y) {
-        itemArray[y][x].getItem().sizeOfNumItems++;
+        itemArray[y][x].getItem().addSizeOfNumItems(1);
     }
     
     private void decreaseItemAmount(int x, int y) {
-        itemArray[y][x].getItem().sizeOfNumItems--;
+        itemArray[y][x].getItem().addSizeOfNumItems(-1);
     }
     
     //Overload the methods
     private void increaseItemAmount(int x, int y, int increment) {
-        itemArray[y][x].getItem().sizeOfNumItems += increment;
+        itemArray[y][x].getItem().addSizeOfNumItems(increment);
     }
     
     private void decreaseItemAmount(int x, int y, int increment) {
-        itemArray[y][x].getItem().sizeOfNumItems -= increment;
+        itemArray[y][x].getItem().addSizeOfNumItems(-increment);
     }
     
     private boolean tryAddItem(Item item, int x, int y) {
