@@ -43,7 +43,7 @@ public class GameWorld extends World {
         player = new Steve(3, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
-        addObject(player, 512, 384);
+        addObject(player, 640, 384);
     }
 
     private boolean keyPreviouslyDown = false;
@@ -76,7 +76,7 @@ public class GameWorld extends World {
         hpBar.setLocation(player.getX(),player.getY() - 90);
     }
     
-    /*
+    /**
      * Getter for openChest
      * 
      * @return openChest openChest value
@@ -85,7 +85,7 @@ public class GameWorld extends World {
         return openChest;
     }
     
-    /*
+    /**
      * Getter for GUIOpened
      * 
      * @return GUIOpened GUIOpened value
@@ -94,7 +94,7 @@ public class GameWorld extends World {
         return GUIOpened;
     }
     
-    /*
+    /**
      * Sets the boolean openChest
      * 
      * @param open New value for openChest
@@ -103,7 +103,7 @@ public class GameWorld extends World {
         openChest = open;
     }
     
-    /*
+    /**
      * Sets the boolean GUIOpened
      * 
      * @param opened New value for GUIOpened
@@ -170,20 +170,27 @@ public class GameWorld extends World {
     }
 
     /**
-     * Refreshes the entire screen of blocks 
-     * 
+     * Scrolling world effect allows shifts entire world rather than moving the player
+     * @param xShift the pixels all objects in the world move on the X-axis
+     * @param yShift the pixels all objects in the world move on the Y-axis
      */
-    public void updateEntireGrid(){
-        for(int i = 0; i < grid.length; i++){
-            for(int j = 0; j < grid.length; j++){
-
-            }
+    public void shiftWorld(double xShift, double yShift){
+        ArrayList<Actor> allActors = (ArrayList<Actor>)getObjects(Actor.class);
+        for(Actor object : allActors){
+            object.setLocation((int) (object.getX() + xShift + 0.5), (int) (object.getY() + yShift + 0.5));
+        }
+    }
+    
+    public void reverseShiftPlayer(double xShift, double yShift){
+        ArrayList<Player> allPlayers = (ArrayList<Player>)getObjects(Player.class);
+        for(Actor player : allPlayers){
+            player.setLocation((int) (player.getX() - xShift + 0.5), (int) (player.getY() - yShift + 0.5));
         }
     }
     
     /**
      * Load in the initial island by placing associated blocks
-     * Called when the world is generated
+     * Called when the world is generated   
      */
     private void prepareWorld() {
         updateBlock(2, 6, new Chest(this));
