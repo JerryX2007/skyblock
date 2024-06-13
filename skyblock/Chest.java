@@ -41,6 +41,7 @@ public class Chest extends Block
     {
         // Add your action code here.
         super.act();
+        
         if(isSelected){
             setImage(img2);
         }
@@ -54,7 +55,15 @@ public class Chest extends Block
 
     }
     
-    public void openChestGUI() {
+    public void addChest(){
         chestGUI.addChest();
+    }
+    
+    public void removeChest(){
+        chestGUI.removeChest();
+    }
+    
+    public ChestGUI getChestGUI(){
+        return chestGUI;
     }
 }

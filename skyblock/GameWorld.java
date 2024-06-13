@@ -15,13 +15,12 @@ public class GameWorld extends World {
     private boolean isCraftingVisible = false;
     private Block[][] grid;
 
-    private boolean openInventory = false;
-    private Inventory inventory;
+    private static boolean openInventory = false;
+    private static Inventory inventory;
 
-    private ChestGUI chest;
-    private boolean openChest = false;
+    private static boolean openChest = false;
 
-    private boolean GUIOpened = false;
+    private static boolean GUIOpened = false;
 
     private Steve player;
     private HealthBar hpBar;
@@ -37,12 +36,11 @@ public class GameWorld extends World {
         prepareWorld();
         // Inventory stuff
         inventory = new Inventory(300, this);
-        chest = new ChestGUI(300, this);
         craftingSystem = new CraftingSystem(300, this);
         //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         
         
-        player = new Steve(3, 3, 3, true, 3);
+        player = new Steve(3, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 512, 384);
@@ -57,42 +55,61 @@ public class GameWorld extends World {
      */
     public void act() {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
-        MouseInfo mouse = Greenfoot.getMouseInfo();
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        boolean keyCurrentlyDown1 = mouse != null && mouse.getButton() == 3 && Greenfoot.mouseClicked(Chest.class);
-        if(openChest && GUIOpened && keyCurrentlyDown && !keyPreviouslyDown){
-            openChest = false;
-            chest.removeChest();
-            removeObject(chest);
-            GUIOpened = false;
-        } else if (keyCurrentlyDown && !keyPreviouslyDown) {
+        
+        if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
-            } 
-            else if(openInventory && GUIOpened){
+            } else if(openInventory && GUIOpened){
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
                 GUIOpened = false;
             } 
-        } else if (keyCurrentlyDown1 && !keyPreviouslyDown1) {
-            openChest = true;
-            spoofInventory();
-            chest.addChest();
-            addObject(chest, getWidth() / 2, getHeight() / 2);
-            GUIOpened = true;
-        } 
-            
-        
-
-        keyPreviouslyDown1 = keyCurrentlyDown1;
+        }
         keyPreviouslyDown = keyCurrentlyDown;
         
         hpBar.setLocation(player.getX(),player.getY() - 90);
+    }
+    
+    /*
+     * Getter for openChest
+     * 
+     * @return openChest openChest value
+     */
+    public static boolean getOpenChest(){
+        return openChest;
+    }
+    
+    /*
+     * Getter for GUIOpened
+     * 
+     * @return GUIOpened GUIOpened value
+     */
+    public static boolean getGUIOpened(){
+        return GUIOpened;
+    }
+    
+    /*
+     * Sets the boolean openChest
+     * 
+     * @param open New value for openChest
+     */
+    public static void setOpenChest(boolean open){
+        openChest = open;
+    }
+    
+    /*
+     * Sets the boolean GUIOpened
+     * 
+     * @param opened New value for GUIOpened
+     */
+    public static void setGUIOpened(boolean opened){
+        GUIOpened = opened;
     }
     
     public void spoofInventory(){
@@ -170,6 +187,7 @@ public class GameWorld extends World {
      */
     private void prepareWorld() {
         updateBlock(2, 6, new Chest(this));
+        updateBlock(4, 6, new Chest(this));
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
         }

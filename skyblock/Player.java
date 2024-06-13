@@ -14,6 +14,7 @@ public abstract class Player extends SuperSmoothMover
     protected static boolean canDrop;
     protected static int pickUpRange;
     protected static boolean jumping;
+    protected Inventory inventory;
 
     protected final int gravity = 2;
     protected double yVelocity;
@@ -24,11 +25,15 @@ public abstract class Player extends SuperSmoothMover
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
     protected boolean activated;
+    
+    protected Chest block;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
-    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping) {
+    
+    private boolean keyPreviouslyDown;
+    public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
         this.reach = reach;
@@ -39,6 +44,7 @@ public abstract class Player extends SuperSmoothMover
         isMoving = false;
         this.hp = 20;
         activated = false;
+        this.inventory = inventory;
     }
 
     /**
@@ -56,6 +62,8 @@ public abstract class Player extends SuperSmoothMover
      * Can toggle sneaking and sprinting
      */
     public void checkKeys() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        
         isMoving = false;
         if(( (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
@@ -94,14 +102,27 @@ public abstract class Player extends SuperSmoothMover
                 }
             }
             if(button == 3) {
-                Chest block = (Chest) getBlockUnderCursor();
+                block = (Chest) getBlockUnderCursor();
                 if(block != null && !activated) {
-                    System.out.println("chest");
+                    //System.out.println("test");
                     activated = true;
-                    block.openChestGUI();
+                    
+                    block.addChest();
+                    getWorld().addObject(block.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                    inventory.act();
+                    GameWorld.setGUIOpened(true);
+                    GameWorld.setOpenChest(true);
                 }
             }
         }
+        if(GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenChest(false);
+            block.removeChest();
+            getWorld().removeObject(block.getChestGUI());
+            activated = false;
+        }
+        keyPreviouslyDown = keyCurrentlyDown;
     }
 
     /**

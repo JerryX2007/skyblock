@@ -28,19 +28,6 @@ public class ChestGUI extends GUI {
         super("chestGUI.png", scale, world);
         this.world = world;
         
-        // Initialize player's inventory slots
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight() / 2 + 30 + yAdjust);
-                slots[j][i] = temp;
-                xAdjust += 54;
-            }
-            xAdjust = 0;
-            yAdjust += 54;
-        }
-        xAdjust = 0;
-        yAdjust = 0;
-        
         // Initialize chest inventory slots
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
