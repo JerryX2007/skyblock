@@ -25,3 +25,11 @@ replay_pid*
 
 # doc files generated from Javadocs
 doc/
+
+# IntellJ files
+.idea/
+*.iml
+*.xml
+
+# .DS_Store
+.DS_Store

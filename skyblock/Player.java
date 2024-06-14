@@ -3,11 +3,13 @@ import java.util.ArrayList;
 
 /**
  * Description to be added
- * 
+ * `
  * @author Jerry Xing, Evan Xi
+ * 
+ * With help from Benny Wang
  */
 public abstract class Player extends SuperSmoothMover{
-    protected static int moveSpeed;
+    protected static double moveSpeed;
     protected static int jumpHeight;
     protected static int reach;
     protected static boolean canDrop;
@@ -23,15 +25,17 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean isMoving;
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
-    protected boolean activated;
-
-    protected Chest block;
+    protected static boolean activated;
+    
+    protected Block block;
+    protected Chest chest;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
-
-    private boolean keyPreviouslyDown;
+    
+    
+    
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -51,8 +55,10 @@ public abstract class Player extends SuperSmoothMover{
      */
     public void act(){
         checkKeys();
-        checkFalling();
         checkPickup();
+        if(!GameWorld.getGUIOpened()){
+            checkFalling();
+        }
     }
 
     /**
@@ -61,68 +67,59 @@ public abstract class Player extends SuperSmoothMover{
      * Can toggle sneaking and sprinting
      */
     public void checkKeys() {
+        
+        GameWorld world = (GameWorld) getWorld();
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         isMoving = false;
-
-        if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
-            jump();  
-        }
-        if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
-            moveRight();
-            isMoving = true;
-        }
-        if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
-            moveLeft();
-            isMoving = true;
-        }
-        if(Greenfoot.isKeyDown("shift")) {
-            isMoving = false;
-        }
-        if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
-            if(isSprinting){
-                moveSpeed -= 1;
-                isSprinting = false;
+        if(!GameWorld.getGUIOpened()){
+            if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
+                jump();  
             }
-            else{
-                moveSpeed += 1;
-                isSprinting = true;
+            if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
+                moveRight();
+                isMoving = true;
             }
-            sprintToggleCD = 50;
-        }
-        sprintToggleCD--;
-
-        MouseInfo mi = Greenfoot.getMouseInfo();
-        if(mi != null) {
-            int button = mi.getButton();
-            if(button == 1) {
-                Block block = getBlockUnderCursor();
-                if(block != null) {
-                    block.setPlayer(this);
+            if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
+                moveLeft();
+                isMoving = true;
+            }
+            if(Greenfoot.isKeyDown("shift")) {
+                isMoving = false;
+                moveSpeed = 1.5;
+            } else{
+                moveSpeed = 4;
+            }
+    
+            MouseInfo mi = Greenfoot.getMouseInfo();
+        
+            if(mi != null) {
+                int button = mi.getButton();
+                if(button == 1) {
+                    Block block = getBlockUnderCursor();
+                    if(block != null) {
+                        block.setPlayer(this);
+                    }
                 }
-            }
-            else if (button == 3) {
-                Block block = getBlockUnderCursor();
-                if (block != null && !activated && block instanceof Chest) {
-                    Chest chest = (Chest) block;
-                    activated = true;
-                    chest.addChest();
-                    getWorld().addObject(chest.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
-                    inventory.act();
-                    GameWorld.setGUIOpened(true);
-                    GameWorld.setOpenChest(true);
+                if(button == 3) {
+                    block = getBlockUnderCursor();
+                    if(block != null && !activated && !GameWorld.getGUIOpened() && block instanceof Chest) {
+                        chest = (Chest) block;
+                        activated = true;
+                        chest.addChest();
+                        getWorld().addObject(chest.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                        inventory.act();
+                        GameWorld.setGUIOpened(true);
+                        GameWorld.setOpenChest(true);
+                    }
                 }
             }
         }
-        if (GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown) {
-            GameWorld.setGUIOpened(false);
-            GameWorld.setOpenChest(false);
-            if (block != null) { // Add null check
-                block.removeChest();
-                getWorld().removeObject(block.getChestGUI());
-            }
-            activated = false;
-        }
-        keyPreviouslyDown = keyCurrentlyDown;
+        
+        
+    }
+    
+    public static void setActivated(boolean active){
+        activated = active;
     }
 
     /**
@@ -207,7 +204,7 @@ public abstract class Player extends SuperSmoothMover{
         }
         return true;
     }    
-
+    
     /**
      * Checks if the user can continue moving left
      * Uses 4 collision points to the left of the user to detect any non-air blocks
@@ -256,7 +253,7 @@ public abstract class Player extends SuperSmoothMover{
             }
         }
     }
-
+        
     /**
      * Moves right by a pixel for each move speed
      * The loop is broken early if the left side is no longer clear for movement
@@ -271,15 +268,14 @@ public abstract class Player extends SuperSmoothMover{
             }
         }
     }
-
+    
     /**
      * If it isn't on the ground, start falling
      */
     protected void checkFalling() {
         if(onGround()) {
             yVelocity = 0;
-        }
-        else {
+        } else {
             fall();
         }
     }
@@ -334,8 +330,7 @@ public abstract class Player extends SuperSmoothMover{
         //System.out.println(dirY);
         if(dirX - dirY < 378) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -375,7 +370,7 @@ public abstract class Player extends SuperSmoothMover{
         }
         return true; // No obstructions
     }
-
+    
     //this is just a testing class
     public void doDamage(int damage){
         this.hp -= damage;
@@ -383,39 +378,32 @@ public abstract class Player extends SuperSmoothMover{
             getWorld().removeObject(this);
         }
     }
-
-    public int getMoveSpeed() {
+    
+    
+    public double getMoveSpeed() {
         return this.moveSpeed;
     }
-
     public int getJumpHeight() {
         return this.jumpHeight;
     }
-
     public int getReach() {
         return this.reach;
     }
-
     public boolean getCanDrop() {
         return this.canDrop;
     }
-
     public int getPickUpRange() {
         return this.pickUpRange;
     }
-
     public boolean isJumping() {
         return this.jumping;
     }
-
     public boolean getDirection(){
         return this.direction;
     }
-
     public int getHp(){
         return this.hp;
     }
-
     public void deactivate() {
         activated = false;
     }

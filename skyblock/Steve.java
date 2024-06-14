@@ -21,6 +21,10 @@ public class Steve extends Player
     private int actNum, counter;
     private boolean isPunching;
     private ArrayList<Item> heldItems;
+    protected int X;
+    protected int Y;
+    protected ArrayList<BodyPart> bodyparts = new ArrayList<>();
+    
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
         //hitBox
@@ -54,6 +58,10 @@ public class Steve extends Player
             getWorld().addObject(leftArm,0,0);  getWorld().addObject(rightArm,0,0);
             getWorld().addObject(leftHead,0,0); getWorld().addObject(rightHead,0,0);
         }
+        
+        
+
+        
         punching();
         rotateTowardsMouse();
         super.act();
