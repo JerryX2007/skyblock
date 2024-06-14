@@ -62,18 +62,9 @@ public abstract class Player extends SuperSmoothMover{
      */
     public void checkKeys() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        
-        GameWorld world = (GameWorld) getWorld();
         isMoving = false;
-        if(Greenfoot.isKeyDown("t")){
-            world.shiftWorld(1, 0);
-            world.reverseShiftPlayer(1, 0);
-        }
-        if(Greenfoot.isKeyDown("y")){
-            world.shiftWorld(-1, 0);
-            world.reverseShiftPlayer(-1, 0);
-        }
-        if(( (Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
+        
+        if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
         }
         if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {

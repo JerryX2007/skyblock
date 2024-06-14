@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
+import java.util.List;
 
 /**
  * All mobs are born with its own damage, speed, and health (passive mobs have 0 damage)
@@ -26,10 +27,14 @@ public abstract class Mob extends SuperSmoothMover{
     
     protected int minSpawnLight;
     protected int maxSpawnLight;
+    
+    protected boolean huntRight = false;
+    protected boolean huntLeft = false;
 
     protected boolean isFleeing;
     SimpleTimer fleeTimer;
     
+    protected int wanderDirection = 0;
     SimpleTimer wanderTimer;
     Random random;
     
@@ -38,6 +43,7 @@ public abstract class Mob extends SuperSmoothMover{
     protected GreenfootImage hurtImg;
     protected GreenfootImage deathImg;
     protected GreenfootImage attackImg;
+    
     public Mob(boolean hostile, int dmg, double spd, int hp, int minLight, int maxLight){
         isHostile = hostile;
         damage = dmg;
@@ -45,6 +51,7 @@ public abstract class Mob extends SuperSmoothMover{
         health = hp;
         minSpawnLight = minLight;
         maxSpawnLight = maxLight;
+        wanderTimer.mark();
     }
     
     public void act(){
@@ -59,6 +66,7 @@ public abstract class Mob extends SuperSmoothMover{
             else{
                 wander();
             }
+            pursue();
         }
         
         if(!isHostile){
@@ -69,6 +77,8 @@ public abstract class Mob extends SuperSmoothMover{
                 wander();
             }
         }
+        
+        checkFalling();
         
         if(health <= 0){
             drop();
@@ -83,7 +93,43 @@ public abstract class Mob extends SuperSmoothMover{
      * If a player is found, begin working its way to it
      */
     protected void hunt(){
-        
+        List<Player> playersInRange = getObjectsInRange(600, Player.class);
+        for(Player player : playersInRange){
+            if(player.getX() > this.getX()){
+                huntRight = true;
+                huntLeft = false;
+            }
+            else{
+                huntLeft = true;
+                huntRight = false;
+            }
+        }
+    }
+    
+    protected void pursue(){
+        if(!hasTarget()){
+            huntRight = false;
+            huntLeft = false;
+            return;
+        }
+        if(huntRight){
+            if(rightClear()){
+                moveRight();
+            }
+            else if(headClear()){
+                jump();
+                moveRight();
+            }
+        }
+        if(huntLeft){
+            if(leftClear()){
+                moveLeft();
+            }
+            else if(headClear()){
+                jump();
+                moveLeft();
+            }
+        }
     }
     
     /**
@@ -91,6 +137,10 @@ public abstract class Mob extends SuperSmoothMover{
      * If a target is found, set 
      */
     protected boolean hasTarget(){
+        List<Player> playersInRange = getObjectsInRange(600, Player.class);
+        if(playersInRange != null){
+            return true;
+        }
         return false;
     }
     
@@ -99,19 +149,56 @@ public abstract class Mob extends SuperSmoothMover{
      * If isFleeing = true, will run in the opposite direction of the player
      */
     protected void flee(){
-        
+        List<Player> playersInRange = getObjectsInRange(600, Player.class);
+        for(Player player : playersInRange){
+            if(player.getX() > this.getX()){
+                if(leftClear()){
+                    moveLeft();
+                }
+                else if(headClear()){
+                    jump();
+                    moveLeft();
+                }
+            }
+            else{
+                if(rightClear()){
+                    moveRight();
+                }
+                else if(headClear()){
+                    jump();
+                    moveRight();
+                }
+            }
+        }
     }
     
     /**
      * If there is nothing to do, wander aimlessly around
      */
     protected void wander(){
-        if(wanderTimer.millisElapsed() > 3000){
-            int direction = random.nextInt(2);
-            
-            if(direction == 0){
-                
+        if((wanderTimer.millisElapsed() > 3000) && wanderTimer.millisElapsed() < 4000){
+            if(wanderDirection == 0){
+                if(leftClear()){
+                    moveLeft();
+                }
+                else{
+                    jump();
+                    moveLeft();
+                }
             }
+            else if(wanderDirection == 1){
+                if(rightClear()){
+                    moveRight();
+                }
+                else{
+                    jump();
+                    moveRight();
+                }
+            }                    
+        }
+        if(wanderTimer.millisElapsed() > 4000){
+            wanderTimer.mark();
+            wanderDirection = random.nextInt(2);
         }
     }
     
