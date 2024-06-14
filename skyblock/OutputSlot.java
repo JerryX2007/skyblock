@@ -9,16 +9,10 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class OutputSlot extends Actor
 {
     private Item item;
-    private Block block;
     
     public OutputSlot(Item item) {
         this.item = item;
     }
-
-    public OutputSlot(Block block) {
-        this.block = block;
-    }
-    
     /**
      * Act - do whatever the CraftingSlot wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -32,20 +26,8 @@ public class OutputSlot extends Actor
         return item;
     }
 
-    public Block getBlock() {
-        return block;
-    }
-
-    public boolean isItem() {
+    public boolean hasItem() {
         return item != null;
-    }
-
-    public boolean isBlock() {
-        return block != null;
-    }
-    
-    public void setBlock(Block block) {
-        this.block = block;
     }
     
     public void setItem(Item item ) {

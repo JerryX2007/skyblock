@@ -11,7 +11,7 @@ public class Stick extends Item
     private String image;
 
     public Stick(int length, int width, World world, int X, int Y){
-        super("items/stick.png", 25, 25, world, false, X, Y, "stick");
+        super("items/stick.png", 25, 25, world, true, X, Y, "stick");
         image  = "items/stick.png";
     }
 
