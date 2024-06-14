@@ -176,7 +176,13 @@ public class Inventory extends GUI {
     }
     
     public ArrayList<Item> getHeldItems(){
-        return heldItem[0].getItems();
+        ArrayList<Item> b = new ArrayList<>();
+        for(Item i : itemsList){
+            if(i.getXPos() == heldItem[0].getXPos() && i.getYPos() == heldItem[0].getYPos()){
+                b.add(i);
+            }
+        }
+        return b;
     }
 
     /**
