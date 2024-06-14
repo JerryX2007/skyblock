@@ -13,7 +13,7 @@ public class Grass extends Block
     private GreenfootImage img2;
 
     public Grass(){
-        super(brown,1);
+        super(brown,1, "grass");
         img = new GreenfootImage("block/grass_block.png");
         img.scale(64,64);
         setImage(img);
