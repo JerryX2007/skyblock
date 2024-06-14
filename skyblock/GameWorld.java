@@ -79,7 +79,7 @@ public class GameWorld extends World {
         }
         if(!GUIOpened && firstTime){
             for (int i = 0; i < 9; i++) {
-                addObject(Hotbar.getHotbarSlots()[i], 401 + xAdjust, 718);
+                addObject(Hotbar.getHotbarSlots()[i], 401 + xAdjust, getHeight() - 50);
                 xAdjust += 60;
             }
             xAdjust = 0;
