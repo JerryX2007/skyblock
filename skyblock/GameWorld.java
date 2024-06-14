@@ -20,7 +20,6 @@ public class GameWorld extends World {
     private Steve player;
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
-    private boolean keyPreviouslyDown1 = false;
 
     /**
      * Constructor for objects of class GameWorld.
