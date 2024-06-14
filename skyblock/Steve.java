@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Write a description of class Steve here.
@@ -19,8 +20,10 @@ public class Steve extends Player
     private RightLeg rightLeg;
     private int actNum, counter;
     private boolean isPunching;
-    public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange) {
-        super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true);
+    private ArrayList<Item> heldItems;
+    public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
+        super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
+        //hitBox
         hitBox = new GreenfootImage("steve/hitBox.png");
         hitBox.scale(40,128);
         setImage(hitBox);
@@ -36,6 +39,7 @@ public class Steve extends Player
         img2.scale(16,96);
         img3 = new GreenfootImage("steve/arm_left.png");
         img3.scale(16,96);
+        heldItems = inventory.getHeldItems();
     }
 
     /**
@@ -82,7 +86,9 @@ public class Steve extends Player
             leftLeg.setRotation(0);
             rightLeg.setRotation(0);
             leftArm.setRotation(0);
+            leftArm.setImage(img3);
             rightArm.setRotation(0);
+            rightArm.setImage(img);
         }
     }
     /**
@@ -124,8 +130,9 @@ public class Steve extends Player
      * swing arms and legs
      */
     public void swing(){
-        int time = actNum/10;
-        double radians = Math.sin(time);
+        // function y = sinx where actNum is x and angle radians is y
+        int time = actNum/10;//swing speed
+        double radians = Math.sin(time);//swing angle
         double oppositeRadians = Math.sin(time+ Math.PI);
         if(isPunching && direction){
             leftLeg.setRotation(45*radians);
@@ -185,10 +192,12 @@ public class Steve extends Player
         // Check if the mouse information is available
         if (mouse != null && mouse.getButton() != 0) {
             if(!isPunching){
+                //punch when mouse clicks
                 isPunching = true;
             }
         }
         if(isPunching){
+            //play the correct animatin depending on the state of steve
             if(!direction){
                 leftArm.setImage(img2);
                 if(counter >= 0 && counter < 5){

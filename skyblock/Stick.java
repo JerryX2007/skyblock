@@ -1,18 +1,18 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class WoodenPickaxe here.
+ * Write a description of class StonePickaxe here.
  * 
  * Dylan Dinesh
  * @version (a version number or a date)
  */
-public class WoodenPickaxe extends Item
+public class Stick extends Item
 {
     private String image;
 
-    public WoodenPickaxe(World world, int X, int Y){
-        super("items/Wooden_Pickaxe.png", 32, 32, world, true, X, Y, "wooden_pickaxe");
-        image  = "items/Wooden_Pickaxe.png";
+    public Stick(int length, int width, World world, int X, int Y){
+        super("items/stick.png", 25, 25, world, true, X, Y, "stick");
+        image  = "items/stick.png";
     }
 
     /**

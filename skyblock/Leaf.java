@@ -13,7 +13,7 @@ public class Leaf extends Block
     private GreenfootImage img2;
 
     public Leaf(){
-        super(green,1);
+        super(green,1, "leaf");
         img = new GreenfootImage("block/leaves.png");
         img.scale(64,64);
         img2 = addBorder(img, black);

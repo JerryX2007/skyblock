@@ -12,7 +12,7 @@ public class CobbleStone extends Block
     private GreenfootImage img2;
 
     public CobbleStone(){
-        super(Color.GRAY,5);
+        super(Color.GRAY,5, "cobblestone");
         img = new GreenfootImage("block/cobblestone.png");
         img.scale(64,64);
         setImage(img);
