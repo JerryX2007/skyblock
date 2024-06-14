@@ -3,13 +3,13 @@ import java.util.ArrayList;
 
 /**
  * Description to be added
- * 
+ * `
  * @author Jerry Xing, Evan Xi
  * 
  * With help from Benny Wang
  */
 public abstract class Player extends SuperSmoothMover{
-    protected static int moveSpeed;
+    protected static double moveSpeed;
     protected static int jumpHeight;
     protected static int reach;
     protected static boolean canDrop;
@@ -27,12 +27,13 @@ public abstract class Player extends SuperSmoothMover{
     protected int sprintToggleCD = 50;
     protected static boolean activated;
     
-    protected Chest block;
-    //protected Chest chest;
+    protected Block block;
+    protected Chest chest;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
+    
     
     
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
@@ -68,68 +69,67 @@ public abstract class Player extends SuperSmoothMover{
         GameWorld world = (GameWorld) getWorld();
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         isMoving = false;
-        
-        if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
-            jump();  
-        }
-        if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
-            moveRight();
-            isMoving = true;
-        }
-        if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
-            moveLeft();
-            isMoving = true;
-        }
-        if(Greenfoot.isKeyDown("shift")) {
-            isMoving = false;
-        }
-        if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
-            if(isSprinting){
-                moveSpeed -= 1;
-                isSprinting = false;
+        if(!GameWorld.getGUIOpened()){
+            if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
+                jump();  
             }
-            else{
-                moveSpeed += 1;
-                isSprinting = true;
+            if((Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("D")) && rightClear()) {
+                moveRight();
+                isMoving = true;
             }
-            sprintToggleCD = 50;
-        }
-        sprintToggleCD--;
-
-        MouseInfo mi = Greenfoot.getMouseInfo();
-    
-        if(mi != null) {
-            int button = mi.getButton();
-            if(button == 1) {
-                Block block = getBlockUnderCursor();
-                if(block != null) {
-                    block.setPlayer(this);
+            if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
+                moveLeft();
+                isMoving = true;
+            }
+            if(Greenfoot.isKeyDown("shift")) {
+                isMoving = false;
+                moveSpeed = 1.5;
+            } else{
+                moveSpeed = 4;
+            }
+            if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
+                if(isSprinting){
+                    moveSpeed -= 1;
+                    isSprinting = false;
                 }
+                else{
+                    moveSpeed += 1;
+                    isSprinting = true;
+                }
+                sprintToggleCD = 50;
             }
-            if(button == 3) {
-                try{
-                    block = (Chest) getBlockUnderCursor();
-                    if(block != null && !activated && !GameWorld.getGUIOpened()) {
-                        //System.out.println("test");
+            sprintToggleCD--;
+    
+            MouseInfo mi = Greenfoot.getMouseInfo();
+        
+            if(mi != null) {
+                int button = mi.getButton();
+                if(button == 1) {
+                    Block block = getBlockUnderCursor();
+                    if(block != null) {
+                        block.setPlayer(this);
+                    }
+                }
+                if(button == 3) {
+                    block = getBlockUnderCursor();
+                    if(block != null && !activated && !GameWorld.getGUIOpened() && block instanceof Chest) {
+                        chest = (Chest) block;
                         activated = true;
-                        
-                        block.addChest();
-                        getWorld().addObject(block.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                        chest.addChest();
+                        getWorld().addObject(chest.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
                         inventory.act();
                         GameWorld.setGUIOpened(true);
                         GameWorld.setOpenChest(true);
                     }
-                } catch (ClassCastException e){
-                         
                 }
-                
             }
         }
         
+        
     }
     
-    public static void setActivated(boolean activated){
-        activated = activated;
+    public static void setActivated(boolean active){
+        activated = active;
     }
 
     /**
@@ -285,8 +285,7 @@ public abstract class Player extends SuperSmoothMover{
     protected void checkFalling() {
         if(onGround()) {
             yVelocity = 0;
-        }
-        else {
+        } else {
             fall();
         }
     }
@@ -341,8 +340,7 @@ public abstract class Player extends SuperSmoothMover{
         //System.out.println(dirY);
         if(dirX - dirY < 378) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -392,7 +390,7 @@ public abstract class Player extends SuperSmoothMover{
     }
     
     
-    public int getMoveSpeed() {
+    public double getMoveSpeed() {
         return this.moveSpeed;
     }
     public int getJumpHeight() {
