@@ -137,6 +137,7 @@ public class Inventory extends GUI {
         
         for(int j = 0; j < 9; j++){
             world.addObject(slots[j][0], 424 + xAdjust, 588);
+            System.out.println(slots[j][0].getX() + ", " + slots[j][0].getY());
             xAdjust += 54;
         }
         xAdjust = 0;

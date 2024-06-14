@@ -14,29 +14,10 @@ public class Hotbar extends GUI
     public Hotbar(int scale, World world){
         super("hotbar.png", scale, world);
         this.world = world;
-        
-        for (int i = 0; i < 9; i++) {
-            hotbarSlots[i] = new Empty(16, 16, world, 401 + xAdjust, 718);
-            xAdjust += 60;
-        }
     }
     
     public static Item[] getHotbarSlots(){
         return hotbarSlots;
-    }
-    
-    public static void addHotbar(){
-        int xAdjust = 0;
-        for (Item i : hotbarSlots){
-            world.addObject(i, 401 + xAdjust, 718);
-            xAdjust += 60;
-        }
-    }
-    
-    public static void removeHotbar(){
-        for (Item i : hotbarSlots){
-            world.removeObject(i);
-        }
     }
     
     /**
