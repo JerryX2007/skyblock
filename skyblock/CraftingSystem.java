@@ -59,6 +59,10 @@ public class CraftingSystem extends GUI
             outputItem = null;
         }
         
+        else if (isCraftingWoodPickaxe()) {
+            outputItem = new WoodenPickaxe(world, outputSlot.getX(), outputSlot.getY());
+        }
+        
         else {
             outputItem = null;
         }
@@ -197,5 +201,65 @@ public class CraftingSystem extends GUI
             }
         }
         return foundFirstSword;
+    }
+    
+    private boolean isCraftingStoneSword() {
+        //Recipe for stone sword: two cobblestones and a stick vertically aligned
+        boolean foundFirstSword = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE - 2; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
+                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("cobblestone") && 
+                        getSlot(x, y+1).getBlock().getName().equals("cobblestone") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                        
+                        if (foundFirstSword) {
+                            return false; //More than one sword recipe found
+                        }
+                        foundFirstSword = true;
+                    } else {
+                        return false; //Another item found
+                    }
+                }
+            }
+        }
+        if(foundFirstSword) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstSword = false;
+                    }
+                }
+            }
+        }
+        return foundFirstSword;
+    }
+    
+    private boolean isCraftingWoodPickaxe() {
+        //Recipe for wooden pickaxe: three planks and 2 sticks in a pickaxe pattern
+        boolean foundFirstPickaxe = false;
+        if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(1, 1) && !isEmpty(1, 2) &&
+            getSlot(0, 0).getItem().getType().equals("plank") && getSlot(1, 0).getItem().getType().equals("plank") &&
+            getSlot(2, 0).getItem().getType().equals("plank") && getSlot(1, 1).getItem().getType().equals("stick") && 
+            getSlot(1, 2).getItem().getType().equals("stick")) {
+            
+            if(foundFirstPickaxe) {
+                return false; //More than one pickaxe recipe found
+            }
+            foundFirstPickaxe = true;
+        }
+        else {
+            return false;
+        }
+        if(foundFirstPickaxe) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstPickaxe = false;
+                    }
+                }
+            }
+        }
+        return foundFirstPickaxe;
     }
 }
