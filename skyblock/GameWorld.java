@@ -66,7 +66,7 @@ public class GameWorld extends World {
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
-            } else if (openInventory && GUIOpened) {
+            } else if (openInventory && GUIOpened && !openChest) {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);

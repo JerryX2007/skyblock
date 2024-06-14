@@ -5,6 +5,8 @@ import java.util.ArrayList;
  * Description to be added
  * 
  * @author Jerry Xing, Evan Xi
+ * 
+ * With help from Benny Wang
  */
 public abstract class Player extends SuperSmoothMover{
     protected static int moveSpeed;
@@ -23,15 +25,16 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean isMoving;
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
-    protected boolean activated;
+    protected static boolean activated;
     
     protected Chest block;
+    //protected Chest chest;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
     
-    private boolean keyPreviouslyDown;
+    
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -61,7 +64,6 @@ public abstract class Player extends SuperSmoothMover{
      * Can toggle sneaking and sprinting
      */
     public void checkKeys() {
-        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         
         GameWorld world = (GameWorld) getWorld();
         isMoving = false;
@@ -101,6 +103,7 @@ public abstract class Player extends SuperSmoothMover{
         sprintToggleCD--;
 
         MouseInfo mi = Greenfoot.getMouseInfo();
+    
         if(mi != null) {
             int button = mi.getButton();
             if(button == 1) {
@@ -109,29 +112,30 @@ public abstract class Player extends SuperSmoothMover{
                     block.setPlayer(this);
                 }
             }
-            else if (button == 3) {
-                Block block = getBlockUnderCursor();
-                if (block != null && !activated && block instanceof Chest) {
-                    Chest chest = (Chest) block;
-                    activated = true;
-                    chest.addChest();
-                    getWorld().addObject(chest.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
-                    inventory.act();
-                    GameWorld.setGUIOpened(true);
-                    GameWorld.setOpenChest(true);
+            if(button == 3) {
+                try{
+                    block = (Chest) getBlockUnderCursor();
+                    if(block != null && !activated && !GameWorld.getGUIOpened()) {
+                        //System.out.println("test");
+                        activated = true;
+                        
+                        block.addChest();
+                        getWorld().addObject(block.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                        inventory.act();
+                        GameWorld.setGUIOpened(true);
+                        GameWorld.setOpenChest(true);
+                    }
+                } catch (ClassCastException e){
+                         
                 }
+                
             }
         }
-        if (GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown) {
-            GameWorld.setGUIOpened(false);
-            GameWorld.setOpenChest(false);
-            if (block != null) { // Add null check
-                block.removeChest();
-                getWorld().removeObject(block.getChestGUI());
-            }
-            activated = false;
-        }
-        keyPreviouslyDown = keyCurrentlyDown;
+        
+    }
+    
+    public static void setActivated(boolean activated){
+        activated = activated;
     }
 
     /**
