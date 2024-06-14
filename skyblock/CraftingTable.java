@@ -19,14 +19,16 @@ public class CraftingTable extends Block
     private static Color lightYellow = new Color(235, 198, 109);
     private GreenfootImage img;
     private GreenfootImage img2;
+    private World world;
 
-    public CraftingTable(){
+    public CraftingTable(World world){
         super(lightYellow,2, "craftingtable");
-        img = new GreenfootImage("block/crafting table.png");
+        img = new GreenfootImage("block/crafting_table.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
+        this.world = world;
     }
 
     /**
