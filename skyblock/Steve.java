@@ -23,6 +23,7 @@ public class Steve extends Player
     private ArrayList<Item> heldItems;
     protected int X;
     protected int Y;
+    protected ArrayList<BodyPart> bodyparts = new ArrayList<>();
     
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
@@ -57,6 +58,10 @@ public class Steve extends Player
             getWorld().addObject(leftArm,0,0);  getWorld().addObject(rightArm,0,0);
             getWorld().addObject(leftHead,0,0); getWorld().addObject(rightHead,0,0);
         }
+        
+        
+
+        
         punching();
         rotateTowardsMouse();
         super.act();
@@ -64,12 +69,6 @@ public class Steve extends Player
         checkIfMoving();
         //rotateTowardsMouse();
         actNum++;
-        if(!GameWorld.getGUIOpened()){
-            X = getX();
-            Y = getY();
-        } else {
-            setLocation(X, Y);
-        }
     }
 
     /**

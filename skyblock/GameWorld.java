@@ -58,7 +58,6 @@ public class GameWorld extends World {
 
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("p");
         
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
@@ -77,11 +76,6 @@ public class GameWorld extends World {
         
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
-        
-        // Debugging: print player's Y coordinate when 'p' is pressed
-        if (keyCurrentlyDown1) {
-            System.out.println(player.getY());
-        }
     }
 
     /**
