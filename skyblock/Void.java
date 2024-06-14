@@ -1,28 +1,30 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class CobbleStone here.
+ * Write a description of class Void here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class CobbleStone extends Block
+public class Void extends Block
 {
+    
+    private static Color brown = new Color(77, 50, 36);
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public CobbleStone(){
-        super(Color.GRAY,5, "cobblestone");
-        img = new GreenfootImage("block/cobblestone.png");
+    public Void(){
+        super(brown,1000000000, "void");
+        img = new GreenfootImage("block/wood.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
-        isStone = true;
-        itemDrop = 1;
+        isWood = true;
+        itemDrop = 5;
     }
 
     /**
-     * Act - do whatever the Grass wants to do. This method is called whenever
+     * Act - do whatever the Dirt wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act()

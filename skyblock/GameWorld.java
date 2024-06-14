@@ -57,6 +57,7 @@ public class GameWorld extends World {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("p");
         
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
@@ -74,6 +75,10 @@ public class GameWorld extends World {
         keyPreviouslyDown = keyCurrentlyDown;
         
         hpBar.setLocation(player.getX(),player.getY() - 90);
+        
+        if (keyCurrentlyDown1) {
+            System.out.println(player.getY());
+        }
     }
     
     /**

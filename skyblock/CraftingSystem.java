@@ -62,6 +62,8 @@ public class CraftingSystem extends GUI
         return itemArray[y][x];
     }
     
+    /** Item functions */
+    
     private void setItem(Item item, int x, int y) {
         itemArray[y][x].setItem(item);
     }
@@ -70,8 +72,8 @@ public class CraftingSystem extends GUI
         itemArray[y][x].getItem().addSizeOfNumItems(1);
     }
     
-    private void decreaseBlockAmount(int x, int y) {
-        //itemArray[y][x].getBlock().addSizeOfNumItems(-1);
+    private void decreaseItemAmount(int x, int y) {
+        itemArray[y][x].getItem().addSizeOfNumItems(-1);
     }
     
     //Overload the methods
@@ -90,6 +92,47 @@ public class CraftingSystem extends GUI
         }
         else {
             if (getSlot(x, y).equals(item)) {
+                increaseItemAmount(x, y);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    
+    
+    /** Block functions */
+    
+    
+    private void setBlock(Block block, int x, int y) {
+        itemArray[y][x].setBlock(block);
+    }
+    
+    private void increaseBlockAmount(int x, int y) {
+        itemArray[y][x].getItem().addSizeOfNumItems(1);
+    }
+    
+    private void decreaseBlockAmount(int x, int y) {
+        itemArray[y][x].getItem().addSizeOfNumItems(-1);
+    }
+    
+    //Overload the methods
+    private void increaseBlockAmount(int x, int y, int increment) {
+        itemArray[y][x].getItem().addSizeOfNumItems(increment);
+    }
+    
+    private void decreaseBlockAmount(int x, int y, int increment) {
+        itemArray[y][x].getItem().addSizeOfNumItems(-increment);
+    }
+    
+    private boolean tryAddBlock(Block block, int x, int y) {
+        if(isEmpty(x, y)) {
+            setBlock(block, x, y);
+            return true;
+        }
+        else {
+            if (getSlot(x, y).equals(block)) {
                 increaseItemAmount(x, y);
                 return true;
             }

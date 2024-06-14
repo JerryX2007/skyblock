@@ -21,7 +21,7 @@ public class CraftingTable extends Block
     private GreenfootImage img2;
 
     public CraftingTable(){
-        super(lightYellow,2);
+        super(lightYellow,2, "craftingtable");
         img = new GreenfootImage("block/crafting table.png");
         img.scale(64,64);
         setImage(img);
