@@ -13,7 +13,7 @@ public class Log extends Block
     private GreenfootImage img2;
 
     public Log(){
-        super(brown,2);
+        super(brown,2, "log");
         img = new GreenfootImage("block/wood.png");
         img.scale(64,64);
         setImage(img);

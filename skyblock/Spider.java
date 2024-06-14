@@ -7,11 +7,6 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @version (a version number or a date)
  */
 public class Spider extends Mob{
-    private GreenfootImage defaultImg;
-    private GreenfootImage movingImg;
-    private GreenfootImage hurtImg;
-    private GreenfootImage deathImg;
-    
     public Spider(){
         super(true, 0, 2.5, 16, 0, 5);
     }

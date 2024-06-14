@@ -5,8 +5,8 @@ import java.util.ArrayList;
  * Represents the inventory GUI in the game.
  * Manages the items in the player's inventory and crafting sections.
  * 
- * Author: Benny Wang, Jerry Xing
- * Edited by: Evan Xi
+ * @arthor Benny Wang
+ * Edited by: Evan Xi, Jerry Xing
  * @version (a version number or a date)
  */
 public class Inventory extends GUI {
@@ -36,14 +36,22 @@ public class Inventory extends GUI {
         yAdjust = 0;
         
         // Initialize player's inventory slots
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, 414 + yAdjust);
-                slots[j][i] = temp;
-                xAdjust += 54;
+                if(i == 0){
+                    Empty temp = new Empty(16, 16, world, 424 + xAdjust, 590);
+                    slots[j][i] = temp;
+                    xAdjust += 54;
+                } else {
+                    Empty temp = new Empty(16, 16, world, 424 + xAdjust, 414 + yAdjust);
+                    slots[j][i] = temp;
+                    xAdjust += 54;
+                }
             }
-            xAdjust = 0;
-            yAdjust += 54;
+            if(i != 0){
+                xAdjust = 0;
+                yAdjust += 54;
+            }
         }
         xAdjust = 0;
         yAdjust = 0;
@@ -58,6 +66,9 @@ public class Inventory extends GUI {
             xAdjust = 0;
             yAdjust += 54;
         }
+        
+        heldItem[0] = new Empty(16, 16, world, 631, 348);
+        
     }
 
     /**
@@ -117,13 +128,20 @@ public class Inventory extends GUI {
         yAdjust = 0;
         
         // Add player's inventory slots to the world
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
-                world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
-                xAdjust += 54;
+                if(i == 0){
+                    world.addObject(slots[j][i], 424 + xAdjust, 588);
+                    xAdjust += 54;
+                } else {
+                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
+                    xAdjust += 54;
+                }
             }
             xAdjust = 0;
-            yAdjust += 54;
+            if(i != 0){
+                yAdjust += 54;
+            }
         }
         xAdjust = 0;
         yAdjust = 0;
@@ -144,6 +162,8 @@ public class Inventory extends GUI {
         for (Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
+        
+        world.addObject(heldItem[0], 631, 348);
     }
 
     /**
@@ -154,6 +174,16 @@ public class Inventory extends GUI {
     public static ArrayList<Item> getTempItemsList() {
         return tempItemsList;
     }
+    
+    public ArrayList<Item> getHeldItems(){
+        ArrayList<Item> b = new ArrayList<>();
+        for(Item i : itemsList){
+            if(i.getXPos() == heldItem[0].getXPos() && i.getYPos() == heldItem[0].getYPos()){
+                b.add(i);
+            }
+        }
+        return b;
+    }
 
     /**
      * Removes the inventory slots and items from the world.
@@ -163,7 +193,7 @@ public class Inventory extends GUI {
             world.removeObject(i);
             i.removeNum();
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
                 world.removeObject(slots[j][i]);
             }
@@ -173,6 +203,7 @@ public class Inventory extends GUI {
                 world.removeObject(crafting[j][i]);
             }
         }
+        world.removeObject(heldItem[0]);
     }
 
     /**

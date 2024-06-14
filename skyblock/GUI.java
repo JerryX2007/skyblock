@@ -14,9 +14,10 @@ public class GUI extends Actor
     protected static ArrayList<Item> itemsList = new ArrayList<>();
     protected ArrayList<Item> contents = new ArrayList<>();
     protected static ArrayList<Item> tempItemsList = new ArrayList<>();
-    protected static Item[][] slots = new Item[9][3];
+    protected static Item[][] slots = new Item[9][4];
     protected static Item[][] crafting = new Item[2][2];
     protected Item[][] chestSlots = new Item[9][3];
+    protected Item[] heldItem = new Item[1];
     
     /**
      * Create an image with given file name and size
