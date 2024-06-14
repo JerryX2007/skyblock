@@ -125,7 +125,8 @@ public class PauseScreen extends World
             volumeSlider.update((double) volume / 100.0);
         }
     }
-   /*
+
+    /*
      * method which gets the image of actors in the simulation, and draw their 
      * picture at their location before the simulation is paused
      */
@@ -134,21 +135,22 @@ public class PauseScreen extends World
             if (actor == blackScreen) {
                 continue;
             }
-            GreenfootImage image = new GreenfootImage(actor.getImage());
-            if (!(actor instanceof Mouse)) {
-                image.rotate(actor.getRotation());
-            }
+         //   GreenfootImage image = new GreenfootImage(actor.getImage());
+         //   if (!(actor instanceof Mouse)) {
+                //image.rotate(actor.getRotation());
+          //  }
 
-            image.setTransparency(actor.getImage().getTransparency());
-            drawImage(image, actor.getX() - image.getWidth()/2, actor.getY() - image.getHeight()/2);
+          //  image.setTransparency(actor.getImage().getTransparency());
+            //drawImage(image, actor.getX() - image.getWidth()/2, actor.getY() - image.getHeight()/2);
         }
         if(blackScreen.getWorld() == null) {
             return;
         }
         GreenfootImage fader = new GreenfootImage(blackScreen.getImage());
         fader.setTransparency(blackScreen.getImage().getTransparency());
-        drawImage(fader, blackScreen.getX() - fader.getWidth()/2, blackScreen.getY() - fader.getHeight()/2);
+      //  drawImage(fader, blackScreen.getX() - fader.getWidth()/2, blackScreen.getY() - fader.getHeight()/2);
     }
+
     /**
      * Returns the volume
      * 

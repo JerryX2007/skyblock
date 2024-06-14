@@ -22,7 +22,7 @@ public class FurnaceOff extends Block
     private GreenfootImage img2;
 
     public FurnaceOff(){
-        super(lightYellow,2);
+        super(lightYellow,2, "furnace");
         img = new GreenfootImage("block/furnace_off.jpeg");
         img.scale(64,64);
         setImage(img);
