@@ -77,8 +77,6 @@ public class CraftingSystem extends GUI
         return itemArray[y][x];
     }
     
-    /** Item functions */
-    
     private void setItem(Item item, int x, int y) {
         itemArray[y][x].setItem(item);
     }
@@ -205,6 +203,11 @@ public class CraftingSystem extends GUI
     
     private boolean isCraftingStoneSword() {
         //Recipe for stone sword: two cobblestones and a stick vertically aligned
+        /*
+         * #
+         * #
+         * #
+         */
         boolean foundFirstSword = false;
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 2; y++) {
@@ -237,10 +240,46 @@ public class CraftingSystem extends GUI
     
     private boolean isCraftingWoodPickaxe() {
         //Recipe for wooden pickaxe: three planks and 2 sticks in a pickaxe pattern
+        /* ###
+         * -#-
+         * -#-
+         */
         boolean foundFirstPickaxe = false;
         if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(1, 1) && !isEmpty(1, 2) &&
             getSlot(0, 0).getItem().getType().equals("plank") && getSlot(1, 0).getItem().getType().equals("plank") &&
             getSlot(2, 0).getItem().getType().equals("plank") && getSlot(1, 1).getItem().getType().equals("stick") && 
+            getSlot(1, 2).getItem().getType().equals("stick")) {
+            
+            if(foundFirstPickaxe) {
+                return false; //More than one pickaxe recipe found
+            }
+            foundFirstPickaxe = true;
+        }
+        else {
+            return false;
+        }
+        if(foundFirstPickaxe) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstPickaxe = false;
+                    }
+                }
+            }
+        }
+        return foundFirstPickaxe;
+    }
+    
+    private boolean isCraftingStonePickaxe() {
+        //Recipe for stone pickaxe: three cobblestone blocks and 2 sticks in a pickaxe pattern
+        /* ###
+         * -#-
+         * -#-
+         */
+        boolean foundFirstPickaxe = false;
+        if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(1, 1) && !isEmpty(1, 2) &&
+            getSlot(0, 0).getItem().getType().equals("cobblestone") && getSlot(1, 0).getItem().getType().equals("cobblestone") &&
+            getSlot(2, 0).getItem().getType().equals("cobblestone") && getSlot(1, 1).getItem().getType().equals("stick") && 
             getSlot(1, 2).getItem().getType().equals("stick")) {
             
             if(foundFirstPickaxe) {
