@@ -21,14 +21,9 @@ public class GameWorld extends World {
     private static boolean openChest = false;
 
     private static boolean GUIOpened = false;
-    
-    private static Hotbar hotbar;
 
     private Steve player;
     private HealthBar hpBar;
-    private int xAdjust = 0;
-    
-    private boolean keyPreviouslyDown = false;
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
@@ -42,7 +37,6 @@ public class GameWorld extends World {
         // Inventory stuff
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
-        hotbar = new Hotbar(300, this);
         //addObject(craftingSystem, getWidth()/2, getHeight()/2);
         
         
@@ -50,8 +44,10 @@ public class GameWorld extends World {
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 512, 384);
-        addObject(hotbar, getWidth() / 2, getHeight() - 50);
     }
+
+    private boolean keyPreviouslyDown = false;
+    private boolean keyPreviouslyDown1 = false;
 
     /**
      * Checks for things happening in the world
@@ -74,13 +70,6 @@ public class GameWorld extends World {
                 removeObject(inventory);
                 GUIOpened = false;
             } 
-        }
-        if(!GUIOpened){
-            for (int i = 0; i < 9; i++) {
-                addObject(GUI.getSlots()[i][0], 401 + xAdjust, getHeight() - 50);
-                xAdjust += 60;
-            }
-            xAdjust = 0;
         }
         keyPreviouslyDown = keyCurrentlyDown;
         

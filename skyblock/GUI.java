@@ -28,8 +28,4 @@ public class GUI extends Actor
         this.setImage(file);
         getImage().scale((int) (getImage().getWidth() * scale * 0.01), (int) (getImage().getHeight() * scale * 0.01));
     }
-    
-    public static Item[][] getSlots(){
-        return slots;
-    }
 }

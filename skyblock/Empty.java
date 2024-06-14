@@ -11,8 +11,8 @@ public class Empty extends Item
     private String image;
     
     public Empty(int length, int width, World world, int X, int Y){
-        super("block/leaves.png", length, width, world, false, X, Y, "air");
-        image  = "block/leaves.png";
+        super("block/air.png", length, width, world, false, X, Y, "air");
+        image  = "block/air.png";
     }
     
     /**
