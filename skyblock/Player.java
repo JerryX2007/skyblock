@@ -26,9 +26,11 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
     protected static boolean activated;
+    protected static boolean activated1;
     
     protected Block block;
     protected Chest chest;
+    protected CraftingTable craftingTable;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
@@ -121,11 +123,14 @@ public abstract class Player extends SuperSmoothMover{
                         GameWorld.setGUIOpened(true);
                         GameWorld.setOpenChest(true);
                     }
+                    else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
+                        craftingTable = (CraftingTable) block;
+                        activated = true;
+                        //craftingTable.
+                    }
                 }
             }
         }
-        
-        
     }
     
     public static void setActivated(boolean active){

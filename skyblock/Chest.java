@@ -1,19 +1,12 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
 /**
  * Write a description of class alsjflsa here.
  * 
- * @author (your name) 
+ * @author Jerry Xing
  * @version (a version number or a date)
  */
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class Log here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Chest extends Block
 {
     private static Color tan = new Color(198, 122, 70);
