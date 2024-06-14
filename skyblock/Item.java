@@ -289,6 +289,16 @@ public class Item extends Actor {
         }
     }
     
+    public ArrayList<Item> getItems(){
+        ArrayList<Item> heldItem = (ArrayList<Item>) getIntersectingObjects(Item.class);
+        for(int i = 0; i < heldItem.size(); i++){
+            if(heldItem.get(i).getType().equals("air")){
+                heldItem.remove(heldItem.get(i));
+            }
+        }
+        return heldItem;
+    }
+    
     /**
      * Gets the inventory x-coordinate of the item.
      * 

@@ -13,7 +13,7 @@ public class Dirt extends Block
     private GreenfootImage img2;
 
     public Dirt(){
-        super(brown,1);
+        super(brown,1, "dirt");
         img = new GreenfootImage("block/dirt.png");
         img.scale(64,64);
         setImage(img);

@@ -13,7 +13,7 @@ public class WoodenPlank extends Block
     private GreenfootImage img2;
 
     public WoodenPlank(){
-        super(brown,2);
+        super(brown,2, "plank");
         img = new GreenfootImage("block/wood_plank.jpeg");
         img.scale(64,64);
         setImage(img);

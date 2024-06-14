@@ -1,21 +1,20 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-import java.util.ArrayList;
 
 /**
- * Write a description of class Empty here.
+ * Write a description of class StonePickaxe here.
  * 
- * @author (your name) 
+ * Dylan Dinesh
  * @version (a version number or a date)
  */
-public class Empty extends Item
+public class Stick extends Item
 {
     private String image;
-    
-    public Empty(int length, int width, World world, int X, int Y){
-        super("block/leaves.png", length, width, world, false, X, Y, "air");
-        image  = "block/leaves.png";
+
+    public Stick(int length, int width, World world, int X, int Y){
+        super("items/stick.png", 25, 25, world, false, X, Y, "stick");
+        image  = "items/stick.png";
     }
-    
+
     /**
      * Act - do whatever the Empty wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -24,10 +23,8 @@ public class Empty extends Item
     {
         super.act();
     }
-    
+
     public String getItemImage(){
         return image;
     }
-    
-    
 }

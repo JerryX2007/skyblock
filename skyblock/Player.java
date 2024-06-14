@@ -100,25 +100,26 @@ public abstract class Player extends SuperSmoothMover{
                     block.setPlayer(this);
                 }
             }
-            if(button == 3) {
-                block = (Chest) getBlockUnderCursor();
-                if(block != null && !activated) {
-                    //System.out.println("test");
+            else if (button == 3) {
+                Block block = getBlockUnderCursor();
+                if (block != null && !activated && block instanceof Chest) {
+                    Chest chest = (Chest) block;
                     activated = true;
-                    
-                    block.addChest();
-                    getWorld().addObject(block.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+                    chest.addChest();
+                    getWorld().addObject(chest.getChestGUI(), getWorld().getWidth() / 2, getWorld().getHeight() / 2);
                     inventory.act();
                     GameWorld.setGUIOpened(true);
                     GameWorld.setOpenChest(true);
                 }
             }
         }
-        if(GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown){
+        if (GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown) {
             GameWorld.setGUIOpened(false);
             GameWorld.setOpenChest(false);
-            block.removeChest();
-            getWorld().removeObject(block.getChestGUI());
+            if (block != null) { // Add null check
+                block.removeChest();
+                getWorld().removeObject(block.getChestGUI());
+            }
             activated = false;
         }
         keyPreviouslyDown = keyCurrentlyDown;

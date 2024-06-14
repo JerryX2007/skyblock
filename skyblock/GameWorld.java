@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * All block information is stored in a massive 2d array system
  * The user is able to see a portion of the world using a "camera" system cenetered around the player
  * 
- * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @author Evan Xi, Benny Wang, Dylan Dinesh, Jerry Xing
  * @version 1.0.0
  */
 
@@ -57,6 +57,7 @@ public class GameWorld extends World {
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);  // Determines what goes on top
 
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("p");
         
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
@@ -74,6 +75,10 @@ public class GameWorld extends World {
         keyPreviouslyDown = keyCurrentlyDown;
         
         hpBar.setLocation(player.getX(),player.getY() - 90);
+        
+        if (keyCurrentlyDown1) {
+            System.out.println(player.getY());
+        }
     }
     
     /**
@@ -195,6 +200,7 @@ public class GameWorld extends World {
     private void prepareWorld() {
         updateBlock(2, 6, new Chest(this));
         updateBlock(4, 6, new Chest(this));
+        updateBlock(5, 6, new CraftingTable(this));
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
         }

@@ -23,7 +23,7 @@ public class Chest extends Block
     private World world;
 
     public Chest(World world){
-        super(tan,2);
+        super(tan,2, "chest");
         img = new GreenfootImage("block/chest.png");
         img.scale(64,64);
         setImage(img);

@@ -53,14 +53,24 @@ public class ChestGUI extends GUI {
      * Adds the chest and inventory slots to the world and positions the items in the chest.
      */
     public void addChest() {
+        xAdjust = 0;
+        yAdjust = 0;
+        
         // Add player's inventory slots to the world
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
-                world.addObject(slots[j][i], 424 + xAdjust, world.getHeight() / 2 + 30 + yAdjust);
-                xAdjust += 54;
+                if(i == 0){
+                    world.addObject(slots[j][i], 424 + xAdjust, 588);
+                    xAdjust += 54;
+                } else {
+                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
+                    xAdjust += 54;
+                }
             }
             xAdjust = 0;
-            yAdjust += 54;
+            if(i != 0){
+                yAdjust += 54;
+            }
         }
         xAdjust = 0;
         yAdjust = 0;
@@ -105,7 +115,7 @@ public class ChestGUI extends GUI {
         }
         
         // Remove player's inventory slots from the world
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
                 world.removeObject(slots[j][i]);
             }

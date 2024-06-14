@@ -26,8 +26,9 @@ public abstract class  Block extends Actor{
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
     protected Player player;
+    protected String name;
 
-    public Block(Color color, double hardness){
+    public Block(Color color, double hardness, String name){
         this.color = color;
         this.hardness = hardness;
         isWood = false; isStone = false; isDirt = false;
@@ -35,6 +36,7 @@ public abstract class  Block extends Actor{
         subBreakTime = breakTime;
         be = new BreakingEffect(this);
         isSelected = false; isHoldingMouse = false;
+        this.name = name;
     }
 
     /**
@@ -196,6 +198,9 @@ public abstract class  Block extends Actor{
     }
     private int getGridNumY(){
         return (this.getY() - 32) / 64;
+    }
+    public String getName() {
+        return name;
     }
 }
 
