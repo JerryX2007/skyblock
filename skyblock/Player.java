@@ -24,13 +24,13 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean isSprinting = false;
     protected int sprintToggleCD = 50;
     protected boolean activated;
-    
+
     protected Chest block;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;
-    
+
     private boolean keyPreviouslyDown;
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
@@ -63,7 +63,7 @@ public abstract class Player extends SuperSmoothMover{
     public void checkKeys() {
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         isMoving = false;
-        
+
         if(((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("W")) && onGround()) && headClear()) {
             jump();  
         }
@@ -207,7 +207,7 @@ public abstract class Player extends SuperSmoothMover{
         }
         return true;
     }    
-    
+
     /**
      * Checks if the user can continue moving left
      * Uses 4 collision points to the left of the user to detect any non-air blocks
@@ -256,7 +256,7 @@ public abstract class Player extends SuperSmoothMover{
             }
         }
     }
-        
+
     /**
      * Moves right by a pixel for each move speed
      * The loop is broken early if the left side is no longer clear for movement
@@ -271,7 +271,7 @@ public abstract class Player extends SuperSmoothMover{
             }
         }
     }
-    
+
     /**
      * If it isn't on the ground, start falling
      */
@@ -375,7 +375,7 @@ public abstract class Player extends SuperSmoothMover{
         }
         return true; // No obstructions
     }
-    
+
     //this is just a testing class
     public void doDamage(int damage){
         this.hp -= damage;
@@ -383,32 +383,39 @@ public abstract class Player extends SuperSmoothMover{
             getWorld().removeObject(this);
         }
     }
-    
-    
+
     public int getMoveSpeed() {
         return this.moveSpeed;
     }
+
     public int getJumpHeight() {
         return this.jumpHeight;
     }
+
     public int getReach() {
         return this.reach;
     }
+
     public boolean getCanDrop() {
         return this.canDrop;
     }
+
     public int getPickUpRange() {
         return this.pickUpRange;
     }
+
     public boolean isJumping() {
         return this.jumping;
     }
+
     public boolean getDirection(){
         return this.direction;
     }
+
     public int getHp(){
         return this.hp;
     }
+
     public void deactivate() {
         activated = false;
     }
