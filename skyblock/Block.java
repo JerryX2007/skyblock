@@ -34,7 +34,6 @@ public abstract class  Block extends Actor{
         isWood = false; isStone = false; isDirt = false;
         breakTime = 60*hardness;
         subBreakTime = breakTime;
-        be = new BreakingEffect(this);
         isSelected = false; isHoldingMouse = false;
         this.name = name;
     }
@@ -104,6 +103,9 @@ public abstract class  Block extends Actor{
         }
         //attempt to break the block when mouse is pressed on me
         if(isHoldingMouse){
+            if(be == null){
+                be = new BreakingEffect(this);
+            }
             isSelected = true;
             breakMe(player, 0,0);
         }
@@ -113,11 +115,15 @@ public abstract class  Block extends Actor{
             isSelected = false;
         }
         //add the breaking effect 
-        getWorld().addObject(be, getX(),getY());
+        if(be != null){
+            getWorld().addObject(be, getX(),getY());
+        }
         //block is broken
         if(subBreakTime < 0){
             drop(itemDrop);
+            if(be != null)
             getWorld().removeObject(be);
+            
             getWorld().removeObject(this);
         }
     }
