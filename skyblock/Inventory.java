@@ -66,6 +66,9 @@ public class Inventory extends GUI {
             xAdjust = 0;
             yAdjust += 54;
         }
+        
+        heldItem[0] = new Empty(16, 16, world, 631, 348);
+        
     }
 
     /**
@@ -159,6 +162,8 @@ public class Inventory extends GUI {
         for (Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
+        
+        world.addObject(heldItem[0], 631, 348);
     }
 
     /**
@@ -168,6 +173,10 @@ public class Inventory extends GUI {
      */
     public static ArrayList<Item> getTempItemsList() {
         return tempItemsList;
+    }
+    
+    public ArrayList<Item> getHeldItems(){
+        return heldItem[0].getItems();
     }
 
     /**
@@ -188,6 +197,7 @@ public class Inventory extends GUI {
                 world.removeObject(crafting[j][i]);
             }
         }
+        world.removeObject(heldItem[0]);
     }
 
     /**

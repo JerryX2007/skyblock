@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Write a description of class Steve here.
@@ -19,6 +20,7 @@ public class Steve extends Player
     private RightLeg rightLeg;
     private int actNum, counter;
     private boolean isPunching;
+    private ArrayList<Item> heldItems;
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
         //hitBox
@@ -37,6 +39,7 @@ public class Steve extends Player
         img2.scale(16,96);
         img3 = new GreenfootImage("steve/arm_left.png");
         img3.scale(16,96);
+        heldItems = inventory.getHeldItems();
     }
 
     /**

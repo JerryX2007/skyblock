@@ -17,6 +17,7 @@ public class GUI extends Actor
     protected static Item[][] slots = new Item[9][4];
     protected static Item[][] crafting = new Item[2][2];
     protected Item[][] chestSlots = new Item[9][3];
+    protected Item[] heldItem = new Item[1];
     
     /**
      * Create an image with given file name and size
