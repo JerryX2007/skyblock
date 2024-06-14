@@ -47,7 +47,7 @@ public class CraftingSystem extends GUI
         } 
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
-            outputItem = new Stick(); // Example output: 4 sticks
+            outputItem = new Stick(25, 25, world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
             outputBlock = null;
         } else {
             outputItem = null;
