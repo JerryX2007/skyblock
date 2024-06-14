@@ -10,8 +10,8 @@ public class WoodenSword extends Item
 {
     private String image;
 
-    public WoodenSword(int length, int width, World world, int X, int Y){
-        super("items/Wooden_Sword.png", 25, 25, world, false, X, Y, "wooden_sword");
+    public WoodenSword(World world, int X, int Y){
+        super("items/Wooden_Sword.png", 32, 32, world, true, X, Y, "wooden_sword");
         image  = "items/Wooden_Sword.png";
     }
 

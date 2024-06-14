@@ -15,7 +15,7 @@ public class TitleScreen extends World
     private GameWorld game;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
-    
+
     /**
      * Constructor for objects of class TitleScreen.
      */
@@ -37,25 +37,26 @@ public class TitleScreen extends World
         }
         setBackground(background);
         play = new Button("play", 3, ".jpg");
-        
+
         Button.init();
-        
+
         addObject(play, getWidth() / 2, getHeight() / 2 + 150);
         addObject(logo, getWidth() / 2, 100);
+        prepare();
     }
-    
-     public void act(){
+
+    public void act(){
         checkClick();
         startMusic();
     }
-    
+
     /**
      * Stops music when greenfoot is stopped
      */
     public void stopped() {
         mainMenu.pause();
     }
-    
+
     /**
      * Starts playing music when greenfoot is started
      *
@@ -63,28 +64,28 @@ public class TitleScreen extends World
     public void started() {
         mainMenu.playLoop();
     }
-    
+
     /*
      * @return the mainMenu music
      */
     public static GreenfootSound getMainMenuMusic(){
         return mainMenu;
     }
-    
+
     /**
      * Plays music
      */
     public static void playMusic(){
         mainMenu.playLoop();
     }
-    
+
     /**
      * Pauses music
      */
     public static void pauseMusic(){
         mainMenu.pause();
     }
-    
+
     /**
      * Setter for mainMenu volume
      * 
@@ -93,7 +94,7 @@ public class TitleScreen extends World
     public static void setMusicVolume(int volume){
         mainMenu.setVolume(volume);
     }
-    
+
     /**
      * Start background music
      */
@@ -114,5 +115,12 @@ public class TitleScreen extends World
             Greenfoot.setWorld(game);
             play.setPressedCondition(false);
         }
+    }
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
+    private void prepare()
+    {
     }
 }
