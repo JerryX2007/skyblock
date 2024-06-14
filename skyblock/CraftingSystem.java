@@ -5,16 +5,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * 
  * @author Jerry Xing
  * @version (a version number or a date)
- * Help from https://www.youtube.com/watch?v=LmQ6U3YkHHk
+ * Help from https://www.youtube.com/watch?v=LmQ6U3YkHHk & ChatGPT
  */
 public class CraftingSystem extends GUI
 {
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
-    private OutputSlot outputSlot;
     private Item outputItem;
-    private Block outputBlock;
+    private OutputSlot outputSlot;
     private static World world;
     
     
@@ -39,19 +38,21 @@ public class CraftingSystem extends GUI
         //Also try to hard code the possible positions of every single combination ;-;
         
         if (isCraftingPlanks()) {
-            outputBlock = new WoodenPlank(); // Example output: 4 planks
-            outputSlot.setBlock(outputBlock);
-            outputItem = null;
+            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank");
+            increaseItemAmount(outputItem, 3);
             outputSlot.setItem(outputItem);
+            outputItem = null;
             
         } 
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
             outputItem = new Stick(25, 25, world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
-            outputBlock = null;
+            increaseItemAmount(outputItem, 3);
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+            
         } else {
             outputItem = null;
-            outputBlock = null;
         }
         
     }
@@ -74,8 +75,16 @@ public class CraftingSystem extends GUI
         itemArray[y][x].getItem().addSizeOfNumItems(1);
     }
     
+    private void increaseItemAmount(Item item, int increment) {
+        item.addSizeOfNumItems(increment);
+    }
+    
     private void decreaseItemAmount(int x, int y) {
         itemArray[y][x].getItem().addSizeOfNumItems(-1);
+    }
+    
+    private void decreaseItemAmount(Item item, int increment) {
+        item.addSizeOfNumItems(-increment);
     }
     
     //Overload the methods
@@ -94,47 +103,6 @@ public class CraftingSystem extends GUI
         }
         else {
             if (getSlot(x, y).equals(item)) {
-                increaseItemAmount(x, y);
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    
-    
-    /** Block functions */
-    
-    
-    private void setBlock(Block block, int x, int y) {
-        itemArray[y][x].setBlock(block);
-    }
-    
-    private void increaseBlockAmount(int x, int y) {
-        itemArray[y][x].getItem().addSizeOfNumItems(1);
-    }
-    
-    private void decreaseBlockAmount(int x, int y) {
-        itemArray[y][x].getItem().addSizeOfNumItems(-1);
-    }
-    
-    //Overload the methods
-    private void increaseBlockAmount(int x, int y, int increment) {
-        itemArray[y][x].getItem().addSizeOfNumItems(increment);
-    }
-    
-    private void decreaseBlockAmount(int x, int y, int increment) {
-        itemArray[y][x].getItem().addSizeOfNumItems(-increment);
-    }
-    
-    private boolean tryAddBlock(Block block, int x, int y) {
-        if(isEmpty(x, y)) {
-            setBlock(block, x, y);
-            return true;
-        }
-        else {
-            if (getSlot(x, y).equals(block)) {
                 increaseItemAmount(x, y);
                 return true;
             }
@@ -179,10 +147,47 @@ public class CraftingSystem extends GUI
     }
 
     private boolean isCraftingSticks() {
-        // Recipe for sticks: two planks vertically aligned in the middle column
-        // Fix later
-        return !isEmpty(1, 0) && !isEmpty(1, 1) && isEmpty(1, 2) &&
-               getSlot(1, 0).getItem().getType().equals("Planks") &&
-               getSlot(1, 1).getItem().getType().equals("Planks");
+        // Recipe for sticks: two planks vertically aligned
+        boolean foundFirstPlank = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE - 1; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
+                    if (getSlot(x, y).getItem() != null && getSlot(x, y + 1).getItem() != null &&
+                        getSlot(x, y).getItem().getType().equals("planks") &&
+                        getSlot(x, y + 1).getItem().getType().equals("planks")) {
+                        if (foundFirstPlank) {
+                            return false; // More than one pair of planks found
+                        }
+                        foundFirstPlank = true;
+                    } else {
+                        return false; // Another item found
+                    }
+                }
+            }
+        }
+        
+        return foundFirstPlank;
+    }
+    
+    private boolean isCraftingWoodSword() {
+        //Recipe for wooden sword: two planks and a stick vertically aligned
+        boolean foundFirstSword = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE - 2; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
+                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("planks") && 
+                        getSlot(x, y+1).getBlock().getName().equals("planks") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                        if (foundFirstSword) {
+                            return false; //More than one sword recipe found
+                        }
+                        foundFirstSword = true;
+                    } else {
+                        return false; //Another item found
+                    }
+                }
+            }
+        }
+        return foundFirstSword;
     }
 }
