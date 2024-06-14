@@ -42,7 +42,7 @@ public class GameWorld extends World {
         craftingSystem = new CraftingSystem(300, this);
 
         // Player and health bar initialization
-        player = new Steve(3, 3, 3, true, 3, inventory);
+        player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
@@ -66,7 +66,7 @@ public class GameWorld extends World {
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
-            } else if (openInventory && GUIOpened) {
+            } else if (openInventory && GUIOpened && !openChest) {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);

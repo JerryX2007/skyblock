@@ -21,6 +21,9 @@ public class Steve extends Player
     private int actNum, counter;
     private boolean isPunching;
     private ArrayList<Item> heldItems;
+    protected int X;
+    protected int Y;
+    
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
         //hitBox
@@ -61,6 +64,12 @@ public class Steve extends Player
         checkIfMoving();
         //rotateTowardsMouse();
         actNum++;
+        if(!GameWorld.getGUIOpened()){
+            X = getX();
+            Y = getY();
+        } else {
+            setLocation(X, Y);
+        }
     }
 
     /**
