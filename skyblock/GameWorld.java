@@ -200,6 +200,7 @@ public class GameWorld extends World {
     private void prepareWorld() {
         updateBlock(2, 6, new Chest(this));
         updateBlock(4, 6, new Chest(this));
+        updateBlock(5, 6, new CraftingTable(this));
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
         }
