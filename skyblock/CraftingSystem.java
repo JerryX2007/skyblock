@@ -51,7 +51,15 @@ public class CraftingSystem extends GUI
             outputSlot.setItem(outputItem);
             outputItem = null;
             
-        } else {
+        }
+        
+        else if (isCraftingWoodSword()) {
+            outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else {
             outputItem = null;
         }
         
