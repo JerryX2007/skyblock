@@ -2,9 +2,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Keeps track of everything that happens inside the world
- * Grid cod * All block information is stored in a massive 2d array system
- *  * The user is able to see a portion of the world using a "camera" system cenetered around the player
+ * Keeps track of everything that happens inside the world.
+ * All block information is stored in a massive 2D array system.
+ * The user is able to see a portion of the world using a "camera" system centered around the player.
  *
  * @author Evan Xi, Benny Wang, Dylan Dinesh
  * @version 1.0.0
@@ -27,7 +27,6 @@ public class GameWorld extends World {
     private Steve player; 
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
-    private boolean keyPreviouslyDown1 = false;
     /**
      * Constructor for objects of class GameWorld.
      * Initializes the world, grid, player, inventory, and other components.
@@ -46,8 +45,8 @@ public class GameWorld extends World {
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
-        // Player and health bar initialization
 
+        // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
@@ -59,7 +58,8 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class); // Determines what goes on top
+        // Determines what goes on top
+        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class); 
         pause();
 
         // Inventory toggle logic
@@ -83,13 +83,13 @@ public class GameWorld extends World {
 
         // Update health bar position
 
-        hpBar.setLocation(player.getX(),player.getY() - 90);
+        hpBar.setLocation(player.getX(), player.getY() - 90);
     }
 
     /**
-     * Getter for openChest
+     * Getter for openChest.
      *
-     * @return  boolean value of openChest 
+     * @return  boolean value of openChest. 
      */
     public static boolean getOpenChest(){
         return openChest;
