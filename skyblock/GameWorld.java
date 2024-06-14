@@ -2,11 +2,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Adds a grid of blocks to the screen. 
- * Grid coded by Dylan with the aid of ChatGPT
- * 
- * Dylan Dinesh, Jerry, Benny
- * @version (a version number or a date)
+ * Keeps track of everything that happens inside the world
+ * Grid cod * All block information is stored in a massive 2d array system
+ *  * The user is able to see a portion of the world using a "camera" system cenetered around the player
+ *
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @version 1.0.0
  */
 
 public class GameWorld extends World {
@@ -21,13 +22,14 @@ public class GameWorld extends World {
     private ChestGUI chest;
     private boolean openChest = false;
 
-    private boolean GUIOpened = false;
+    private static boolean GUIOpened = false;
 
-    private Steve player = new Steve(3, 3, 3, true, 3);
+    private Steve player; 
+    private HealthBar hpBar;
 
     public GameWorld() {    
-        // Create a new world with 1280x768 cells with a cell size of 1x1 pixels.
-        super(1280, 768, 1);
+        // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
+        super(1280, 768, 1, false);
 
         // Initialize the grid
         grid = new Block[20][12];
@@ -40,24 +42,33 @@ public class GameWorld extends World {
         chest = new ChestGUI(300, this);
         craftingSystem = new CraftingSystem(300, this);
         //addObject(craftingSystem, getWidth()/2, getHeight()/2);
+
+
+        player = new Steve(3, 3, 3, true, 3, inventory);
+        hpBar = new HealthBar(player);
+        addObject(hpBar, 0, 0);
         addObject(player, 512, 384);
     }
 
     private boolean keyPreviouslyDown = false;
     private boolean keyPreviouslyDown1 = false;
 
+    /**
+     * Checks for things happening in the world
+     * Tracks chests, inventory, blocks, and more
+     */
     public void act() {
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class); // Determines what goes on top
         pause();
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
-            } 
-            else if(openInventory && GUIOpened){
+            } else if(openInventory && GUIOpened){
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
@@ -84,11 +95,60 @@ public class GameWorld extends World {
         }
 
         keyPreviouslyDown1 = keyCurrentlyDown1;
-
+        
+        hpBar.setLocation(player.getX(),player.getY() - 90);
     }
+        
+    /*
+     * Getter for openChest
+     *
+     * @return openChest openChest value
+     */
+    public static boolean getOpenChest(){
+        return openChest;
+    }
+    
+    /*
+     * Getter for GUIOpened
+     *
+     * @return GUIOpened GUIOpened value
+     */
+    public static boolean getGUIOpened(){
+        return GUIOpened;
+    }
+    
+    /*
+     * Sets the boolean openChest
+     *
+     * @param open New value for openChest
+     */
+    public static void setOpenChest(boolean open){
+        openChest = open;
+    }
+    
+    /*
+     * Sets the boolean GUIOpened
+     *
+     * @param opened New value for GUIOpened
+     */
+    public static void setGUIOpened(boolean opened){
+        GUIOpened = opened;
+    }
+    
+    public void spoofInventory(){
+        inventory.addInventory();
+        addObject(inventory, getWidth() / 2, getHeight() / 2);
+        inventory.act();
+        inventory.removeInventory();
+        removeObject(inventory);
+    }
+    
+    /**
+     * Fill out the entire world with air blocks
+     */
 
     private void initializeGrid() {
-        // Initializing the grid with Air blocks
+
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 12; j++) {
                 grid[i][j] = new Air();           
@@ -128,7 +188,9 @@ public class GameWorld extends World {
         int[] worldCoordinates = getWorldCoordinates(gridX, gridY);
         addObject(actor, worldCoordinates[0], worldCoordinates[1]);
     }
-
+    /**
+     * Replaces the given block on the 2d grid system with another block
+     */
     public void updateBlock(int gridX, int gridY, Block newBlock){
         ArrayList<Block> removingBlock = (ArrayList<Block>)getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
         for(Block blocks : removingBlock){
@@ -150,7 +212,15 @@ public class GameWorld extends World {
         }
     }
 
+
+    
+    /**
+     * Load in the initial island by placing associated blocks
+     * Called when the world is generated
+     */
     private void prepareWorld(){
+        updateBlock(2, 6, new Chest(this));
+        updateBlock(4, 6, new Chest(this));
         for (int i = 2; i < 18; i++){
             updateBlock(i, 8, new Dirt());  
         }
