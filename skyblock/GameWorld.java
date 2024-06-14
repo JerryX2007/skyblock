@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * All block information is stored in a massive 2d array system
  * The user is able to see a portion of the world using a "camera" system cenetered around the player
  * 
- * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @author Evan Xi, Benny Wang, Dylan Dinesh, Jerry Xing
  * @version 1.0.0
  */
 

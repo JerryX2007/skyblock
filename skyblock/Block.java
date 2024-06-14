@@ -199,5 +199,8 @@ public abstract class  Block extends Actor{
     private int getGridNumY(){
         return (this.getY() - 32) / 64;
     }
+    public String getName() {
+        return name;
+    }
 }
 

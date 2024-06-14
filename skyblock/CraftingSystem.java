@@ -12,6 +12,7 @@ public class CraftingSystem extends GUI
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
+    private OutputSlot outputSlot;
     private Item outputItem;
     private Block outputBlock;
     private static World world;
@@ -37,16 +38,17 @@ public class CraftingSystem extends GUI
         //Hard code recipes
         //Also try to hard code the possible positions of every single combination ;-;
         
-        // Check for plank recipe (wood block anywhere in the grid)
         if (isCraftingPlanks()) {
             outputBlock = new WoodenPlank(); // Example output: 4 planks
-            //outputBlock.increaseBlockAmount();
+            outputSlot.setBlock(outputBlock);
             outputItem = null;
+            outputSlot.setItem(outputItem);
             
         } 
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
-            //outputItem = new Item("Sticks", 4); // Example output: 4 sticks
+            outputItem = new Stick(); // Example output: 4 sticks
+            outputBlock = null;
         } else {
             outputItem = null;
             outputBlock = null;
@@ -163,11 +165,13 @@ public class CraftingSystem extends GUI
         boolean satisfied = false;
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
-                if (!isEmpty(x, y) && getSlot(x, y).getItem().getType().equals("Log")) {
+                if (!isEmpty(x, y)) {
                     if(satisfied) {
-                        return false;
+                        return false; //If there is another block in the crafting system return false
                     }
-                    satisfied = true;
+                    if(getSlot(x, y).getBlock().getName().equals("log")) {
+                        satisfied = true;
+                    }
                 }
             }
         }
