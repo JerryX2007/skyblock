@@ -9,10 +9,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Spider extends Mob{
     public Spider(){
         super(true, 0, 2.5, 16, 0, 5);
+        defaultImg = new GreenfootImage("mob/spider_1.png");
+        movingImg = new GreenfootImage("mob/spider_2.png");
+        hurtImg = new GreenfootImage("mob/spider_3.png");
     }
     
     public void act(){
-        
+        super.act();
     }
     
     public void drop(){

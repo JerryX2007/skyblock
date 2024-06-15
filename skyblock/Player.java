@@ -300,7 +300,7 @@ public abstract class Player extends SuperSmoothMover{
      */
     protected void jump() {
         GameWorld world = (GameWorld) getWorld();
-        yVelocity -= 4.9;
+        yVelocity -= 4.4;
         world.shiftWorld(0, -yVelocity);
         world.reverseShiftPlayer(0, -yVelocity);
     }
