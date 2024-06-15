@@ -133,7 +133,7 @@ public class GameWorld extends World {
             // Capture current grid and actors
             Block[][] currentGrid = getGrid();
             ArrayList<Actor> currentActors = getActors();
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentGrid, currentActors));   
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
         }
     }
 
