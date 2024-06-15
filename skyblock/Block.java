@@ -259,5 +259,22 @@ public abstract class  Block extends Actor{
     public String getName() {
         return name;
     }
+    
+    /**
+     * Get whether the block is dirt
+     * 
+     * @return if the block is dirt
+     */
+    public boolean isDirt() {
+        return isDirt;
+    }
+    
+    public boolean isStone() {
+        return isStone;
+    }
+    
+    public boolean isWood() {
+        return isWood;
+    }
 }
 
