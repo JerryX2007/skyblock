@@ -96,7 +96,7 @@ public class GameWorld extends World {
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
         checkSave();
-        checkPause();
+        //checkPause();
         checkLoad();
     }
 

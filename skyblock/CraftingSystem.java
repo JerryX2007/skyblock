@@ -66,7 +66,7 @@ public class CraftingSystem extends GUI
         for(int i=0; i < GRID_SIZE; i++) {
             for(int y=0;y<GRID_SIZE;y++) {
                 if(i==0) {
-                    world.addObject(new Empty(16, 16, world, 200 + xAdjust, 400));
+                    world.addObject(new Empty(16, 16, world, 200 + xAdjust, 400), 200 + xAdjust, 400);
                 }
                 
             }

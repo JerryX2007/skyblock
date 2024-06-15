@@ -15,6 +15,8 @@ public abstract class Player extends SuperSmoothMover{
     protected static int pickUpRange;
     protected static boolean jumping;
     protected Inventory inventory;
+    protected static GreenfootSound[] walking;
+    protected boolean isPlaying;
 
     protected final int gravity = 2;
     protected double yVelocity;
@@ -26,7 +28,7 @@ public abstract class Player extends SuperSmoothMover{
     protected int sprintToggleCD = 50;
     protected static boolean activated;
     protected static boolean activated1;
-
+    
     protected Block block;
     protected Chest chest;
     protected CraftingTable craftingTable;
@@ -59,6 +61,11 @@ public abstract class Player extends SuperSmoothMover{
         this.hp = 20;
         activated = false;
         this.inventory = inventory;
+        walking = new GreenfootSound[3];
+        walking[0] = new GreenfootSound("walking_dirt.mp3");
+        walking[1] = new GreenfootSound("walking_stone.mp3");
+        walking[2] = new GreenfootSound("walking_wood.mp3");
+        isPlaying = false;
     }
 
     /**
@@ -68,6 +75,21 @@ public abstract class Player extends SuperSmoothMover{
         checkKeys();
         checkPickup();
         checkFalling();
+        if (isMoving) {
+            Block blockBelow = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+            if(blockBelow != null && !(blockBelow instanceof Air)) {
+                if(blockBelow.isDirt() && !isPlaying) {
+                    walking[0].playLoop();
+                    isPlaying = true;
+                }
+            }
+        }
+        else {
+            for(int i=0; i<walking.length; i++) {
+                walking[i].pause();
+            }
+            isPlaying = false;
+        }
     }
 
     /**
@@ -117,7 +139,7 @@ public abstract class Player extends SuperSmoothMover{
                         else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
                             craftingTable = (CraftingTable) block;
                             activated = true;
-                            craftingTable.openGUI();
+                            //craftingTable.openGUI();
                         }
                     }
                 }
@@ -344,7 +366,7 @@ public abstract class Player extends SuperSmoothMover{
         }
     }
 
-        /**
+    /**
      * Checks if a block is within a certain range of the player.
      * 
      * @param targetBlock The block to check.
