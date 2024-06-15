@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
-    private static Block[][] grid;
+    public static Block[][] grid;
     private TitleScreen titleScreen;
     private ArrayList<Actor> actorList;
     private Fader blackScreen;
@@ -50,10 +50,11 @@ public class GameWorld extends World {
         grid = new Block[100][36];
 
         // Optionally fill the grid with initial values or objects
-        initializeGrid();
-        prepareWorld();
+        //initializeGrid();
+        //prepareWorld();
         //refreshWorld();
-        //loadWorld();
+        loadWorld();
+        checkSave();
 
         // Inventory initialization
         inventory = new Inventory(300, this);
@@ -96,8 +97,7 @@ public class GameWorld extends World {
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
         checkSave();
-        checkPause();
-        checkLoad();
+        checkReset();
     }
 
     /**
@@ -162,8 +162,7 @@ public class GameWorld extends World {
     private void initializeGrid() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
-                //updateBlock(i, j, new Air());
-                grid[i][j] = new Air();
+                updateBlock(i, j, new Air());
             }
         }
     }
@@ -237,9 +236,9 @@ public class GameWorld extends World {
      * @param newBlock The new block to place.
      */
     public void updateBlock(int gridX, int gridY, Block newBlock) {
-        ArrayList<Block> removingBlock = (ArrayList<Block>) getObjectsAt(gridX * 64 + 32, gridY * 64 + 32, Block.class);
-        for (Block blocks : removingBlock) {
-            removeObject(blocks);
+        ArrayList<Block> removingBlock = (ArrayList<Block>) getObjectsAt((gridX - 40)* 64 + 32, (gridY - 12) * 64 + 32, Block.class);
+        for (Block block : removingBlock) {
+            removeObject(block);
         }
         grid[gridX][gridY] = newBlock;
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
@@ -333,9 +332,10 @@ public class GameWorld extends World {
         }
         refreshWorld();
     }
-    private void checkLoad(){
+    private void checkReset(){
         if(Greenfoot.isKeyDown("l")){
-            loadWorld();
+            initializeGrid();
+            prepareWorld();
         }
     }
     
@@ -348,6 +348,7 @@ public class GameWorld extends World {
                     pWriter.println(grid[i][j].getName());
                 }
             }
+            //System.out.println("World saved!");
             pWriter.close();
         }
         catch(IOException e){
