@@ -58,7 +58,7 @@ public class GameWorld extends World {
     public void act() {
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-        pause();
+        //pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
 
