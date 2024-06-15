@@ -78,6 +78,10 @@ public class ItemDrop extends SuperSmoothMover{
                 img = new GreenfootImage("block/chest.png");
                 name = "chest";
                 break;
+            case 8:
+                img = new GreenfootImage("block/wooden_plank.png");
+                name = "plank";
+                break;
         }
         img.scale(15, 15); // Scales the item drop to be a mini version of the original 64x64 block
         setImage(img);
@@ -119,6 +123,7 @@ public class ItemDrop extends SuperSmoothMover{
     public int getType(){
         return type;
     }
+
     public String getName(){
         return name;
     }
