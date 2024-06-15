@@ -14,7 +14,7 @@ public class TNT extends Block
 
     public TNT(){
         super(brown,2, "plank");
-        img = new GreenfootImage("block/wooden_plank.png");
+        img = new GreenfootImage("block/TNT.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
