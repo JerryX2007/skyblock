@@ -63,7 +63,7 @@ public abstract class Player extends SuperSmoothMover{
         this.inventory = inventory;
         walking = new GreenfootSound[3];
         walking[0] = new GreenfootSound("walking_dirt.mp3");
-        walking[0].setVolume(50);
+        walking[0].setVolume(30);
         walking[1] = new GreenfootSound("walking_stone.mp3");
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
