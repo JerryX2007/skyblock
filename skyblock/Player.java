@@ -33,7 +33,7 @@ public abstract class Player extends SuperSmoothMover{
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    protected int hp;
+    protected int hp;    
 
     /**
      * Constructor for Player class.
@@ -46,6 +46,7 @@ public abstract class Player extends SuperSmoothMover{
      * @param jumping Boolean indicating if the player is currently jumping
      * @param inventory The player's inventory
      */
+
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
         this.jumpHeight = jumpHeight;
@@ -66,9 +67,7 @@ public abstract class Player extends SuperSmoothMover{
     public void act(){
         checkKeys();
         checkPickup();
-        if(!GameWorld.getGUIOpened()){
-            checkFalling();
-        }
+        checkFalling();
     }
 
     /**
