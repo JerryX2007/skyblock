@@ -72,7 +72,7 @@ public class GameWorld extends World {
      */
     public void act() {
         // Determines what goes on top
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, SuperSmoothMover.class);
         //pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -84,10 +84,11 @@ public class GameWorld extends World {
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
             } else if (openInventory && GUIOpened && !openChest) {
+                GUIOpened = false;
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-                GUIOpened = false;
+                
             } 
         }
         keyPreviouslyDown = keyCurrentlyDown;
@@ -146,9 +147,12 @@ public class GameWorld extends World {
         removeObject(inventory);
     }
 
-    private void checkPause(){
-        if(Greenfoot.isKeyDown("p")){
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
+    private void pause() {
+        if (Greenfoot.isKeyDown("p")) {
+            // Capture current grid and actors
+            Block[][] currentGrid = getGrid();
+            ArrayList<Actor> currentActors = getActors();
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
         }
     }
 
@@ -411,6 +415,14 @@ public class GameWorld extends World {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    public Block[][] getGrid() {
+        return grid;
+    }
+
+    public ArrayList<Actor> getActors() {
+        return new ArrayList<>(getObjects(Actor.class));
     }
 
     /**

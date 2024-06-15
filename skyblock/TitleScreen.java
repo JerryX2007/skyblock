@@ -65,7 +65,7 @@ public class TitleScreen extends World
         mainMenu.playLoop();
     }
 
-    /*
+    /**
      * @return the mainMenu music
      */
     public static GreenfootSound getMainMenuMusic(){
@@ -116,6 +116,7 @@ public class TitleScreen extends World
             play.setPressedCondition(false);
         }
     }
+    
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.

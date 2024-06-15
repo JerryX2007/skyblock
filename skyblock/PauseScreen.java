@@ -77,6 +77,7 @@ public class PauseScreen extends World
             addObject(soundOffImg, getWidth() / 2 - 110, getHeight() - 25);
             soundOffImg.getImage().scale(40, 40);
         }
+        getActorImage();
     }
 
     /**
@@ -130,25 +131,19 @@ public class PauseScreen extends World
      * method which gets the image of actors in the simulation, and draw their 
      * picture at their location before the simulation is paused
      */
-    private void getActorImage(Fader blackScreen){
+    private void getActorImage(){
         for(Actor actor : pauseLocation){
-            if (actor == blackScreen) {
-                continue;
-            }
-            //   GreenfootImage image = new GreenfootImage(actor.getImage());
-            //   if (!(actor instanceof Mouse)) {
-            //image.rotate(actor.getRotation());
-            //  }
 
-            //  image.setTransparency(actor.getImage().getTransparency());
-            //drawImage(image, actor.getX() - image.getWidth()/2, actor.getY() - image.getHeight()/2);
+            GreenfootImage image = new GreenfootImage(actor.getImage());
+
+            image.setTransparency(actor.getImage().getTransparency());
+            drawImage(image, actor.getX() - image.getWidth()/2, actor.getY() - image.getHeight()/2);
         }
-        if(blackScreen.getWorld() == null) {
-            return;
-        }
-        GreenfootImage fader = new GreenfootImage(blackScreen.getImage());
-        fader.setTransparency(blackScreen.getImage().getTransparency());
-        //  drawImage(fader, blackScreen.getX() - fader.getWidth()/2, blackScreen.getY() - fader.getHeight()/2);
+
+    }
+
+    private void drawImage(GreenfootImage image, int x, int y){
+        getBackground().drawImage(image, x, y);
     }
 
     /**

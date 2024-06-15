@@ -23,8 +23,4 @@ public class WoodenSword extends Item
     {
         super.act();
     }
-
-    public String getItemImage(){
-        return image;
-    }
 }

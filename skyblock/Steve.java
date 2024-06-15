@@ -2,10 +2,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Write a description of class Steve here.
+ * Represents the main character, Steve, in the game.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * This class represents the main character, Steve, in the game. Steve has various body parts
+ * and can perform actions such as punching and moving.
+ * 
+ * @author Nick Chen
+ * @version 1.0.0
  */
 public class Steve extends Player
 {
@@ -25,6 +28,16 @@ public class Steve extends Player
     protected int Y;
     protected ArrayList<BodyPart> bodyparts = new ArrayList<>();
     
+    /**
+     * Constructor for the Steve class.
+     * 
+     * @param moveSpeed The movement speed of Steve.
+     * @param jumpHeight The jump height of Steve.
+     * @param reach The reach of Steve.
+     * @param canDrop A boolean indicating whether Steve can drop items.
+     * @param pickUpRange The pick-up range of Steve.
+     * @param inventory The inventory of Steve.
+     */
     public Steve(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, Inventory inventory) {
         super(moveSpeed, jumpHeight, reach, canDrop, pickUpRange, true, inventory);
         //hitBox
@@ -59,9 +72,6 @@ public class Steve extends Player
             getWorld().addObject(leftHead,0,0); getWorld().addObject(rightHead,0,0);
         }
         
-        
-
-        
         punching();
         rotateTowardsMouse();
         super.act();
@@ -72,7 +82,7 @@ public class Steve extends Player
     }
 
     /**
-     * if player is moving, play swinging animation, else, reset it to idle position
+     * Check if Steve is moving and update the animation accordingly.
      */
     public void checkIfMoving(){
         if(isMoving){
@@ -99,8 +109,9 @@ public class Steve extends Player
             rightArm.setImage(img);
         }
     }
+
     /**
-     * make the body parts into the right order when body turns
+     * Update the layering of body parts based on Steve's direction.
      */
     public void updateLayering() {
         // Clear existing objects
@@ -135,34 +146,7 @@ public class Steve extends Player
     }
 
     /**
-     * swing arms and legs
-     */
-    public void swing(){
-        // function y = sinx where actNum is x and angle radians is y
-        int time = actNum/10;//swing speed
-        double radians = Math.sin(time);//swing angle
-        double oppositeRadians = Math.sin(time+ Math.PI);
-        if(isPunching && direction){
-            leftLeg.setRotation(45*radians);
-            rightLeg.setRotation(45*oppositeRadians);
-            leftArm.setRotation(40*oppositeRadians);
-        }
-        else if(isPunching && !direction){
-            rightArm.setRotation(40*radians);
-            leftLeg.setRotation(45*radians);
-            rightLeg.setRotation(45*oppositeRadians);
-        }
-        else{
-            rightArm.setRotation(40*radians);
-            leftLeg.setRotation(45*radians);
-            rightLeg.setRotation(45*oppositeRadians);
-            leftArm.setRotation(40*oppositeRadians);
-        }
-    }
-
-    /**
-     * rotate head towards mouse
-     * implemented from chatgpt
+     * Rotate Steve's head towards the mouse pointer.
      */
     public void rotateTowardsMouse() {
         // Get the current mouse information
@@ -192,8 +176,35 @@ public class Steve extends Player
             rightHead.turnTowards(mouseX, mouseY);
         }
     }
+
     /**
-     * punching animation, kinda shit
+     * Perform the swinging animation when Steve is moving.
+     */
+    public void swing(){
+        // function y = sinx where actNum is x and angle radians is y
+        int time = actNum/10;//swing speed
+        double radians = Math.sin(time);//swing angle
+        double oppositeRadians = Math.sin(time+ Math.PI);
+        if(isPunching && direction){
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(40*oppositeRadians);
+        }
+        else if(isPunching && !direction){
+            rightArm.setRotation(40*radians);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+        }
+        else{
+            rightArm.setRotation(40*radians);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(40*oppositeRadians);
+        }
+    }
+
+    /**
+     * Perform the punching animation when Steve punches.
      */
     public void punching(){
         MouseInfo mouse = Greenfoot.getMouseInfo();
@@ -245,5 +256,4 @@ public class Steve extends Player
             counter++;
         }
     }
-
 }
