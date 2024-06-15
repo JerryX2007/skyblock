@@ -79,52 +79,54 @@ public abstract class  Block extends Actor{
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act(){
-        MouseInfo mouse = Greenfoot.getMouseInfo();
+        if (getWorld() instanceof GameWorld) {
+            MouseInfo mouse = Greenfoot.getMouseInfo();
 
-        if (mouse != null) {
-            // Extract the x and y coordinates of the mouse
-            int mouseX = mouse.getX();
-            int mouseY = mouse.getY();
-            
-            //borrowed mouseover code from Mr. Cohen
-            isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+            if (mouse != null) {
+                // Extract the x and y coordinates of the mouse
+                int mouseX = mouse.getX();
+                int mouseY = mouse.getY();
 
-            if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
-                // Mouse button is pressed
-                isHoldingMouse = true;
+                //borrowed mouseover code from Mr. Cohen
+                isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+
+                if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
+                    // Mouse button is pressed
+                    isHoldingMouse = true;
+                }
+                if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
+                    isHoldingMouse = false; // Reset the flag
+                }   
             }
-            if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
-                isHoldingMouse = false; // Reset the flag
-            }   
-        }
-        if(!isSelected){
-            stopBreaking();
-            isHoldingMouse = false;
-        }
-        //attempt to break the block when mouse is pressed on me
-        if(isHoldingMouse){
-            if(be == null){
-                be = new BreakingEffect(this);
+            if(!isSelected){
+                stopBreaking();
+                isHoldingMouse = false;
             }
-            isSelected = true;
-            breakMe(player, 0,0);
-        }
+            //attempt to break the block when mouse is pressed on me
+            if(isHoldingMouse){
+                if(be == null){
+                    be = new BreakingEffect(this);
+                }
+                isSelected = true;
+                breakMe(player, 0,0);
+            }
 
-        else{
-            stopBreaking();
-            isSelected = false;
-        }
-        //add the breaking effect 
-        if(be != null){
-            getWorld().addObject(be, getX(),getY());
-        }
-        //block is broken
-        if(subBreakTime < 0){
-            drop(itemDrop);
-            if(be != null)
-            getWorld().removeObject(be);
-            
-            getWorld().removeObject(this);
+            else{
+                stopBreaking();
+                isSelected = false;
+            }
+            //add the breaking effect 
+            if(be != null){
+                getWorld().addObject(be, getX(),getY());
+            }
+            //block is broken
+            if(subBreakTime < 0){
+                drop(itemDrop);
+                if(be != null)
+                    getWorld().removeObject(be);
+
+                getWorld().removeObject(this);
+            }
         }
     }
 
@@ -190,21 +192,27 @@ public abstract class  Block extends Actor{
     public void setPlayer(Player player) {
         this.player = player;
     }
+
     public void stopBreaking(){
         subBreakTime = breakTime;
     }
+
     public double getBreakTime(){
         return breakTime;
     }
+
     public double getSubBreakTime(){
         return subBreakTime;
     }
+
     private int getGridNumX(){
         return (this.getX() - 32) / 64;
     }
+
     private int getGridNumY(){
         return (this.getY() - 32) / 64;
     }
+
     public String getName() {
         return name;
     }

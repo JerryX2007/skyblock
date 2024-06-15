@@ -33,6 +33,8 @@ public class PauseScreen extends World
     protected static int volume = 100;
     private boolean soundOn = true;
     private int previousVolume;
+    private Block[][] grid;
+    private ArrayList<Actor> actors;
 
     /**
      * Constructor for objects of class PauseScreen.
@@ -41,13 +43,20 @@ public class PauseScreen extends World
      * @param GameWorld world: the world world which is acting before it is paused, used for resume button
      * @param ArrayList<Actor> actors: used for painting actors on the pauseScreen based under these actors' position in the simulation before
      */
-    public PauseScreen(TitleScreen titleScreen, GameWorld world, ArrayList<Actor> actors)
-    {    
+    public PauseScreen(TitleScreen titleScreen, GameWorld world, Block[][] grid, ArrayList<Actor> actors) {
+
         // Create a new world with 1260x720 cells with a cell size of 1x1 pixels.
         super(1260, 720, 1);
 
         // Capture the background of the current game world
         GreenfootImage background = new GreenfootImage(world.getBackground());
+
+        // Save the grid and actors
+        this.grid = grid;
+        this.actors = actors;
+
+        // Recreate the grid and actors in the pause world
+        initializePauseWorld();
 
         // Apply a mostly transparent gray overlay
         overlay.setColor(new Color(0, 0, 0, 50)); // 50 is the alpha for more transparency
@@ -79,6 +88,25 @@ public class PauseScreen extends World
         }
     }
 
+    private void initializePauseWorld() {
+        // Add grid blocks to the pause world
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                Block block = grid[i][j];
+                if (block != null) {
+                    addObject(block, i * 64 + 32, j * 64 + 32);
+                }
+            }
+        }
+
+        // Add other actors to the pause world
+        for (Actor actor : actors) {
+            int x = actor.getX();
+            int y = actor.getY();
+            addObject(actor, x, y);
+        }
+    }
+
     /**
      * This act method updates the volume of music based on the volume slider.
      * It also checks whether or not buttons are clicked.
@@ -91,8 +119,8 @@ public class PauseScreen extends World
             Greenfoot.setWorld(titleScreen);
         }
         if (resume.isPressed()) {
-            Greenfoot.setWorld(world);
             resume.setPressedCondition(false);
+            Greenfoot.setWorld(world);
         }
 
         volume = volumeSlider.getValue();
