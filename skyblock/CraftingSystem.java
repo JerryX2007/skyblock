@@ -1,10 +1,11 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class CraftingSystem here.
+ * CraftingSystem class handles the crafting mechanics in the game.
+ * It checks for specific crafting recipes and updates the output slot with the crafted item.
  * 
  * @author Jerry Xing
- * @version (a version number or a date)
+ * @version 1.0 (June 14, 2024)
  * Help from https://www.youtube.com/watch?v=LmQ6U3YkHHk & ChatGPT
  */
 public class CraftingSystem extends GUI
@@ -16,7 +17,13 @@ public class CraftingSystem extends GUI
     private OutputSlot outputSlot;
     private static World world;
     
-    
+    /**
+     * Constructor for objects of class CraftingSystem.
+     * Initializes the crafting grid and visibility state.
+     * 
+     * @param scale The scale of the crafting system interface.
+     * @param world The world in which the crafting system exists.
+     */
     public CraftingSystem(int scale, World world) {
         super("craftingTableInterface.png", scale, world);
         itemArray = new CraftingSlot[GRID_SIZE][GRID_SIZE];
@@ -33,6 +40,9 @@ public class CraftingSystem extends GUI
         }
     }
     
+    /**
+     * Checks the crafting grid for valid crafting recipes and updates the output slot with the crafted item.
+     */
     private void checkCrafting() {
         //Hard code recipes
         //Also try to hard code the possible positions of every single combination ;-;
@@ -70,43 +80,111 @@ public class CraftingSystem extends GUI
         
     }
     
+    /**
+     * Checks if the slot at the given coordinates is empty.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     * @return True if the slot is empty, false otherwise.
+     */
     private boolean isEmpty(int x, int y) {
         return itemArray[y][x] == null;
     }
     
+    /**
+     * Gets the crafting slot at the given coordinates.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     * @return The CraftingSlot object at the specified coordinates.
+     */
     private CraftingSlot getSlot(int x, int y) {
         return itemArray[y][x];
     }
     
+    /**
+     * Sets the item in the specified slot.
+     * 
+     * @param item The item to be placed in the slot.
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     */
     private void setItem(Item item, int x, int y) {
         itemArray[y][x].setItem(item);
     }
     
+    /**
+     * Increases the amount of items in the specified slot by 1.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     */
     private void increaseItemAmount(int x, int y) {
         itemArray[y][x].getItem().addSizeOfNumItems(1);
     }
     
+    /**
+     * Increases the amount of the specified item by a given increment.
+     * 
+     * @param item The item whose amount is to be increased.
+     * @param increment The amount to increase.
+     */
     private void increaseItemAmount(Item item, int increment) {
         item.addSizeOfNumItems(increment);
     }
     
+    /**
+     * Decreases the amount of items in the specified slot by 1.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     */
     private void decreaseItemAmount(int x, int y) {
         itemArray[y][x].getItem().addSizeOfNumItems(-1);
     }
     
+    /**
+     * Decreases the amount of the specified item by a given decrement.
+     * 
+     * @param item The item whose amount is to be decreased.
+     * @param increment The amount to decrease.
+     */
     private void decreaseItemAmount(Item item, int increment) {
         item.addSizeOfNumItems(-increment);
     }
     
     //Overload the methods
+    
+    /**
+     * Increases the amount of items in the specified slot by a given increment.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     * @param increment The amount to increase.
+     */
     private void increaseItemAmount(int x, int y, int increment) {
         itemArray[y][x].getItem().addSizeOfNumItems(increment);
     }
     
+    /**
+     * Decreases the amount of items in the specified slot by a given decrement.
+     * 
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     * @param increment The amount to decrease.
+     */
     private void decreaseItemAmount(int x, int y, int increment) {
         itemArray[y][x].getItem().addSizeOfNumItems(-increment);
     }
     
+    /**
+     * Tries to add the specified item to the slot at the given coordinates.
+     * 
+     * @param item The item to be added.
+     * @param x The x-coordinate of the slot.
+     * @param y The y-coordinate of the slot.
+     * @return True if the item was successfully added, false otherwise.
+     */
     private boolean tryAddItem(Item item, int x, int y) {
         if(isEmpty(x, y)) {
             setItem(item, x, y);
@@ -123,22 +201,43 @@ public class CraftingSystem extends GUI
         }
     }
     
+    /**
+     * Shows the crafting interface.
+     */
     public void showCrafting() {
         isVisible = true;
     }
 
+    /**
+     * Hides the crafting interface.
+     */
     public void hideCrafting() {
         isVisible = false;
     }
-
+    
+    /**
+     * Checks if the crafting interface is visible.
+     * 
+     * @return True if the crafting interface is visible, false otherwise.
+     */
     public boolean isVisible() {
         return isVisible;
     }
     
+    /**
+     * Gets the output item from the crafting process.
+     * 
+     * @return The crafted item.
+     */
     public Item getOutputItem() {
         return outputItem;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting planks.
+     * 
+     * @return True if the recipe for planks is satisfied, false otherwise.
+     */
     private boolean isCraftingPlanks() {
         // Recipe for planks: a single wood block in the top-left corner
         /*
@@ -160,6 +259,11 @@ public class CraftingSystem extends GUI
         return satisfied;
     }
 
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting sticks.
+     * 
+     * @return True if the recipe for sticks is satisfied, false otherwise.
+     */
     private boolean isCraftingSticks() {
         // Recipe for sticks: two planks vertically aligned
         /*
@@ -187,6 +291,11 @@ public class CraftingSystem extends GUI
         return foundFirstPlank;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a wooden sword.
+     * 
+     * @return True if the recipe for a wooden sword is satisfied, false otherwise.
+     */
     private boolean isCraftingWoodSword() {
         //Recipe for wooden sword: two planks and a stick vertically aligned
         /*
@@ -214,6 +323,11 @@ public class CraftingSystem extends GUI
         return foundFirstSword;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a stone sword.
+     * 
+     * @return True if the recipe for a stone sword is satisfied, false otherwise.
+     */
     private boolean isCraftingStoneSword() {
         //Recipe for stone sword: two cobblestones and a stick vertically aligned
         /*
@@ -251,6 +365,11 @@ public class CraftingSystem extends GUI
         return foundFirstSword;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a wooden pickaxe.
+     * 
+     * @return True if the recipe for a wooden pickaxe is satisfied, false otherwise.
+     */
     private boolean isCraftingWoodPickaxe() {
         //Recipe for wooden pickaxe: three planks and 2 sticks in a pickaxe pattern
         /* ###
@@ -283,6 +402,11 @@ public class CraftingSystem extends GUI
         return foundFirstPickaxe;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a stone pickaxe.
+     * 
+     * @return True if the recipe for a stone pickaxe is satisfied, false otherwise.
+     */
     private boolean isCraftingStonePickaxe() {
         //Recipe for stone pickaxe: three cobblestone blocks and 2 sticks in a pickaxe pattern
         /* ###
@@ -315,6 +439,11 @@ public class CraftingSystem extends GUI
         return foundFirstPickaxe;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a wooden shovel.
+     * 
+     * @return True if the recipe for a wooden shovel is satisfied, false otherwise.
+     */
     private boolean isCraftingWoodShovel() {
         //Recipe for the wooden shovel: one plank and 2 sticks vertically aligned
         /*
@@ -355,6 +484,11 @@ public class CraftingSystem extends GUI
         
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a stone shovel.
+     * 
+     * @return True if the recipe for a stone shovel is satisfied, false otherwise.
+     */
     private boolean isCraftingStoneShovel() {
         //Recipe for the stone shovel: one cobblestone and 2 sticks vertically aligned
         /*
