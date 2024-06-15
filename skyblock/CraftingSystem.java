@@ -46,7 +46,7 @@ public class CraftingSystem extends GUI
         } 
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
-            outputItem = new Stick(25, 25, world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
+            outputItem = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
             increaseItemAmount(outputItem, 3);
             outputSlot.setItem(outputItem);
             outputItem = null;
@@ -61,6 +61,7 @@ public class CraftingSystem extends GUI
         
         else if (isCraftingWoodPickaxe()) {
             outputItem = new WoodenPickaxe(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
         }
         
         else {

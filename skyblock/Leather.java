@@ -1,18 +1,18 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class WoodenShovel here.
+ * Write a description of class StonePickaxe here.
  * 
  * Jerry Xing
  * @version (a version number or a date)
  */
-public class WoodenShovel extends Item
+public class Leather extends Item
 {
     private String image;
 
-    public WoodenShovel(World world, int X, int Y){
-        super("items/Wooden_Shovel.png", 32, 32, world, true, X, Y, "wooden_shovel");
-        image  = "items/Wooden_Shovel.png";
+    public Leather(int length, int width, World world, int X, int Y){
+        super("items/leather.png", 32, 32, world, true, X, Y, "leather");
+        image  = "items/leather.png";
     }
 
     /**

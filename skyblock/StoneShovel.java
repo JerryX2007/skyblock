@@ -3,15 +3,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class StoneShovel here.
  * 
- * Dylan Dinesh
+ * Jerry Xing
  * @version (a version number or a date)
  */
 public class StoneShovel extends Item
 {
     private String image;
 
-    public StoneShovel(int length, int width, World world, int X, int Y){
-        super("items/Stone_Shovel.png", 25, 25, world, false, X, Y, "wooden_sword");
+    public StoneShovel(World world, int X, int Y){
+        super("items/Stone_Shovel.png", 32, 32, world, true, X, Y, "stone_shovel");
         image  = "items/Stone_Shovel.png";
     }
 
