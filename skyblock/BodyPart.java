@@ -8,6 +8,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class BodyPart extends SuperSmoothMover
 {
+    protected int xPos;
+    protected int yPos;
+    
     /**
      * Act - do whatever the BodyPart wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -16,5 +19,14 @@ public class BodyPart extends SuperSmoothMover
     {
         // Add your action code here.
         
+    }
+    
+    public void setXY(int x, int y){
+        xPos = x;
+        yPos = y;
+    }
+    
+    public void setPlace(){
+        setLocation(xPos, yPos);
     }
 }

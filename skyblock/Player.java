@@ -57,8 +57,10 @@ public abstract class Player extends SuperSmoothMover{
      */
     public void act(){
         checkKeys();
-        checkFalling();
         checkPickup();
+        if(!GameWorld.getGUIOpened()){
+            checkFalling();
+        }
     }
 
     /**
@@ -89,18 +91,6 @@ public abstract class Player extends SuperSmoothMover{
             } else{
                 moveSpeed = 4;
             }
-            if(Greenfoot.isKeyDown("control") && sprintToggleCD < 0){
-                if(isSprinting){
-                    moveSpeed -= 1;
-                    isSprinting = false;
-                }
-                else{
-                    moveSpeed += 1;
-                    isSprinting = true;
-                }
-                sprintToggleCD = 50;
-            }
-            sprintToggleCD--;
     
             MouseInfo mi = Greenfoot.getMouseInfo();
         

@@ -30,3 +30,6 @@ doc/
 .idea/
 *.iml
 *.xml
+
+# .DS_Store
+.DS_Store
