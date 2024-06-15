@@ -83,7 +83,7 @@ public class Inventory extends GUI {
                 
                 // Find a slot for the item based on its type
                 outerloop1:
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 9; j++) {
                         if (slots[j][i].getType().equals(temp.getType()) && slots[j][i].getCounterNum() < 64) {
                             tempX = slots[j][i].getX();
@@ -97,7 +97,7 @@ public class Inventory extends GUI {
                 // If no suitable slot was found, find an empty slot
                 if (!foundLocation) {
                     outerloop2:
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 4; i++) {
                         for (int j = 0; j < 9; j++) {
                             if (slots[j][i].getType().equals("air")) {
                                 tempX = slots[j][i].getX();
@@ -189,6 +189,12 @@ public class Inventory extends GUI {
      * Removes the inventory slots and items from the world.
      */
     public void removeInventory() {
+        for(Item i : Item.getTouchingItems()){
+            i.setPressed(false);
+            i.setLocation(i.getXPos(), i.getYPos());
+        }
+        Item.setHoldingSomething(false);
+        Item.getTouchingItems().clear();
         for (Item i : itemsList) {
             world.removeObject(i);
             i.removeNum();
