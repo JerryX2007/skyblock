@@ -1,7 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
-import java.util.Iterator;
-import com.google.common.collect.Iterators;
 
 /**
  * Represents an item in the game that can be dragged, snapped, and stacked.
@@ -16,7 +14,6 @@ public class Item extends Actor {
     protected int X;
     protected int Y;
     protected MouseInfo mouse;
-    protected boolean dragging  = false;
     protected boolean draggable = true;
     protected boolean snapped = false;
     protected String type;
@@ -25,7 +22,7 @@ public class Item extends Actor {
     protected World world;
     private String image;
     private boolean firstTime = true;
-    private ArrayList<Item> touchingItems;
+    private static ArrayList<Item> touchingItems = new ArrayList<>();
     private boolean gotItems = false;
     private ArrayList<Item> numItems;
     private int sizeOfNumItems = 1;
@@ -38,6 +35,8 @@ public class Item extends Actor {
     private int testCount = 0;
     private int invX;
     private int invY;
+    protected boolean pressed = false;
+    protected static boolean holdingSomething = false;
 
     /**
      * Constructor for the Item class, given file name, size of scaled image length, size of scaled image width, the world its in, whether its draggable or not, x-coordinate of item, y-coordinate of item and the type of file
@@ -64,15 +63,57 @@ public class Item extends Actor {
         image = file;
         this.invX = invX;
         this.invY = invY;
+        counter.setLineColor(Label.getTransparent());
+    }
+    
+    /**
+     * Setter for holdingSomething
+     * 
+     * @param hold New value for holdingSomething
+     */
+    public static void setHoldingSomething(boolean hold){
+        holdingSomething = hold;
+    }
+    
+    /**
+     * Setter for firstTime
+     * 
+     * @param first New value for firstTime
+     */
+    public void setFirstTime(boolean first){
+        firstTime = first;
+    }
+    
+    /**
+     * Setter for snapped
+     * 
+     * @param snap New value for snapped
+     */
+    public void setSnapped(boolean snap){
+        snapped = snap;
+    }
+    
+    /**
+     * Setter for gotItems
+     * 
+     * @param got New value for gotItems
+     */
+    public void setGotItems(boolean got){
+        gotItems = got;
     }
 
     /**
      * What Items do when run
      */
     public void act(){
+        //System.out.println(holdingSomething + " " + Greenfoot.getRandomNumber(10));
         if(draggable){
+            // Update the counter label position
+            counter.setLocation(getX() + 15, getY() + 15);
+            
             // This is used to make sure that the stacks don't go over 64
             if(firstAct){
+                
                 // Get a list of touching items and if any of them are over 64, find a new location to put the stack
                 ArrayList<Item> test = (ArrayList<Item>) getIntersectingObjects(Item.class);
                 for(Item i : test){
@@ -110,20 +151,15 @@ public class Item extends Actor {
                 firstAct = false;  // Set firstAct to false after initial setup
             }
             
-            // Update the counter label position
-            counter.setLineColor(Label.getTransparent());
-            counter.setLocation(getX() + 15, getY() + 15);
-            
             numItems = (ArrayList<Item>) getIntersectingObjects(Item.class);
             // Remove all items that aren't the same as this item or that are air
-            Iterator<Item> test = numItems.iterator();
-            while(test.hasNext()){
-                Item i = test.next();
-                if(!i.getType().equals(getType()) || i.getItemImage().equals("block/air.png")){
-                    test.remove();
+            for(int i = 0; i < numItems.size(); i++){
+                if(numItems.get(i).getItemImage().equals("block/air.png") || !numItems.get(i).getType().equals(getType())){
+                    numItems.remove(numItems.get(i));
                 }
             }
             sizeOfNumItems = numItems.size() + 1;
+            
             // Update the counter value based on the number of items in the stack
             if(sizeOfNumItems > 1){
                 counter.setValue(sizeOfNumItems);
@@ -134,78 +170,90 @@ public class Item extends Actor {
             }
             
             MouseInfo mouse = Greenfoot.getMouseInfo();
-            if(Greenfoot.mousePressed(this) && !dragging){
-                // Start dragging the item
-                dragging = true;
-                snapped = false;
+            
+            if (Greenfoot.mousePressed(this) && holdingSomething){ // pressing releases all items
+                // Stop pressed the item
+                //System.out.println(3);
+                for(Item i : world.getObjects(Item.class)){
+                    i.setPressed(false);
+                    i.setFirstTime(true);
+                }
+                holdingSomething = false;
+                pressed = false;
+                firstTime = true;
+            } else if(mouse != null && mouse.getButton() == 1 && Greenfoot.mousePressed(this) && !pressed && !holdingSomething){ // left click gets entire stack
+                // Start pressed the item
+                //System.out.println(1);
+                
                 if(firstTime){
+                    pressed = true;
+                    snapped = false;
                     tempX = getX();
                     tempY = getY();
                     firstTime = false;
-                    touchingItems = (ArrayList<Item>) getIntersectingObjects(Item.class);
-                    // Remove items that aren't the same type or are air
-                    Iterator<Item> iterator = touchingItems.iterator();
-                    while(iterator.hasNext()){
-                        Item i = iterator.next();
-                        if(!i.getType().equals(getType()) || i.getItemImage().equals("block/air.png")){
-                            iterator.remove();
+                    touchingItems = (ArrayList<Item>) getIntersectingObjects(Item.class);    
+                    for(int i = 0; i < touchingItems.size(); i++){
+                        if(!touchingItems.get(i).getType().equals(getType()) || touchingItems.get(i).getItemImage().equals("block/air.png")){
+                            touchingItems.remove(touchingItems.get(i));
                         }
                     }
                     gotItems = true;
                 }
-            } else if (Greenfoot.mousePressed(this) && dragging){
-                // Stop dragging the item
-                dragging = false;
-                firstTime = true;
-            }
-            if(Greenfoot.mouseDragged(this)){
-                // Continue dragging the item
-                dragging = true;
+            } else if(mouse != null && mouse.getButton() == 3 && Greenfoot.mousePressed(this) && !holdingSomething){ // right click gets only 1 item
+                // Start pressed the item
+                //System.out.println(2);
+                
                 if(firstTime){
                     tempX = getX();
                     tempY = getY();
-                    firstTime = false;
-                    touchingItems = (ArrayList<Item>) getIntersectingObjects(Item.class);
-                    // Remove items that aren't the same type or are air
-                    Iterator<Item> iterator = touchingItems.iterator();
-                    while(iterator.hasNext()){
-                        Item i = iterator.next();
-                        if(!i.getType().equals(getType()) || i.getItemImage().equals("block/air.png")){
-                            iterator.remove();
+                    
+                    touchingItems = (ArrayList<Item>) getIntersectingObjects(Item.class);    
+                    for(int i = 0; i < touchingItems.size(); i++){
+                        if(!touchingItems.get(i).getType().equals(getType()) || touchingItems.get(i).getItemImage().equals("block/air.png")){
+                            touchingItems.remove(touchingItems.get(i));
                         }
                     }
-                    gotItems = true;
+                    
+                    while(touchingItems.size() > 1){
+                        touchingItems.remove(touchingItems.size() - 1);
+                    }
+                    //System.out.println(touchingItems.size());
+                    try{
+                        touchingItems.get(0).setPressed(true);
+                        touchingItems.get(0).setSnapped(false);
+                        touchingItems.get(0).setTempXY(tempX, tempY);
+                        touchingItems.get(0).setGotItems(true);
+                    } catch (IndexOutOfBoundsException e){
+                        
+                    }
+                    
                 }
-                snapped = false;
-            } else if(Greenfoot.mouseDragEnded(this)){
-                // Stop dragging the item when mouse drag ends
-                dragging = false;
-                firstTime = true;
             }
-
-            // Handle mouse dragging
-            if (dragging){
+            
+            // Handle mouse pressed
+            if (pressed){
+                holdingSomething = true;
                 snapped = false;
                 try{
-                    X = mouse.getX();
-                    Y = mouse.getY();
+                    tempX = mouse.getX();
+                    tempY = mouse.getY();
                 } catch (NullPointerException e){
-                    X = world.getWidth()/2;
-                    Y = world.getHeight()/2;
+                    tempX = world.getWidth()/2;
+                    tempY = world.getHeight()/2;
                 }
                 
                 // Move all touching items together with the dragged item
                 for(Item i: touchingItems){
-                    i.setLocation(X, Y);
+                    i.setLocation(tempX, tempY);
                 }
-                setLocation(X, Y);
+                setLocation(tempX, tempY);
                 if(sizeOfNumItems > 1){
-                    counter.setLocation(X + 15, Y + 15);
+                    counter.setLocation(tempX + 15, tempY + 15);
                 }
             }
             
             // Snapping to slot
-            if(!dragging && !snapped){
+            if(!pressed && !snapped){
                 // Get a big radius to ensure that a slot can be found
                 if(!getObjectsInRange(1000, Empty.class).isEmpty()){
                     int dist = 1000;
@@ -244,6 +292,7 @@ public class Item extends Actor {
                                 j.setTempXY(tempX, tempY);
                                 j.setSnapped(true);
                             }
+                            
                         }
                     } else {
                         setLocation(tempX, tempY);
@@ -257,13 +306,13 @@ public class Item extends Actor {
                                 j.setXY(X, Y);
                                 j.setSnapped(true);
                             }
+                            
                         }
+                        
                     }
                     setLocation(X, Y);
                     temp1.clear();
-                    if(gotItems){
-                        touchingItems.clear();
-                    }
+                    touchingItems.clear();
                     okToSnap = true;
                 }
             }
@@ -289,14 +338,46 @@ public class Item extends Actor {
         }
     }
     
-    public ArrayList<Item> getItems(){
-        ArrayList<Item> heldItem = (ArrayList<Item>) getIntersectingObjects(Item.class);
-        for(int i = 0; i < heldItem.size(); i++){
-            if(heldItem.get(i).getType().equals("air")){
-                heldItem.remove(heldItem.get(i));
+    /**
+     * Getter for touchingItems
+     * 
+     * @return Returns touchingItems
+     */
+    public static ArrayList<Item> getTouchingItems(){
+        return touchingItems;
+    }
+    
+    
+    /**
+     * Get item under cursor
+     * 
+     * @return returns a Item
+     */
+    protected Item getBlockUnderCursor() {
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+        if (mouse != null) {
+            int mouseX = mouse.getX();
+            int mouseY = mouse.getY();
+            ArrayList<Item> it = (ArrayList<Item>) getWorld().getObjectsAt(mouseX, mouseY, Item.class);
+            for(int i = 0; i < it.size(); i++){
+                if(it.get(i).getType().equals("air")){
+                    it.remove(it.get(i));
+                }
+            }
+            if (!it.isEmpty()) {
+                return it.get(0); // Assuming only one block can be at this position
             }
         }
-        return heldItem;
+        return null;
+    }
+    
+    /**
+     * Setter for pressed
+     * 
+     * @param drag New value for pressed
+     */
+    public void setPressed(boolean drag){
+        pressed = drag;
     }
     
     /**
@@ -315,15 +396,6 @@ public class Item extends Actor {
      */
     public int getInvY(){
         return invY;
-    }
-    
-    /**
-     * Sets the snapped status of the item.
-     * 
-     * @param snapped True if the item is snapped, false otherwise.
-     */
-    public void setSnapped(boolean snapped){
-        this.snapped = snapped;
     }
     
     /**
@@ -355,7 +427,7 @@ public class Item extends Actor {
         world.removeObject(counter);
     }
     
-    /*
+    /**
      * Update sizeOfNumItems value
      * 
      * @param value Value to be added

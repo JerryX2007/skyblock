@@ -57,7 +57,7 @@ public class GameWorld extends World {
      */
     public void act() {
         // Determines what goes on top
-        setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, SuperSmoothMover.class);
         //pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -69,10 +69,11 @@ public class GameWorld extends World {
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
             } else if (openInventory && GUIOpened && !openChest) {
+                GUIOpened = false;
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-                GUIOpened = false;
+                
             } 
         }
         keyPreviouslyDown = keyCurrentlyDown;

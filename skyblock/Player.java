@@ -85,12 +85,6 @@ public abstract class Player extends SuperSmoothMover{
                 moveLeft();
                 isMoving = true;
             }
-            if(Greenfoot.isKeyDown("shift")) {
-                isMoving = false;
-                moveSpeed = 1.5;
-            } else{
-                moveSpeed = 4;
-            }
     
             MouseInfo mi = Greenfoot.getMouseInfo();
         

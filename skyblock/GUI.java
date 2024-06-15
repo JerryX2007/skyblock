@@ -29,4 +29,13 @@ public class GUI extends Actor
         this.setImage(file);
         getImage().scale((int) (getImage().getWidth() * scale * 0.01), (int) (getImage().getHeight() * scale * 0.01));
     }
+    
+    /*
+     * Getter for itemList
+     * 
+     * @return Returns an arraylist with all items inside
+     */
+    public static ArrayList<Item> getItemList(){
+        return itemsList;
+    }
 }
