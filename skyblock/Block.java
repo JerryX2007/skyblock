@@ -87,6 +87,7 @@ public abstract class  Block extends Actor{
     public void act(){
         if (getWorld() instanceof GameWorld) {
             MouseInfo mouse = Greenfoot.getMouseInfo();
+            GameWorld world = (GameWorld) getWorld();
 
             if (mouse != null) {
                 // Extract the x and y coordinates of the mouse
@@ -123,15 +124,18 @@ public abstract class  Block extends Actor{
             }
             //add the breaking effect 
             if(be != null){
-                getWorld().addObject(be, getX(),getY());
+                world.addObject(be, getX(),getY());
             }
             //block is broken
             if(subBreakTime < 0){
                 drop(itemDrop);
-                if(be != null)
-                    getWorld().removeObject(be);
-
-                getWorld().removeObject(this);
+                if(be != null){
+                    world.removeObject(be);
+                }
+                
+                //world.updateBlock(getGridNumX(), getGridNumY(), new Air());
+                GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
+                world.removeObject(this);
             }
         }
     }
@@ -235,7 +239,7 @@ public abstract class  Block extends Actor{
      * @return The grid number along the x-axis
      */
     private int getGridNumX(){
-        return (this.getX() - 32) / 64;
+        return ((this.getX() - 32) / 64) + 40;
     }
     
     /**
@@ -244,7 +248,7 @@ public abstract class  Block extends Actor{
      * @return The grid number along the y-axis
      */
     private int getGridNumY(){
-        return (this.getY() - 32) / 64;
+        return ((this.getY() - 32) / 64) + 12;
     }
 
     /**
