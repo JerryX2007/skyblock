@@ -127,7 +127,7 @@ public class PauseScreen extends World
         }
     }
 
-    /*
+    /**
      * method which gets the image of actors in the simulation, and draw their 
      * picture at their location before the simulation is paused
      */

@@ -16,6 +16,8 @@ public class CraftingSystem extends GUI
     private Item outputItem;
     private OutputSlot outputSlot;
     private static World world;
+    private int xAdjust = 0;
+    private int yAdjust = 0;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -37,6 +39,61 @@ public class CraftingSystem extends GUI
     public void act() {
         if(isVisible) {
             checkCrafting();
+        }
+    }
+    
+    public void addCrafting() {
+        xAdjust = 0;
+        yAdjust = 0;
+        
+        // Add player's inventory slots to the world
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                if(i == 0){
+                    world.addObject(slots[j][i], 424 + xAdjust, 588);
+                    xAdjust += 54;
+                } else {
+                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
+                    xAdjust += 54;
+                }
+            }
+            xAdjust = 0;
+            if(i != 0){
+                yAdjust += 54;
+            }
+        }
+        
+        for(int i=0; i < GRID_SIZE; i++) {
+            for(int y=0;y<GRID_SIZE;y++) {
+                if(i==0) {
+                    world.addObject(new Empty(16, 16, world, 200 + xAdjust, 400), 200 + xAdjust, 400);
+                }
+                
+            }
+        }
+        xAdjust = 0;
+        yAdjust = 0;
+        
+        // Add player's items to the world
+        for (Item i : Inventory.getItemsList()) {
+            world.addObject(i, i.getXPos(), i.getYPos());
+        }
+        
+        // Add chest inventory slots to the world
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                world.addObject(chestSlots[j][i], 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
+                xAdjust += 54;
+            }
+            xAdjust = 0;
+            yAdjust += 54;
+        }
+        xAdjust = 0;
+        yAdjust = 0;
+        
+        // Add items in the chest to the world
+        for (Item i : contents) {
+            world.addObject(i, i.getXPos(), i.getYPos());
         }
     }
     

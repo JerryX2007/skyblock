@@ -2,11 +2,10 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Description to be added
- * `
- * @author Jerry Xing, Evan Xi
+ * The Player superclass represents a player in the game. 
+ * It provides methods for movement, interaction with objects, and other player-related functionalities.
  * 
- * With help from Benny Wang
+ * @author Jerry Xing, Evan Xi, Benny Wang, Nick Chen
  */
 public abstract class Player extends SuperSmoothMover{
     protected static double moveSpeed;
@@ -16,6 +15,8 @@ public abstract class Player extends SuperSmoothMover{
     protected static int pickUpRange;
     protected static boolean jumping;
     protected Inventory inventory;
+    protected static GreenfootSound[] walking;
+    protected boolean isPlaying;
 
     protected final int gravity = 2;
     protected double yVelocity;
@@ -27,14 +28,26 @@ public abstract class Player extends SuperSmoothMover{
     protected int sprintToggleCD = 50;
     protected static boolean activated;
     protected static boolean activated1;
-
+    
     protected Block block;
     protected Chest chest;
     protected CraftingTable craftingTable;
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    protected int hp;
+    protected int hp;    
+
+    /**
+     * Constructor for Player class.
+     * 
+     * @param moveSpeed Speed of the player's movement
+     * @param jumpHeight Height of the player's jump
+     * @param reach Reach distance of the player
+     * @param canDrop Boolean indicating if the player can drop items
+     * @param pickUpRange Range within which the player can pick up items
+     * @param jumping Boolean indicating if the player is currently jumping
+     * @param inventory The player's inventory
+     */
 
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
@@ -48,6 +61,12 @@ public abstract class Player extends SuperSmoothMover{
         this.hp = 20;
         activated = false;
         this.inventory = inventory;
+        walking = new GreenfootSound[3];
+        walking[0] = new GreenfootSound("walking_dirt.mp3");
+        walking[0].setVolume(30);
+        walking[1] = new GreenfootSound("walking_stone.mp3");
+        walking[2] = new GreenfootSound("walking_wood.mp3");
+        isPlaying = false;
     }
 
     /**
@@ -56,8 +75,29 @@ public abstract class Player extends SuperSmoothMover{
     public void act(){
         checkKeys();
         checkPickup();
-        if(!GameWorld.getGUIOpened()){
-            checkFalling();
+        checkFalling();
+        if (isMoving) {
+            Block blockBelow = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+            if(blockBelow != null && !(blockBelow instanceof Air)) {
+                if(blockBelow.isDirt() && !isPlaying) {
+                    walking[0].playLoop();
+                    isPlaying = true;
+                }
+                else if (blockBelow.isStone() && !isPlaying) {
+                    walking[1].playLoop();
+                    isPlaying = true;
+                }
+                else if (blockBelow.isWood() && !isPlaying) {
+                    walking[2].playLoop();
+                    isPlaying = true;
+                }
+            }
+        }
+        else {
+            for(int i=0; i<walking.length; i++) {
+                walking[i].pause();
+            }
+            isPlaying = false;
         }
     }
 
@@ -82,12 +122,6 @@ public abstract class Player extends SuperSmoothMover{
                 if((Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("A")) && leftClear()) {
                     moveLeft();
                     isMoving = true;
-                }
-                if(Greenfoot.isKeyDown("shift")) {
-                    isMoving = false;
-                    moveSpeed = 1.5;
-                } else{
-                    moveSpeed = 4;
                 }
 
                 MouseInfo mi = Greenfoot.getMouseInfo();
@@ -114,7 +148,7 @@ public abstract class Player extends SuperSmoothMover{
                         else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
                             craftingTable = (CraftingTable) block;
                             activated = true;
-                            //craftingTable.
+                            //craftingTable.openGUI();
                         }
                     }
                 }
@@ -124,12 +158,19 @@ public abstract class Player extends SuperSmoothMover{
         }
     }
 
+    /**
+    * Sets the activation state of the player.
+    * 
+    * @param active The activation state to set
+    */
     public static void setActivated(boolean active){
         activated = active;
     }
 
     /**
-     * Checks for blocks being mined by the user
+     * Gets the block under the cursor.
+     * 
+     * @return The block under the cursor, or null if no block is found
      */
     protected Block getBlockUnderCursor() {
         MouseInfo mouse = Greenfoot.getMouseInfo();
@@ -145,8 +186,9 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Checks if the player in on solid ground
-     * Gets the block directly under the user.  If there exists a block and it isn't an air block, return true.
+     * Checks if the player is on solid ground.
+     * 
+     * @return True if the player is on solid ground, false otherwise
      */
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
@@ -162,8 +204,9 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Checks if the player's head is clear and determines if it can jump
-     * Gets the block directly above the user.  If there exists a block that isn't an air block, return false.  Otherwise return true.
+     * Checks if the player's head is clear and determines if it can jump.
+     * 
+     * @return True if the player's head is clear, false otherwise
      */
     protected boolean headClear(){
         Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
@@ -179,9 +222,9 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Checks if the user can continue moving right
-     * Uses 4 collision points to the right of the user to detect any non-air blocks
-     * If either of the 4 collision points detect a non-air block, immediately return false
+     * Checks if the player can continue moving right.
+     * 
+     * @return True if the player can move right, false otherwise
      */
     protected boolean rightClear(){ 
         Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
@@ -212,9 +255,9 @@ public abstract class Player extends SuperSmoothMover{
     }    
 
     /**
-     * Checks if the user can continue moving left
-     * Uses 4 collision points to the left of the user to detect any non-air blocks
-     * If either of the 4 collision points detect a non-air block, immediately return false
+     * Checks if the player can continue moving left.
+     * 
+     * @return True if the player can move left, false otherwise
      */
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
@@ -282,7 +325,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * If it isn't on the ground, start falling
+     * Accelerate downwards to fall.
      */
     protected void checkFalling() {
         if(onGround()) {
@@ -306,7 +349,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Gains a small amount of momentum upwards to jump
+     * Makes the player jump.
      */
     protected void jump() {
         if (getWorld() instanceof GameWorld) {
@@ -332,103 +375,162 @@ public abstract class Player extends SuperSmoothMover{
         }
     }
 
+    /**
+     * Checks if a block is within a certain range of the player.
+     * 
+     * @param targetBlock The block to check.
+     * @return True if the block is within range, false otherwise.
+     */
     public boolean isBlockWithinRange(Block targetBlock) {
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY();
-
+    
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-
-        //Calculate the direction vector
+    
+        // Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
-        //System.out.println(dirX);
-        //System.out.println(dirY);
-        if(dirX - dirY < 378) {
+    
+        // Check if the block is within a certain range
+        if (dirX - dirY < 378) {
             return true;
         } else {
             return false;
         }
     }
-
+    
+    /**
+     * Checks if a block is visible from the player's current position.
+     * 
+     * @param targetBlock The block to check.
+     * @param increment The y-coordinate increment to adjust the player's position.
+     * @return True if the block is visible, false otherwise.
+     */
     public boolean isBlockVisible(Block targetBlock, int increment) {
         // Get player's position
         int playerX = this.getX();
         int playerY = this.getY() - increment;
-
+    
         // Get block's position
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
-
+    
         // Calculate the direction vector
         int dirX = blockX - playerX;
         int dirY = blockY - playerY;
         int steps = Math.max(Math.abs(dirX), Math.abs(dirY));
-
+    
         // Normalize the direction vector
         double stepX = dirX / (double) steps;
         double stepY = dirY / (double) steps;
-
+    
         // Cast the ray
         double currentX = playerX;
         double currentY = playerY;
         for (int i = 0; i < steps; i++) {
-            //Increment to the position of the block
+            // Increment to the position of the block
             currentX += stepX;
             currentY += stepY;
-
+    
             // Check if there is a block at the current position
             Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - playerX), (int) Math.round(currentY - playerY), Block.class);
             if (block != null && block != targetBlock && !(block instanceof Air)) {
                 return false; // Block is obstructing the view
-
             }
         }
         return true; // No obstructions
     }
-
-    //this is just a testing class
-    public void doDamage(int damage){
+    
+    /**
+     * Inflicts damage to the player.
+     * 
+     * @param damage The amount of damage to inflict.
+     */
+    public void doDamage(int damage) {
         this.hp -= damage;
-        if(hp <= 0) {
+        if (hp <= 0) {
             getWorld().removeObject(this);
         }
     }
-
+    
+    /**
+     * Gets the player's movement speed.
+     * 
+     * @return The movement speed.
+     */
     public double getMoveSpeed() {
         return this.moveSpeed;
     }
-
+    
+    /**
+     * Gets the player's jump height.
+     * 
+     * @return The jump height.
+     */
     public int getJumpHeight() {
         return this.jumpHeight;
     }
-
+    
+    /**
+     * Gets the player's reach distance.
+     * 
+     * @return The reach distance.
+     */
     public int getReach() {
         return this.reach;
     }
-
+    
+    /**
+     * Checks if the player can drop items.
+     * 
+     * @return True if the player can drop items, false otherwise.
+     */
     public boolean getCanDrop() {
         return this.canDrop;
     }
-
+    
+    /**
+     * Gets the range within which the player can pick up items.
+     * 
+     * @return The pick-up range.
+     */
     public int getPickUpRange() {
         return this.pickUpRange;
     }
-
+    
+    /**
+     * Checks if the player is currently jumping.
+     * 
+     * @return True if the player is jumping, false otherwise.
+     */
     public boolean isJumping() {
         return this.jumping;
     }
-
-    public boolean getDirection(){
+    
+    /**
+     * Gets the direction the player is facing.
+     * 
+     * @return True if the player is facing right, false if facing left.
+     */
+    public boolean getDirection() {
         return this.direction;
     }
-
-    public int getHp(){
+    
+    /**
+     * Gets the player's current health points.
+     * 
+     * @return The current health points.
+     */
+    public int getHp() {
         return this.hp;
     }
-
+    
+    /**
+     * Deactivates the player.
+     */
     public void deactivate() {
         activated = false;
     }

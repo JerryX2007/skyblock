@@ -21,7 +21,7 @@ public class Empty extends Item
      * @param Y Y position of the item
      */
     public Empty(int length, int width, World world, int X, int Y){
-        super("block/air.png", length, width, world, false, X, Y, "air");
+        super("block/air.png", length, width, world, false, X, Y, "leaves");
         image  = "block/air.png";
     }
     
@@ -42,6 +42,4 @@ public class Empty extends Item
     public String getItemImage(){
         return image;
     }
-    
-    
 }

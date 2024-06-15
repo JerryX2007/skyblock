@@ -35,6 +35,8 @@ public class Item extends Actor {
     private int testCount = 0;
     private int invX;
     private int invY;
+    private int mX;
+    private int mY;
     protected boolean pressed = false;
     protected static boolean holdingSomething = false;
 
@@ -64,42 +66,6 @@ public class Item extends Actor {
         this.invX = invX;
         this.invY = invY;
         counter.setLineColor(Label.getTransparent());
-    }
-    
-    /**
-     * Setter for holdingSomething
-     * 
-     * @param hold New value for holdingSomething
-     */
-    public static void setHoldingSomething(boolean hold){
-        holdingSomething = hold;
-    }
-    
-    /**
-     * Setter for firstTime
-     * 
-     * @param first New value for firstTime
-     */
-    public void setFirstTime(boolean first){
-        firstTime = first;
-    }
-    
-    /**
-     * Setter for snapped
-     * 
-     * @param snap New value for snapped
-     */
-    public void setSnapped(boolean snap){
-        snapped = snap;
-    }
-    
-    /**
-     * Setter for gotItems
-     * 
-     * @param got New value for gotItems
-     */
-    public void setGotItems(boolean got){
-        gotItems = got;
     }
 
     /**
@@ -158,13 +124,13 @@ public class Item extends Actor {
                     numItems.remove(numItems.get(i));
                 }
             }
-            sizeOfNumItems = numItems.size() + 1;
+            sizeOfNumItems = numItems.size();
             
             // Update the counter value based on the number of items in the stack
-            if(sizeOfNumItems > 1){
-                counter.setValue(sizeOfNumItems);
+            if(sizeOfNumItems >= 1){
+                counter.setValue(sizeOfNumItems + 1);
                 getWorld().addObject(counter, getX() + 15, getY() + 15);
-            } else if(sizeOfNumItems == 1){
+            } else if(sizeOfNumItems < 1){
                 counter.setValue("");
                 getWorld().addObject(counter, getX() + 15, getY() + 15);
             }
@@ -235,20 +201,20 @@ public class Item extends Actor {
                 holdingSomething = true;
                 snapped = false;
                 try{
-                    tempX = mouse.getX();
-                    tempY = mouse.getY();
+                    mX = mouse.getX();
+                    mY = mouse.getY();
                 } catch (NullPointerException e){
-                    tempX = world.getWidth()/2;
-                    tempY = world.getHeight()/2;
+                    mX = world.getWidth()/2;
+                    mY = world.getHeight()/2;
                 }
                 
                 // Move all touching items together with the dragged item
                 for(Item i: touchingItems){
-                    i.setLocation(tempX, tempY);
+                    i.setLocation(mX, mY);
                 }
-                setLocation(tempX, tempY);
+                setLocation(mX, mY);
                 if(sizeOfNumItems > 1){
-                    counter.setLocation(tempX + 15, tempY + 15);
+                    counter.setLocation(mX + 15, mY + 15);
                 }
             }
             
@@ -387,6 +353,42 @@ public class Item extends Actor {
      */
     public int getInvX(){
         return invX;
+    }
+    
+    /**
+     * Setter for holdingSomething
+     * 
+     * @param hold New value for holdingSomething
+     */
+    public static void setHoldingSomething(boolean hold){
+        holdingSomething = hold;
+    }
+    
+    /**
+     * Setter for firstTime
+     * 
+     * @param first New value for firstTime
+     */
+    public void setFirstTime(boolean first){
+        firstTime = first;
+    }
+    
+    /**
+     * Setter for snapped
+     * 
+     * @param snap New value for snapped
+     */
+    public void setSnapped(boolean snap){
+        snapped = snap;
+    }
+    
+    /**
+     * Setter for gotItems
+     * 
+     * @param got New value for gotItems
+     */
+    public void setGotItems(boolean got){
+        gotItems = got;
     }
     
     /**
