@@ -3,15 +3,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class WoodenShovel here.
  * 
- * Dylan Dinesh
+ * Jerry Xing
  * @version (a version number or a date)
  */
 public class WoodenShovel extends Item
 {
     private String image;
 
-    public WoodenShovel(int length, int width, World world, int X, int Y){
-        super("items/Wooden_Shovel.png", 25, 25, world, false, X, Y, "wooden_sword");
+    public WoodenShovel(World world, int X, int Y){
+        super("items/Wooden_Shovel.png", 32, 32, world, true, X, Y, "wooden_shovel");
         image  = "items/Wooden_Shovel.png";
     }
 

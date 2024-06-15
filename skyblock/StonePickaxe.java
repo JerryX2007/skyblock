@@ -3,15 +3,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class StonePickaxe here.
  * 
- * Dylan Dinesh
+ * Jerry Xing
  * @version (a version number or a date)
  */
 public class StonePickaxe extends Item
 {
     private String image;
 
-    public StonePickaxe(int length, int width, World world, int X, int Y){
-        super("items/Stone_Pickaxe.png", 25, 25, world, false, X, Y, "wooden_sword");
+    public StonePickaxe(World world, int X, int Y){
+        super("items/Stone_Pickaxe.png", 32, 32, world, true, X, Y, "stone_pickaxe");
         image  = "items/Stone_Pickaxe.png";
     }
 
@@ -22,9 +22,5 @@ public class StonePickaxe extends Item
     public void act()
     {
         super.act();
-    }
-
-    public String getItemImage(){
-        return image;
     }
 }

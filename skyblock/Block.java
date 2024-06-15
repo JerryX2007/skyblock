@@ -1,13 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Block here.
- * - blocks are all squares
- * - blocks stops entities from falling through them
- * - blocks can be broken
- * - blocks drop when they are broken
- * @author (your name) 
- * @version (a version number or a date)
+ * Abstract class for defining blocks in the game.
+ * Blocks are used to create the environment, and can be broken by the player.
+ * Different types of blocks have different properties such as hardness and drop items.
+ * 
+ * @author Nick Chen
+ * @version 1.0.0
  */
 public abstract class  Block extends Actor{
 
@@ -28,6 +27,13 @@ public abstract class  Block extends Actor{
     protected Player player;
     protected String name;
 
+    /**
+     * Constructor for Block class.
+     * 
+     * @param color     The color of the block
+     * @param hardness  How long it takes to break the block
+     * @param name      The name of the block
+     */
     public Block(Color color, double hardness, String name){
         this.color = color;
         this.hardness = hardness;
@@ -79,52 +85,54 @@ public abstract class  Block extends Actor{
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act(){
-        MouseInfo mouse = Greenfoot.getMouseInfo();
+        if (getWorld() instanceof GameWorld) {
+            MouseInfo mouse = Greenfoot.getMouseInfo();
 
-        if (mouse != null) {
-            // Extract the x and y coordinates of the mouse
-            int mouseX = mouse.getX();
-            int mouseY = mouse.getY();
-            
-            //borrowed mouseover code from Mr. Cohen
-            isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+            if (mouse != null) {
+                // Extract the x and y coordinates of the mouse
+                int mouseX = mouse.getX();
+                int mouseY = mouse.getY();
 
-            if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
-                // Mouse button is pressed
-                isHoldingMouse = true;
+                //borrowed mouseover code from Mr. Cohen
+                isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+
+                if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
+                    // Mouse button is pressed
+                    isHoldingMouse = true;
+                }
+                if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
+                    isHoldingMouse = false; // Reset the flag
+                }   
             }
-            if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
-                isHoldingMouse = false; // Reset the flag
-            }   
-        }
-        if(!isSelected){
-            stopBreaking();
-            isHoldingMouse = false;
-        }
-        //attempt to break the block when mouse is pressed on me
-        if(isHoldingMouse){
-            if(be == null){
-                be = new BreakingEffect(this);
+            if(!isSelected){
+                stopBreaking();
+                isHoldingMouse = false;
             }
-            isSelected = true;
-            breakMe(player, 0,0);
-        }
+            //attempt to break the block when mouse is pressed on me
+            if(isHoldingMouse){
+                if(be == null){
+                    be = new BreakingEffect(this);
+                }
+                isSelected = true;
+                breakMe(player, 0,0);
+            }
 
-        else{
-            stopBreaking();
-            isSelected = false;
-        }
-        //add the breaking effect 
-        if(be != null){
-            getWorld().addObject(be, getX(),getY());
-        }
-        //block is broken
-        if(subBreakTime < 0){
-            drop(itemDrop);
-            if(be != null)
-            getWorld().removeObject(be);
-            
-            getWorld().removeObject(this);
+            else{
+                stopBreaking();
+                isSelected = false;
+            }
+            //add the breaking effect 
+            if(be != null){
+                getWorld().addObject(be, getX(),getY());
+            }
+            //block is broken
+            if(subBreakTime < 0){
+                drop(itemDrop);
+                if(be != null)
+                    getWorld().removeObject(be);
+
+                getWorld().removeObject(this);
+            }
         }
     }
 
@@ -187,24 +195,63 @@ public abstract class  Block extends Actor{
         }
     }
 
+     /**
+     * Set the player object interacting with this block.
+     * 
+     * @param player The player object
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    /**
+     * Stop the breaking process of the block.
+     */
     public void stopBreaking(){
         subBreakTime = breakTime;
     }
+
+    /**
+     * Get the total break time of the block.
+     * 
+     * @return The total break time
+     */
     public double getBreakTime(){
         return breakTime;
     }
+
+    /**
+     * Get the current break time progress of the block.
+     * 
+     * @return The current break time progress
+     */
     public double getSubBreakTime(){
         return subBreakTime;
     }
+
+    /**
+     * Get the grid number along the x-axis where the block is positioned.
+     * 
+     * @return The grid number along the x-axis
+     */
     private int getGridNumX(){
         return (this.getX() - 32) / 64;
     }
+    
+    /**
+     * Get the grid number along the y-axis where the block is positioned.
+     * 
+     * @return The grid number along the y-axis
+     */
     private int getGridNumY(){
         return (this.getY() - 32) / 64;
     }
+
+    /**
+     * Get the name of the block.
+     * 
+     * @return The name of the block
+     */
     public String getName() {
         return name;
     }

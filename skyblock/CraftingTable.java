@@ -1,25 +1,19 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
 /**
  * Write a description of class alsjflsa here.
  * 
- * @author (your name) 
+ * @author Jerry Xing
  * @version (a version number or a date)
  */
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class Log here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class CraftingTable extends Block
 {
     private static Color lightYellow = new Color(235, 198, 109);
     private GreenfootImage img;
     private GreenfootImage img2;
     private World world;
+    private CraftingSystem craftingSystem;
 
     public CraftingTable(World world){
         super(lightYellow,2, "craftingtable");
@@ -29,6 +23,7 @@ public class CraftingTable extends Block
         img2 = addBorder(img, black);
         isWood = true;
         this.world = world;
+        craftingSystem = new CraftingSystem(300, world);
     }
 
     /**
@@ -45,13 +40,21 @@ public class CraftingTable extends Block
         if(!isSelected){
             setImage(img);
         }
-        if (Greenfoot.mouseClicked(this)) {
-            // Open crafting interface
-            ((GameWorld) getWorld()).openCraftingInterface();
-        }
     }
 
     public void drop(){
 
+    }
+    
+    public void openCraftingSystem() {
+        
+    }
+    
+    public void closeCraftingSystem() {
+        
+    }
+    
+    public CraftingSystem getCraftingSystem() {
+        return craftingSystem;
     }
 }

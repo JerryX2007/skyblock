@@ -1,9 +1,8 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 /**
- * Represents a graphical user interface for a chest in the game.
+ * A GUI for a chest in game.
  * It manages the chest inventory and the player's inventory when interacting with the chest.
  * 
  * Author: Benny
@@ -16,6 +15,7 @@ public class ChestGUI extends GUI {
     private boolean foundLocation = false;
     private int tempX;
     private int tempY;
+    private boolean keyPreviouslyDown;
 
     /**
      * Constructor for the ChestGUI class.
@@ -46,7 +46,17 @@ public class ChestGUI extends GUI {
      * What ChestGUI when run
      */
     public void act() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        
         manageItems();
+        if(GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenChest(false);
+            removeChest();
+            Player.setActivated(false);
+            world.removeObject(this);
+        }
+        keyPreviouslyDown = keyCurrentlyDown;
     }
 
     /**
@@ -80,7 +90,7 @@ public class ChestGUI extends GUI {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
         
-        // Add chest inventory slots to the world
+        // Add crafting grid slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 world.addObject(chestSlots[j][i], 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);

@@ -28,6 +28,7 @@ public class Air extends Block
 
     public void act()
     {
+        /*
         //stop air from breaking
         super.act();
 
@@ -40,6 +41,7 @@ public class Air extends Block
         if(subBreakTime < 10){
             subBreakTime = breakTime;
         }
+        */
     }
 
     public void drop(int itemDrop){
