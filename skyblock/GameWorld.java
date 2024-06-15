@@ -6,13 +6,17 @@ import java.util.ArrayList;
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
- * @author 
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
  * @version 1.0.0
  */
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
     private Block[][] grid;
+    private TitleScreen titleScreen;
+    private ArrayList<Actor> actorList;
+    private Fader blackScreen;
+    private ChestGUI chest;
     private static boolean openInventory = false;
     private static Inventory inventory;
     private static boolean openChest = false;
@@ -54,10 +58,10 @@ public class GameWorld extends World {
     public void act() {
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-
+        pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        
+
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
@@ -72,7 +76,7 @@ public class GameWorld extends World {
             } 
         }
         keyPreviouslyDown = keyCurrentlyDown;
-        
+
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
     }
@@ -122,6 +126,13 @@ public class GameWorld extends World {
         inventory.act();
         inventory.removeInventory();
         removeObject(inventory);
+    }
+
+    private void pause(){
+        if(Greenfoot.isKeyDown("p")){
+            //    MrCohen.pauseSounds();
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
+        }
     }
 
     /**
