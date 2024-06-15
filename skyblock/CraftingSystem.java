@@ -141,6 +141,9 @@ public class CraftingSystem extends GUI
     
     private boolean isCraftingPlanks() {
         // Recipe for planks: a single wood block in the top-left corner
+        /*
+         * #
+         */
         boolean satisfied = false;
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
@@ -159,6 +162,10 @@ public class CraftingSystem extends GUI
 
     private boolean isCraftingSticks() {
         // Recipe for sticks: two planks vertically aligned
+        /*
+         * #
+         * #
+         */
         boolean foundFirstPlank = false;
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 1; y++) {
@@ -182,6 +189,11 @@ public class CraftingSystem extends GUI
     
     private boolean isCraftingWoodSword() {
         //Recipe for wooden sword: two planks and a stick vertically aligned
+        /*
+         * #
+         * #
+         * #
+         */
         boolean foundFirstSword = false;
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 2; y++) {
@@ -301,5 +313,85 @@ public class CraftingSystem extends GUI
             }
         }
         return foundFirstPickaxe;
+    }
+    
+    private boolean isCraftingWoodShovel() {
+        //Recipe for the wooden shovel: one plank and 2 sticks vertically aligned
+        /*
+         * #
+         * #
+         * #
+         */
+        boolean foundFirstShovel = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE - 2; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
+                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("plank") && 
+                        getSlot(x, y+1).getBlock().getName().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                        
+                        if (foundFirstShovel) {
+                            return false; //More than one sword recipe found
+                        }
+                        foundFirstShovel = true;
+                    } else {
+                        return false; //Another item found
+                    }
+                }
+            }
+        }
+        
+        if(foundFirstShovel) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstShovel = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstShovel;
+        
+    }
+    
+    private boolean isCraftingStoneShovel() {
+        //Recipe for the stone shovel: one cobblestone and 2 sticks vertically aligned
+        /*
+         * #
+         * #
+         * #
+         */
+        boolean foundFirstShovel = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE - 2; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
+                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("cobblestone") && 
+                        getSlot(x, y+1).getBlock().getName().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                        
+                        if (foundFirstShovel) {
+                            return false; //More than one sword recipe found
+                        }
+                        foundFirstShovel = true;
+                    } else {
+                        return false; //Another item found
+                    }
+                }
+            }
+        }
+        
+        if(foundFirstShovel) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstShovel = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstShovel;
+        
     }
 }
