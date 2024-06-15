@@ -41,8 +41,6 @@ public abstract class Mob extends SuperSmoothMover{
     protected GreenfootImage defaultImg;
     protected GreenfootImage movingImg;
     protected GreenfootImage hurtImg;
-    protected GreenfootImage deathImg;
-    protected GreenfootImage attackImg;
     
     public Mob(boolean hostile, int dmg, double spd, int hp, int minLight, int maxLight){
         isHostile = hostile;
