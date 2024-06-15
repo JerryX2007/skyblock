@@ -83,6 +83,14 @@ public abstract class Player extends SuperSmoothMover{
                     walking[0].playLoop();
                     isPlaying = true;
                 }
+                else if (blockBelow.isStone() && !isPlaying) {
+                    walking[1].playLoop();
+                    isPlaying = true;
+                }
+                else if (blockBelow.isWood() && !isPlaying) {
+                    walking[2].playLoop();
+                    isPlaying = true;
+                }
             }
         }
         else {

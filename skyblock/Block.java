@@ -268,5 +268,13 @@ public abstract class  Block extends Actor{
     public boolean isDirt() {
         return isDirt;
     }
+    
+    public boolean isStone() {
+        return isStone;
+    }
+    
+    public boolean isWood() {
+        return isWood;
+    }
 }
 
