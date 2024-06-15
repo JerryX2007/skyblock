@@ -52,6 +52,12 @@ public class Water extends Air
     {
         // Add your action code here.
     }
+    
+    /**
+     * Getter for source
+     * 
+     * @return returns true if it is the source
+     */
     public boolean isSource(){
         return isSource;
     }

@@ -1,9 +1,8 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 /**
- * Represents a graphical user interface for a chest in the game.
+ * A GUI for a chest in game.
  * It manages the chest inventory and the player's inventory when interacting with the chest.
  * 
  * Author: Benny

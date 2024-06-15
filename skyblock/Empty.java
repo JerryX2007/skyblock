@@ -42,6 +42,4 @@ public class Empty extends Item
     public String getItemImage(){
         return image;
     }
-    
-    
 }
