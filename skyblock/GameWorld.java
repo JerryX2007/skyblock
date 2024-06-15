@@ -1,18 +1,27 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+
+import java.util.Scanner;
+import java.util.NoSuchElementException;
+import java.io.File;
+import java.io.FileNotFoundException;
+
 /**
  * Keeps track of everything that happens inside the world.
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
- * @author Evan Xi, Benny Wang, Dylan Dinesh
+ * @author Evan Xi, Benny Wang
  * @version 1.0.0
  */
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
-    private Block[][] grid;
+    private static Block[][] grid;
     private TitleScreen titleScreen;
     private ArrayList<Actor> actorList;
     private Fader blackScreen;
@@ -24,6 +33,10 @@ public class GameWorld extends World {
     private Steve player;
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
+    
+    Scanner s;
+    FileWriter fWriter;
+    PrintWriter pWriter;
 
     /**
      * Constructor for objects of class GameWorld.
@@ -34,11 +47,13 @@ public class GameWorld extends World {
         super(1280, 768, 1, false);
 
         // Initialize the grid
-        grid = new Block[20][12];
+        grid = new Block[100][36];
 
         // Optionally fill the grid with initial values or objects
         initializeGrid();
         prepareWorld();
+        //refreshWorld();
+        //loadWorld();
 
         // Inventory initialization
         inventory = new Inventory(300, this);
@@ -79,6 +94,9 @@ public class GameWorld extends World {
 
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
+        checkSave();
+        checkPause();
+        checkLoad();
     }
 
     /**
@@ -128,9 +146,8 @@ public class GameWorld extends World {
         removeObject(inventory);
     }
 
-    private void pause(){
+    private void checkPause(){
         if(Greenfoot.isKeyDown("p")){
-            //    MrCohen.pauseSounds();
             Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
         }
     }
@@ -139,9 +156,10 @@ public class GameWorld extends World {
      * Initializes the grid with air blocks.
      */
     private void initializeGrid() {
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 12; j++) {
-                grid[i][j] = new Air();           
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 36; j++) {
+                //updateBlock(i, j, new Air());
+                grid[i][j] = new Air();
             }
         }
     }
@@ -177,8 +195,8 @@ public class GameWorld extends World {
      * @return Array containing grid coordinates {gridX, gridY}.
      */
     public int[] getGridCoordinates(int x, int y) {
-        int gridX = x / 64;
-        int gridY = y / 64;
+        int gridX = (x / 64) + 40;
+        int gridY = (y / 64) + 12;
         return new int[]{gridX, gridY};
     }
 
@@ -190,8 +208,8 @@ public class GameWorld extends World {
      * @return Array containing world coordinates {worldX, worldY}.
      */
     public int[] getWorldCoordinates(int gridX, int gridY) {
-        int worldX = gridX * 64 + 32; // center of the cell
-        int worldY = gridY * 64 + 32; // center of the cell
+        int worldX = (gridX - 40) * 64 + 32; // center of the cell
+        int worldY = (gridY - 12) * 64 + 32; // center of the cell
         return new int[]{worldX, worldY};
     }
 
@@ -219,7 +237,19 @@ public class GameWorld extends World {
         for (Block blocks : removingBlock) {
             removeObject(blocks);
         }
-        setGridValue(gridX, gridY, newBlock);
+        grid[gridX][gridY] = newBlock;
+        addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
+    }
+    
+    /**
+     * Updates the entire world with the correct blocks
+     */
+    private void refreshWorld(){
+        for(int i = 0; i < 100; i++){
+            for(int j = 0; j < 36; j++){
+                updateBlock(i, j, grid[i][j]);
+            }
+        }
     }
 
     /**
@@ -253,35 +283,113 @@ public class GameWorld extends World {
      * Called when the world is generated.
      */
     private void prepareWorld() {
-        updateBlock(2, 6, new Chest(this));
-        updateBlock(4, 6, new Chest(this));
-        updateBlock(5, 6, new CraftingTable(this));
-        for (int i = 2; i < 18; i++) {
-            updateBlock(i, 8, new Dirt());
+        updateBlock(42, 18, new Chest(this));
+        updateBlock(44, 18, new Chest(this));
+        updateBlock(45, 18, new CraftingTable(this));
+        for (int i = 42; i < 58; i++) {
+            updateBlock(i, 20, new Dirt());
         }
-        for (int i = 2; i < 18; i++) {
-            updateBlock(i, 7, new Grass());
+        for (int i = 42; i < 58; i++) {
+            updateBlock(i, 19, new Grass());
         }
-        for (int i = 3; i < 17; i++) {
-            updateBlock(i, 9, new CobbleStone());
+        for (int i = 43; i < 57; i++) {
+            updateBlock(i, 21, new CobbleStone());
         }
-        for (int i = 5; i < 15; i++) {
-            updateBlock(i, 10, new CobbleStone());
+        for (int i = 45; i < 55; i++) {
+            updateBlock(i, 22, new CobbleStone());
         }
-        for (int i = 10; i < 15; i++) {
-            updateBlock(i, 3, new Leaf());
+        for (int i = 50; i < 55; i++) {
+            updateBlock(i, 15, new Leaf());
         }
-        for (int i = 10; i < 15; i++) {
-            updateBlock(i, 4, new Leaf());
+        for (int i = 50; i < 55; i++) {
+            updateBlock(i, 16, new Leaf());
         }
-        for (int i = 11; i < 14; i++) {
-            updateBlock(i, 2, new Leaf());
+        for (int i = 51; i < 54; i++) {
+            updateBlock(i, 14, new Leaf());
         }
-        for (int j = 4; j < 7; j++) {
-            updateBlock(12, j, new Log());
+        for (int j = 16; j < 19; j++) {
+            updateBlock(52, j, new Log());
         }
     }
 
+    private void loadWorld(){
+        try{
+            s = new Scanner(new File("world_info.txt"));
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File not found");
+        }
+        
+        while(s.hasNext()){
+            for(int i = 0; i < 100; i++){
+                for(int j = 0; j < 36; j++){
+                    grid[i][j] = toBlock(s.nextLine());
+                }
+            }
+        }
+        refreshWorld();
+    }
+    private void checkLoad(){
+        if(Greenfoot.isKeyDown("l")){
+            loadWorld();
+        }
+    }
+    
+    private void saveWorld(){
+        try{
+            fWriter = new FileWriter("world_info.txt");
+            pWriter = new PrintWriter(fWriter);
+            for(int i = 0; i < 100; i++){
+                for(int j = 0; j < 36; j++){
+                    pWriter.println(grid[i][j].getName());
+                }
+            }
+            pWriter.close();
+        }
+        catch(IOException e){
+            System.out.println("Error: " + e);
+        }
+    }
+    private void checkSave(){
+        if(Greenfoot.isKeyDown("k")){
+            saveWorld();
+        }
+    }
+    
+    private Block toBlock(String name){
+        Block block = new Air();
+    
+        if(name.equals("air")){
+            block = new Air();
+        }
+        else if(name.equals("chest")){
+            block = new Chest(this);
+        }
+        else if(name.equals("cobblestone")){
+            block = new CobbleStone();
+        }
+        else if(name.equals("craftingtable")){
+            block = new CraftingTable(this);
+        }
+        else if(name.equals("dirt")){
+            block = new Dirt();
+        }
+        else if(name.equals("grass")){
+            block = new Grass();
+        }
+        else if(name.equals("leaf")){
+            block = new Leaf();
+        }
+        else if(name.equals("log")){
+            block = new Log();
+        }
+        else if(name.equals("sapling")){
+            block = new Sapling();
+        }
+        
+        return block;
+    }
+    
     /**
      * Starts the main menu music when the world starts.
      */

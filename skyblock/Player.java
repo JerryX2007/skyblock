@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  * Description to be added
- * `
+ * 
  * @author Jerry Xing, Evan Xi
  * 
  * With help from Benny Wang
@@ -36,7 +36,7 @@ public abstract class Player extends SuperSmoothMover{
     protected int moveRightCounter;
     protected int hp;
     
-    
+    private static boolean pauseFalling = false;
     
     public Player(int moveSpeed, int jumpHeight, int reach, boolean canDrop, int pickUpRange, boolean jumping, Inventory inventory) {
         this.moveSpeed = moveSpeed;
@@ -58,9 +58,7 @@ public abstract class Player extends SuperSmoothMover{
     public void act(){
         checkKeys();
         checkPickup();
-        if(!GameWorld.getGUIOpened()){
-            checkFalling();
-        }
+        checkFalling();
     }
 
     /**
@@ -283,6 +281,9 @@ public abstract class Player extends SuperSmoothMover{
         } else {
             fall();
         }
+    }
+    public static void pauseFall(boolean condition){
+        pauseFalling = condition;
     }
 
     /**

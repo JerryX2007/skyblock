@@ -106,7 +106,7 @@ public class TitleScreen extends World
         }
     }
 
-    /*
+    /**
      * Checks if buttons are pressed
      */
     private void checkClick(){
