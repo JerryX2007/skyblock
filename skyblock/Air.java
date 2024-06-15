@@ -23,7 +23,7 @@ public class Air extends Block
 
         setImage(img);
         img2 = addBorder(img, black);
-        be.lockFrame();
+
     }
 
     public void act()

@@ -6,13 +6,17 @@ import java.util.ArrayList;
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
- * @author 
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
  * @version 1.0.0
  */
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
     private Block[][] grid;
+    private TitleScreen titleScreen;
+    private ArrayList<Actor> actorList;
+    private Fader blackScreen;
+    private ChestGUI chest;
     private static boolean openInventory = false;
     private static Inventory inventory;
     private static boolean openChest = false;
@@ -20,7 +24,6 @@ public class GameWorld extends World {
     private Steve player;
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
-    private boolean keyPreviouslyDown1 = false;
 
     /**
      * Constructor for objects of class GameWorld.
@@ -42,7 +45,7 @@ public class GameWorld extends World {
         craftingSystem = new CraftingSystem(300, this);
 
         // Player and health bar initialization
-        player = new Steve(3, 3, 3, true, 3, inventory);
+        player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
@@ -55,18 +58,17 @@ public class GameWorld extends World {
     public void act() {
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, GUI.class, SuperSmoothMover.class);
-
+        //pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        boolean keyCurrentlyDown1 = Greenfoot.isKeyDown("p");
-        
+
         if (keyCurrentlyDown && !keyPreviouslyDown) {
             if (!openInventory && !GUIOpened) {
                 openInventory = true;
                 inventory.addInventory();
                 addObject(inventory, getWidth() / 2, getHeight() / 2);
                 GUIOpened = true;
-            } else if (openInventory && GUIOpened) {
+            } else if (openInventory && GUIOpened && !openChest) {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
@@ -74,14 +76,9 @@ public class GameWorld extends World {
             } 
         }
         keyPreviouslyDown = keyCurrentlyDown;
-        
+
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
-        
-        // Debugging: print player's Y coordinate when 'p' is pressed
-        if (keyCurrentlyDown1) {
-            System.out.println(player.getY());
-        }
     }
 
     /**
@@ -129,6 +126,13 @@ public class GameWorld extends World {
         inventory.act();
         inventory.removeInventory();
         removeObject(inventory);
+    }
+
+    private void pause(){
+        if(Greenfoot.isKeyDown("p")){
+            //    MrCohen.pauseSounds();
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ public class ChestGUI extends GUI {
     private boolean foundLocation = false;
     private int tempX;
     private int tempY;
+    private boolean keyPreviouslyDown;
 
     /**
      * Constructor for the ChestGUI class.
@@ -46,7 +47,17 @@ public class ChestGUI extends GUI {
      * What ChestGUI when run
      */
     public void act() {
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        
         manageItems();
+        if(GameWorld.getGUIOpened() && GameWorld.getOpenChest() && keyCurrentlyDown && !keyPreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenChest(false);
+            removeChest();
+            Player.setActivated(false);
+            world.removeObject(this);
+        }
+        keyPreviouslyDown = keyCurrentlyDown;
     }
 
     /**

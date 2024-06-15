@@ -3,15 +3,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class StoneSword here.
  * 
- * Dylan Dinesh
+ * Jerry Xing
  * @version (a version number or a date)
  */
 public class StoneSword extends Item
 {
     private String image;
 
-    public StoneSword(int length, int width, World world, int X, int Y){
-        super("items/Stone_Sword.png", 25, 25, world, false, X, Y, "wooden_sword");
+    public StoneSword(World world, int X, int Y){
+        super("items/Stone_Sword.png", 32, 32, world, true, X, Y, "stone_sword");
         image  = "items/Stone_Sword.png";
     }
 
