@@ -6,10 +6,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author Jerry Xing 
  * @version (a version number or a date)
  */
-public class CraftingSlot extends Actor
+public class CraftingSlot extends Item
 {
     private Item item;
-    private Block block;
     
     public CraftingSlot(Item item) {
         this.item = item;
