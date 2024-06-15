@@ -23,8 +23,4 @@ public class Stick extends Item
     {
         super.act();
     }
-
-    public String getItemImage(){
-        return image;
-    }
 }

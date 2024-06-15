@@ -17,6 +17,12 @@ public class HealthBar extends Actor
     private GreenfootImage image;
     private Steve player;
     private int actNum;
+    
+    /**
+     * Constructs a new HealthBar object.
+     * 
+     * @param player The player whose health is represented by this health bar.
+     */
     public HealthBar(Steve player){
         fullHeart.scale(heartSize,heartSize);
         halfHeart.scale(heartSize,heartSize);
@@ -25,6 +31,7 @@ public class HealthBar extends Actor
         this.player = player;
         actNum = 0;
     }
+    
     /**
      * Act - do whatever the HealthBar wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -38,7 +45,10 @@ public class HealthBar extends Actor
         }
         actNum++;
     }
-    //updates hp bar
+    
+    /**
+     * Update health bar
+     */
     private void updateHpBar(){
         
         image.clear();

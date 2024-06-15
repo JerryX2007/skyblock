@@ -23,8 +23,4 @@ public class StonePickaxe extends Item
     {
         super.act();
     }
-
-    public String getItemImage(){
-        return image;
-    }
 }

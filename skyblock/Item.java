@@ -67,42 +67,6 @@ public class Item extends Actor {
         this.invY = invY;
         counter.setLineColor(Label.getTransparent());
     }
-    
-    /**
-     * Setter for holdingSomething
-     * 
-     * @param hold New value for holdingSomething
-     */
-    public static void setHoldingSomething(boolean hold){
-        holdingSomething = hold;
-    }
-    
-    /**
-     * Setter for firstTime
-     * 
-     * @param first New value for firstTime
-     */
-    public void setFirstTime(boolean first){
-        firstTime = first;
-    }
-    
-    /**
-     * Setter for snapped
-     * 
-     * @param snap New value for snapped
-     */
-    public void setSnapped(boolean snap){
-        snapped = snap;
-    }
-    
-    /**
-     * Setter for gotItems
-     * 
-     * @param got New value for gotItems
-     */
-    public void setGotItems(boolean got){
-        gotItems = got;
-    }
 
     /**
      * What Items do when run
@@ -389,6 +353,42 @@ public class Item extends Actor {
      */
     public int getInvX(){
         return invX;
+    }
+    
+    /**
+     * Setter for holdingSomething
+     * 
+     * @param hold New value for holdingSomething
+     */
+    public static void setHoldingSomething(boolean hold){
+        holdingSomething = hold;
+    }
+    
+    /**
+     * Setter for firstTime
+     * 
+     * @param first New value for firstTime
+     */
+    public void setFirstTime(boolean first){
+        firstTime = first;
+    }
+    
+    /**
+     * Setter for snapped
+     * 
+     * @param snap New value for snapped
+     */
+    public void setSnapped(boolean snap){
+        snapped = snap;
+    }
+    
+    /**
+     * Setter for gotItems
+     * 
+     * @param got New value for gotItems
+     */
+    public void setGotItems(boolean got){
+        gotItems = got;
     }
     
     /**
