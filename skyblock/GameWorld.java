@@ -128,10 +128,12 @@ public class GameWorld extends World {
         removeObject(inventory);
     }
 
-    private void pause(){
-        if(Greenfoot.isKeyDown("p")){
-            //    MrCohen.pauseSounds();
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, actorList));
+    private void pause() {
+        if (Greenfoot.isKeyDown("p")) {
+            // Capture current grid and actors
+            Block[][] currentGrid = getGrid();
+            ArrayList<Actor> currentActors = getActors();
+            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
         }
     }
 
@@ -303,6 +305,14 @@ public class GameWorld extends World {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    public Block[][] getGrid() {
+        return grid;
+    }
+
+    public ArrayList<Actor> getActors() {
+        return new ArrayList<>(getObjects(Actor.class));
     }
 
     /**
