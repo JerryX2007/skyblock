@@ -534,6 +534,13 @@ public class Item extends Actor {
     }
     
     /**
+     * Getter for placeable
+     * 
+     * @return returns the value of placeable for a given item
+     */
+    public boolean getPlaceable(){ return placeable;}
+    
+    /**
      * Checks if this item is equal to another item.
      * 
      * @param item The item to compare with.
