@@ -161,6 +161,8 @@ public class Inventory extends GUI {
         // Add items in the inventory to the world
         for (Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
+            //System.out.println(i.getXPos());
+            //System.out.println(i.getYPos());
         }
         
         world.addObject(heldItem[0], 631, 348);
