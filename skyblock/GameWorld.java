@@ -50,9 +50,6 @@ public class GameWorld extends World {
         grid = new Block[100][36];
 
         // Optionally fill the grid with initial values or objects
-        //initializeGrid();
-        //prepareWorld();
-        //refreshWorld();
         loadWorld();
         checkSave();
 
@@ -264,7 +261,7 @@ public class GameWorld extends World {
     public void shiftWorld(double xShift, double yShift) {
         ArrayList<Actor> allActors = (ArrayList<Actor>) getObjects(Actor.class);
         for (Actor object : allActors) {
-            object.setLocation((int) (object.getX() + xShift + 0.5), (int) (object.getY() + yShift + 0.5));
+            object.setLocation((int) ((object.getX() + xShift + Math.signum(object.getX()) * 0.5)), (int) ((object.getY() + yShift + Math.signum(object.getY()) * 0.5)));
         }
     }
 
@@ -277,7 +274,7 @@ public class GameWorld extends World {
     public void reverseShiftPlayer(double xShift, double yShift) {
         ArrayList<Player> allPlayers = (ArrayList<Player>) getObjects(Player.class);
         for (Actor player : allPlayers) {
-            player.setLocation((int) (player.getX() - xShift + 0.5), (int) (player.getY() - yShift + 0.5));
+            player.setLocation((int) (player.getX() - xShift + Math.signum(player.getX()) * 0.5), (int) ((player.getY() - yShift + Math.signum(player.getY()) * 0.5)));
         }
     }
 

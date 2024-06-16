@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * Represents the inventory GUI in the game.
  * Manages the items in the player's inventory and crafting sections.
  * 
- * @arthor Benny Wang
+ * @author Benny Wang
  * Edited by: Evan Xi, Jerry Xing
  * @version (a version number or a date)
  */

@@ -209,7 +209,7 @@ public abstract class Player extends SuperSmoothMover{
      * @return True if the player's head is clear, false otherwise
      */
     protected boolean headClear(){
-        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
+        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+10), Block.class);
         if(above != null) {
             if(above instanceof Air) {
                 return true;
@@ -293,15 +293,12 @@ public abstract class Player extends SuperSmoothMover{
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveLeft(){
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            for(int i = 0; i < moveSpeed; i++){
-                world.shiftWorld(1, 0);
-                world.reverseShiftPlayer(1, 0);
-                if(!leftClear()){
-                    return;
-                }
+        GameWorld world = (GameWorld) getWorld();
+        for(int i = 0; i < moveSpeed; i++){
+            world.shiftWorld(1, 0);
+            world.reverseShiftPlayer(1, 0);
+            if(!leftClear()){
+                return;
             }
         }
     }
@@ -311,15 +308,12 @@ public abstract class Player extends SuperSmoothMover{
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveRight(){
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            for(int i = 0; i < moveSpeed; i++){
-                world.shiftWorld(-1, 0);
-                world.reverseShiftPlayer(-1, 0);
-                if(!rightClear()){
-                    return;
-                }
+        GameWorld world = (GameWorld) getWorld();
+        for(int i = 0; i < moveSpeed; i++){
+            world.shiftWorld(-1, 0);
+            world.reverseShiftPlayer(-1, 0);
+            if(!rightClear()){
+                return;
             }
         }
     }
@@ -339,26 +333,20 @@ public abstract class Player extends SuperSmoothMover{
      * Accelerate downwards to fall
      */
     protected void fall() {
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            world.shiftWorld(0, - yVelocity);
-            world.reverseShiftPlayer(0, -yVelocity);
-            yVelocity = yVelocity + acceleration;
-        }
+        GameWorld world = (GameWorld) getWorld();
+        yVelocity = yVelocity + acceleration;
+        world.shiftWorld(0, - yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity + 0.05);
     }
 
     /**
      * Makes the player jump.
      */
     protected void jump() {
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            yVelocity -= 4.4;
-            world.shiftWorld(0, -yVelocity);
-            world.reverseShiftPlayer(0, -yVelocity);
-        }
+        GameWorld world = (GameWorld) getWorld();
+        yVelocity -= 4.4;
+        world.shiftWorld(0, -yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity);
     }
 
     /**

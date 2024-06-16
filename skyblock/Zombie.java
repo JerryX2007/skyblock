@@ -9,9 +9,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Zombie extends Mob{
     public Zombie(){
         super(true, 0, 2, 20, 0, 5);
-        defaultImg = new GreenfootImage("mob/zombie_1.png");
-        movingImg = new GreenfootImage("mob/zombie_2.png");
-        hurtImg = new GreenfootImage("mob/zombie_3.png");
+        defaultImg = new GreenfootImage("mobs/zombie_1.png");
+        movingImg = new GreenfootImage("mobs/zombie_2.png");
+        hurtImg = new GreenfootImage("mobs/zombie_3.png");
+        
+        defaultImg.scale(64, 128);
+        movingImg.scale(64, 128);
+        hurtImg.scale(64, 128);
+        
+        setImage(defaultImg);
     }
     
     public void act(){
