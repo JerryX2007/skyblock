@@ -33,7 +33,9 @@ public class GameWorld extends World {
     private Steve player;
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
+    private int worldTime;    
     
+    SimpleTimer dayNightTimer = new SimpleTimer();
     Scanner s;
     FileWriter fWriter;
     PrintWriter pWriter;
@@ -62,6 +64,7 @@ public class GameWorld extends World {
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
+        dayNightTimer.mark();
     }
 
     /**
@@ -95,8 +98,43 @@ public class GameWorld extends World {
         hpBar.setLocation(player.getX(), player.getY() - 90);
         checkSave();
         checkReset();
+        checkTime();
     }
 
+    /**
+     * Updates the time of the day every 15 seconds, with a full day lasting 1m 30s
+     */
+    private void checkTime(){
+        if(dayNightTimer.millisElapsed() > 15000){
+            worldTime = 1;
+        }
+        else if(dayNightTimer.millisElapsed() > 30000){
+            worldTime = 2;
+        }
+        else if(dayNightTimer.millisElapsed() > 45000){
+            worldTime = 3;
+        }
+        else if(dayNightTimer.millisElapsed() > 60000){
+            worldTime = 4;
+        }
+        else if(dayNightTimer.millisElapsed() > 75000){
+            worldTime = 3;
+        }
+        else if(dayNightTimer.millisElapsed() > 90000){
+            worldTime = 2;
+            dayNightTimer.mark();
+        }
+    }
+    
+    /**
+     * Returns the world time for blocks to use and set their brightness
+     * 
+     * @return the time of the world
+     */
+    public int getTime(){
+        return worldTime;
+    }
+    
     /**
      * Getter for openChest.
      * 

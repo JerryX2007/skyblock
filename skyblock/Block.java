@@ -6,6 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * Different types of blocks have different properties such as hardness and drop items.
  * 
  * @author Nick Chen
+ * Edited by: Evan Xi
  * @version 1.0.0
  */
 public abstract class  Block extends Actor{
@@ -22,6 +23,7 @@ public abstract class  Block extends Actor{
     protected boolean isDirt;// i am a dirt and a shovel will break me faster
     protected boolean isSelected;//the mouse have hovered over this block
     protected boolean isHoldingMouse;
+    protected int brightness = 4;
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
     protected Player player;
@@ -88,6 +90,8 @@ public abstract class  Block extends Actor{
         if (getWorld() instanceof GameWorld) {
             MouseInfo mouse = Greenfoot.getMouseInfo();
             GameWorld world = (GameWorld) getWorld();
+            
+            brightness = world.getTime();
 
             if (mouse != null) {
                 // Extract the x and y coordinates of the mouse
@@ -139,6 +143,14 @@ public abstract class  Block extends Actor{
         }
     }
 
+    /**
+     * Adds a transparent block on top depending on the brightness of the block
+     * Uses a scale from 1 - 4, with 4 being brightest
+     */
+    private void updateBrightness(){
+        
+    }
+    
     /**
      * Check if the actor is intersecting with a given coordinate.
      * 
@@ -260,20 +272,39 @@ public abstract class  Block extends Actor{
     }
     
     /**
-     * Get whether the block is dirt
+     * Get whether or not the block is a type of dirt
      * 
-     * @return if the block is dirt
+     * @return if the block is a type of dirt
      */
     public boolean isDirt() {
         return isDirt;
     }
     
+    /**
+     * Get whether or not the block is a type of stone
+     * 
+     * @return if the block is a type of stone
+     */
     public boolean isStone() {
         return isStone;
     }
     
+    /**
+     * Get whether or not the block is a type of wood
+     * 
+     * @return if the block is a type of wood
+     */
     public boolean isWood() {
         return isWood;
+    }
+    
+    /**
+     * Get the brightness of the block
+     * 
+     * @return the brightness of the block
+     */
+    public int getBrightness(){
+        return brightness;
     }
 }
 

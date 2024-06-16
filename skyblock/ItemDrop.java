@@ -91,7 +91,7 @@ public class ItemDrop extends SuperSmoothMover{
                 name = "plank";
                 break;
             case 11:
-                img = new GreenfootImage("block/cole_ore.jpeg");
+                img = new GreenfootImage("block/coal_ore.jpeg");
                 name = "plank";
                 break;
             case 12:
