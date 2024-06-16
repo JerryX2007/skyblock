@@ -47,7 +47,7 @@ public class HealthBar extends Actor
     }
     
     /**
-     * Update health bar
+     * Update health bar, fills in the heart depending on the health
      */
     private void updateHpBar(){
         
