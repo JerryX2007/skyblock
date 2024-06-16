@@ -36,7 +36,7 @@ public class CraftingSystem extends GUI
         for (int x = 0; x < GRID_SIZE; x++) {
             for(int y = 0; y < GRID_SIZE; y++) {
                 Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
-                itemArray[x][y] = new CraftingSlot(world, 424 + xAdjust, world.getHeight() / 2 - 348 + yAdjust, temp);
+                itemArray[x][y] = new CraftingSlot(world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust, temp);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -77,15 +77,6 @@ public class CraftingSystem extends GUI
                 yAdjust += 54;
             }
         }
-        
-        for(int i=0; i < GRID_SIZE; i++) {
-            for(int y=0;y<GRID_SIZE;y++) {
-                if(i==0) {
-                    world.addObject(new Empty(16, 16, world, 200 + xAdjust, 400), 200 + xAdjust, 400);
-                }
-                
-            }
-        }
         xAdjust = 0;
         yAdjust = 0;
         
@@ -97,7 +88,7 @@ public class CraftingSystem extends GUI
         // Add crafting slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                world.addObject(itemArray[i][j], 424 + xAdjust, world.getHeight() / 2 - 348 + yAdjust);
+                world.addObject(itemArray[i][j], 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
