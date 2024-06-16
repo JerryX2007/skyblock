@@ -11,6 +11,9 @@ import java.util.ArrayList;
 public class Item extends Actor {
     // Basic properties of the item
     protected String name;
+    protected String file;
+    protected int length;
+    protected int width;
     protected int X;
     protected int Y;
     protected MouseInfo mouse;
@@ -39,7 +42,8 @@ public class Item extends Actor {
     private int mY;
     protected boolean pressed = false;
     protected static boolean holdingSomething = false;
-
+    protected boolean placeable;
+    
     /**
      * Constructor for the Item class, given file name, size of scaled image length, size of scaled image width, the world its in, whether its draggable or not, x-coordinate of item, y-coordinate of item and the type of file
      * 
@@ -51,21 +55,25 @@ public class Item extends Actor {
      * @param X The x-coordinate of the item.
      * @param Y The y-coordinate of the item.
      * @param type The type of the item.
+     * @param placeable Whether the item is placeable or not
      */
-    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
+    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type, boolean placeable){
         this.setImage(file);
-        getImage().scale(length, width);
         this.draggable = draggable;
+        this.file = file;
         this.X = X;
         this.Y = Y;
         this.type = type;
-        tempX = X;
-        tempY = Y;
         this.world = world;
-        image = file;
         this.invX = invX;
         this.invY = invY;
+        this.length = length;
+        this.placeable = placeable;
+        image = file;
+        tempX = X;
+        tempY = Y;
         counter.setLineColor(Label.getTransparent());
+        getImage().scale(length, width);
     }
 
     /**
@@ -313,6 +321,14 @@ public class Item extends Actor {
         return touchingItems;
     }
     
+    /**
+     * Gets a string representation of the item.
+     * 
+     * @return A string representation of the item.
+     */
+    public String toString(){
+        return file + " " + length + " " + world + " " + draggable + " " + X + " " + Y + " " + type + " " +  placeable;
+    }
     
     /**
      * Get item under cursor
@@ -466,15 +482,6 @@ public class Item extends Actor {
     }
 
     /**
-     * Gets a string representation of the item.
-     * 
-     * @return A string representation of the item.
-     */
-    public String toString(){
-        return "(" + X + ", " + Y + ")";
-    }
-
-    /**
      * Gets the x-coordinate of the item.
      * 
      * @return The x-coordinate of the item.
@@ -527,6 +534,13 @@ public class Item extends Actor {
     public String getItemImage(){
         return image;
     }
+    
+    /**
+     * Getter for placeable
+     * 
+     * @return returns the value of placeable for a given item
+     */
+    public boolean getPlaceable(){ return placeable;}
     
     /**
      * Checks if this item is equal to another item.

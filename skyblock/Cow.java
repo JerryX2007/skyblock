@@ -9,10 +9,16 @@ import java.util.Random;
  */
 public class Cow extends Mob{
     public Cow(){
-        super(false, 0, 2, 10, 10, 15);
-        defaultImg = new GreenfootImage("mob/cow_1.png");
-        movingImg = new GreenfootImage("mob/cow_2.png");
-        hurtImg = new GreenfootImage("mob/cow_3.png");
+        super(false, 0, 2, 10);
+        defaultImg = new GreenfootImage("mobs/cow_1.png");
+        movingImg = new GreenfootImage("mobs/cow_2.png");
+        hurtImg = new GreenfootImage("mobs/cow_3.png");
+        
+        defaultImg.scale(80, 64);
+        movingImg.scale(80, 64);
+        hurtImg.scale(80, 64);
+        
+        setImage(defaultImg);
     }
     
     public void act(){

@@ -11,7 +11,7 @@ public class StoneSword extends Item
     private String image;
 
     public StoneSword(World world, int X, int Y){
-        super("items/Stone_Sword.png", 32, 32, world, true, X, Y, "stone_sword");
+        super("items/Stone_Sword.png", 32, 32, world, true, X, Y, "stone_sword", false);
         image  = "items/Stone_Sword.png";
     }
 

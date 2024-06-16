@@ -14,12 +14,12 @@ public class WoodenPlank extends Block
 
     public WoodenPlank(){
         super(brown,2, "plank");
-        img = new GreenfootImage("block/wood_plank.jpeg");
+        img = new GreenfootImage("block/wooden_plank.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isWood = true;
-        itemDrop = 6;
+        itemDrop = 8;
     }
     /**
      * Act - do whatever the Dirt wants to do. This method is called whenever
