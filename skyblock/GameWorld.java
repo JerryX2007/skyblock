@@ -35,7 +35,7 @@ public class GameWorld extends World {
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
     private int worldTime;    
-
+    private boolean firstAct = true;
     SimpleTimer dayNightTimer = new SimpleTimer();
     Scanner s;
     FileWriter fWriter;
@@ -54,6 +54,7 @@ public class GameWorld extends World {
 
         // Optionally fill the grid with initial values or objects
         loadWorld();
+        
         checkSave();
 
         // Inventory initialization
@@ -73,8 +74,14 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
+        
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
+        
+        if(firstAct){
+            loadInv();
+            firstAct = false;
+        }
         pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -92,6 +99,9 @@ public class GameWorld extends World {
                 removeObject(inventory);
 
             } 
+            for(Label l : getObjects(Label.class)){
+                removeObject(l);
+            }
         }
         keyPreviouslyDown = keyCurrentlyDown;
 
@@ -290,6 +300,48 @@ public class GameWorld extends World {
         grid[gridX][gridY] = newBlock;
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
     }
+    
+    private void saveInv(){
+        try{
+            fWriter = new FileWriter("saves/inv.txt");
+            pWriter = new PrintWriter(fWriter);
+            for(Item i : GUI.getItemList()){
+                pWriter.println(i.toString());
+            }
+            //System.out.println("World saved!");
+            pWriter.close();
+        }
+        catch(IOException e){
+            //System.out.println("Error: " + e);
+        }
+    }
+    
+    private void loadInv(){
+        try{
+            s = new Scanner(new File("saves/inv.txt"));
+            ArrayList<String> tempString = new ArrayList<>();
+            while(s.hasNext()){
+                tempString.add(s.nextLine());
+            }
+            for(String s : tempString){
+                String[] a = s.split(" ");
+                String file = a[0];
+                int lengthWidth = Integer.valueOf(a[1]);
+                boolean draggable = Boolean.valueOf(a[3]);
+                int X = Integer.valueOf(a[4]);
+                int Y = Integer.valueOf(a[5]);
+                String type = a[6];
+                boolean placeable = Boolean.valueOf(a[7]);
+                Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
+                //System.out.println(temp.toString());
+                GUI.getItemList().add(temp);
+            }
+            s.close();
+        }
+        catch(FileNotFoundException e){
+
+        }
+    }
 
     /**
      * Updates the entire world with the correct blocks
@@ -367,7 +419,7 @@ public class GameWorld extends World {
             s = new Scanner(new File("world_info.txt"));
         }
         catch(FileNotFoundException e){
-            System.out.println("File not found");
+            //System.out.println("File not found");
         }
 
         while(s.hasNext()){
@@ -400,13 +452,15 @@ public class GameWorld extends World {
             pWriter.close();
         }
         catch(IOException e){
-            System.out.println("Error: " + e);
+            //System.out.println("Error: " + e);
         }
     }
 
     private void checkSave(){
         if(Greenfoot.isKeyDown("k")){
             saveWorld();
+            spoofInventory();
+            saveInv();
         }
     }
 
