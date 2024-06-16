@@ -86,10 +86,10 @@ public class PauseScreen extends World
      */
     public void act() {
         if (menu.isPressed()) {
-            menu.setPressedCondition(false);
-            TitleScreen.setMusicVolume(25);
-            TitleScreen.playMusic();
             Greenfoot.setWorld(titleScreen);
+            menu.setPressedCondition(false);
+          //  TitleScreen.setMusicVolume(25);
+          //  TitleScreen.playMusic();
         }
         if (resume.isPressed()) {
             Greenfoot.setWorld(world);
