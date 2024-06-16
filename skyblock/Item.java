@@ -42,6 +42,7 @@ public class Item extends Actor {
     private int mY;
     protected boolean pressed = false;
     protected static boolean holdingSomething = false;
+    protected boolean placeable;
     
     /**
      * Constructor for the Item class, given file name, size of scaled image length, size of scaled image width, the world its in, whether its draggable or not, x-coordinate of item, y-coordinate of item and the type of file
@@ -54,8 +55,9 @@ public class Item extends Actor {
      * @param X The x-coordinate of the item.
      * @param Y The y-coordinate of the item.
      * @param type The type of the item.
+     * @param placeable Whether the item is placeable or not
      */
-    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type){
+    public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type, boolean placeable){
         this.setImage(file);
         getImage().scale(length, width);
         this.draggable = draggable;
@@ -69,6 +71,7 @@ public class Item extends Actor {
         this.invX = invX;
         this.invY = invY;
         counter.setLineColor(Label.getTransparent());
+        this.placeable = placeable;
     }
 
     /**
@@ -322,7 +325,7 @@ public class Item extends Actor {
      * @return A string representation of the item.
      */
     public String toString(){
-        return file + " " + length + " " + world + " " + draggable + " " + X + " " + Y + " " + type;
+        return file + " " + length + " " + world + " " + draggable + " " + X + " " + Y + " " + type + " " +  placeable;
     }
     
     /**

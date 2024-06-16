@@ -11,7 +11,7 @@ public class WoodenShovel extends Item
     private String image;
 
     public WoodenShovel(World world, int X, int Y){
-        super("items/Wooden_Shovel.png", 32, 32, world, true, X, Y, "wooden_shovel");
+        super("items/Wooden_Shovel.png", 32, 32, world, true, X, Y, "wooden_shovel", false);
         image  = "items/Wooden_Shovel.png";
     }
 

@@ -105,7 +105,7 @@ public class CraftingSystem extends GUI
         //Also try to hard code the possible positions of every single combination ;-;
         
         if (isCraftingPlanks()) {
-            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank");
+            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank", true);
             increaseItemAmount(outputItem, 3);
             outputSlot.setItem(outputItem);
             outputItem = null;

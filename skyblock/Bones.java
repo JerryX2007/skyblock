@@ -11,7 +11,7 @@ public class Bones extends Item
     private String image;
 
     public Bones(int length, int width, World world, int X, int Y){
-        super("items/Bones.png", 32, 32, world, true, X, Y, "bones");
+        super("items/Bones.png", 32, 32, world, true, X, Y, "bones", false);
         image  = "items/Bones.png";
     }
 
