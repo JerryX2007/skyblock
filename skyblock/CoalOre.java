@@ -6,12 +6,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class ColeOre extends Block
+public class CoalOre extends Block
 {
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public ColeOre(){
+    public CoalOre(){
         super(Color.GRAY,5, "cole_ore");
         img = new GreenfootImage("block/cole_ore.jpeg");
         img.scale(64,64);

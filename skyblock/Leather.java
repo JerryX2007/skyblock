@@ -11,7 +11,7 @@ public class Leather extends Item
     private String image;
 
     public Leather(int length, int width, World world, int X, int Y){
-        super("items/leather.png", 32, 32, world, true, X, Y, "leather");
+        super("items/leather.png", 32, 32, world, true, X, Y, "leather", false);
         image  = "items/leather.png";
     }
 

@@ -11,8 +11,8 @@ public class Gunpowder extends Item
     private String image;
 
     public Gunpowder(int length, int width, World world, int X, int Y){
-        super("items/leather.png", 32, 32, world, true, X, Y, "leather");
-        image  = "items/leather.png";
+        super("items/gunpowder.png", 32, 32, world, true, X, Y, "gunpowder", false);
+        image  = "items/gunpowder.png";
     }
 
     /**

@@ -73,9 +73,12 @@ public abstract class Player extends SuperSmoothMover{
      * Constantly checks for movement input and possible pickups around it
      */
     public void act(){
-        checkKeys();
-        checkPickup();
-        checkFalling();
+        if(!GameWorld.getGUIOpened()){
+            checkKeys();
+            checkPickup();
+            checkFalling();
+        }
+        
         if (isMoving) {
             Block blockBelow = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
             if(blockBelow != null && !(blockBelow instanceof Air)) {

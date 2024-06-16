@@ -11,7 +11,7 @@ public class Diamond extends Item
     private String image;
 
     public Diamond(int length, int width, World world, int X, int Y){
-        super("items/Diamond.png", 32, 32, world, true, X, Y, "diamond");
+        super("items/Diamond.png", 32, 32, world, true, X, Y, "diamond", false);
         image = "items/Diamond.png";
     }
 

@@ -42,10 +42,6 @@ public class CraftingTable extends Block
             setImage(img);
         }
     }
-
-    public void drop(){
-
-    }
     
     public void openCraftingSystem() {
         

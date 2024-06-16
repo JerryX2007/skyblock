@@ -11,7 +11,7 @@ public class Feather extends Item
     private String image;
 
     public Feather(int length, int width, World world, int X, int Y){
-        super("items/Feather.png", 32, 32, world, true, X, Y, "feather");
+        super("items/Feather.png", 32, 32, world, true, X, Y, "feather", false);
         image  = "items/Feather.png";
     }
 

@@ -105,7 +105,7 @@ public class CraftingSystem extends GUI
         //Also try to hard code the possible positions of every single combination ;-;
         
         if (isCraftingPlanks()) {
-            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank");
+            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank", true);
             increaseItemAmount(outputItem, 3);
             outputSlot.setItem(outputItem);
             outputItem = null;
@@ -120,15 +120,112 @@ public class CraftingSystem extends GUI
             
         }
         
-        else if (isCraftingWoodSword()) {
+        else if (isCraftingSword("plank")) {
             outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
             outputSlot.setItem(outputItem);
             outputItem = null;
         }
         
-        else if (isCraftingWoodPickaxe()) {
+        else if (isCraftingSword("cobblestone")) {
+            outputItem = new StoneSword(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingSword("iron")) {
+            //outputItem = new IronSword(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingSword("diamond")) {
+            //outputItem = new DiamondSword(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingPickaxe("plank")) {
             outputItem = new WoodenPickaxe(world, outputSlot.getX(), outputSlot.getY());
             outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingPickaxe("cobblestone")) {
+            outputItem = new StonePickaxe(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingPickaxe("iron")) {
+            //outputItem = new IronPickaxe(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingPickaxe("diamond")) {
+            //outputItem = new DiamondPickaxe(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingShovel("plank")) {
+            outputItem = new WoodenShovel(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingShovel("cobblestone")) {
+            outputItem = new StoneShovel(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingShovel("iron")) {
+            //outputItem = new IronShovel(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingShovel("diamond")) {
+            //outputItem = new DiamondShovel(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingHelmet("leather")) {
+            //outputItem = new LeatherHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingHelmet("iron")) {
+            //outputItem = new IronHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingHelmet("diamond")) {
+            //outputItem = new DiamondHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("leather")) {
+            //outputItem = new LeatherHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("iron")) {
+            //outputItem = new IronHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("diamond")) {
+            //outputItem = new DiamondHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
         }
         
         else {
@@ -145,7 +242,7 @@ public class CraftingSystem extends GUI
      * @return True if the slot is empty, false otherwise.
      */
     private boolean isEmpty(int x, int y) {
-        return itemArray[y][x] == null;
+        return itemArray[y][x].getItem() instanceof Empty;
     }
     
     /**
@@ -349,12 +446,13 @@ public class CraftingSystem extends GUI
     }
     
     /**
-     * Checks if the current grid configuration matches the recipe for crafting a wooden sword.
+     * Checks if the current grid configuration matches the recipe for crafting a sword.
      * 
-     * @return True if the recipe for a wooden sword is satisfied, false otherwise.
+     * @param itemName the type of sword
+     * @return True if the recipe for a sword is satisfied, false otherwise.
      */
-    private boolean isCraftingWoodSword() {
-        //Recipe for wooden sword: two planks and a stick vertically aligned
+    private boolean isCraftingSword(String itemName) {
+        //Recipe for stone sword: two (itemName)s and a stick vertically aligned
         /*
          * #
          * #
@@ -365,40 +463,8 @@ public class CraftingSystem extends GUI
             for (int y = 0; y < GRID_SIZE - 2; y++) {
                 if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
                     if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("planks") && 
-                        getSlot(x, y+1).getBlock().getName().equals("planks") && getSlot(x, y+2).getItem().getType().equals("stick")) {
-                        if (foundFirstSword) {
-                            return false; //More than one sword recipe found
-                        }
-                        foundFirstSword = true;
-                    } else {
-                        return false; //Another item found
-                    }
-                }
-            }
-        }
-        return foundFirstSword;
-    }
-    
-    /**
-     * Checks if the current grid configuration matches the recipe for crafting a stone sword.
-     * 
-     * @return True if the recipe for a stone sword is satisfied, false otherwise.
-     */
-    private boolean isCraftingStoneSword() {
-        //Recipe for stone sword: two cobblestones and a stick vertically aligned
-        /*
-         * #
-         * #
-         * #
-         */
-        boolean foundFirstSword = false;
-        for (int x = 0; x < GRID_SIZE; x++) {
-            for (int y = 0; y < GRID_SIZE - 2; y++) {
-                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
-                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("cobblestone") && 
-                        getSlot(x, y+1).getBlock().getName().equals("cobblestone") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals(itemName) && 
+                        getSlot(x, y+1).getBlock().getName().equals(itemName) && getSlot(x, y+2).getItem().getType().equals("stick")) {
                         
                         if (foundFirstSword) {
                             return false; //More than one sword recipe found
@@ -410,6 +476,7 @@ public class CraftingSystem extends GUI
                 }
             }
         }
+        
         if(foundFirstSword) {
             for(int x = 0; x < GRID_SIZE; x++) {
                 for(int y = 0; y < GRID_SIZE; y++) {
@@ -425,23 +492,21 @@ public class CraftingSystem extends GUI
     /**
      * Checks if the current grid configuration matches the recipe for crafting a wooden pickaxe.
      * 
-     * @return True if the recipe for a wooden pickaxe is satisfied, false otherwise.
+     * @param itemName the type of pickaxe
+     * @return True if the recipe for a pickaxe is satisfied, false otherwise.
      */
-    private boolean isCraftingWoodPickaxe() {
-        //Recipe for wooden pickaxe: three planks and 2 sticks in a pickaxe pattern
+    private boolean isCraftingPickaxe(String itemName) {
+        //Recipe for wooden pickaxe: three (itemName)s and 2 sticks in a pickaxe pattern
         /* ###
          * -#-
          * -#-
          */
         boolean foundFirstPickaxe = false;
         if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(1, 1) && !isEmpty(1, 2) &&
-            getSlot(0, 0).getItem().getType().equals("plank") && getSlot(1, 0).getItem().getType().equals("plank") &&
-            getSlot(2, 0).getItem().getType().equals("plank") && getSlot(1, 1).getItem().getType().equals("stick") && 
+            getSlot(0, 0).getItem().getType().equals(itemName) && getSlot(1, 0).getItem().getType().equals(itemName) &&
+            getSlot(2, 0).getItem().getType().equals(itemName) && getSlot(1, 1).getItem().getType().equals("stick") && 
             getSlot(1, 2).getItem().getType().equals("stick")) {
-            
-            if(foundFirstPickaxe) {
-                return false; //More than one pickaxe recipe found
-            }
+
             foundFirstPickaxe = true;
         }
         else {
@@ -460,64 +525,29 @@ public class CraftingSystem extends GUI
     }
     
     /**
-     * Checks if the current grid configuration matches the recipe for crafting a stone pickaxe.
+     * Checks if the current grid configuration matches the recipe for crafting a shovel.
      * 
-     * @return True if the recipe for a stone pickaxe is satisfied, false otherwise.
+     * @param itemName the type of shovel
+     * @return True if the recipe for a shovel is satisfied, false otherwise.
      */
-    private boolean isCraftingStonePickaxe() {
-        //Recipe for stone pickaxe: three cobblestone blocks and 2 sticks in a pickaxe pattern
-        /* ###
-         * -#-
-         * -#-
-         */
-        boolean foundFirstPickaxe = false;
-        if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(1, 1) && !isEmpty(1, 2) &&
-            getSlot(0, 0).getItem().getType().equals("cobblestone") && getSlot(1, 0).getItem().getType().equals("cobblestone") &&
-            getSlot(2, 0).getItem().getType().equals("cobblestone") && getSlot(1, 1).getItem().getType().equals("stick") && 
-            getSlot(1, 2).getItem().getType().equals("stick")) {
-            
-            if(foundFirstPickaxe) {
-                return false; //More than one pickaxe recipe found
-            }
-            foundFirstPickaxe = true;
-        }
-        else {
-            return false;
-        }
-        if(foundFirstPickaxe) {
-            for(int x = 0; x < GRID_SIZE; x++) {
-                for(int y = 0; y < GRID_SIZE; y++) {
-                    if(!isEmpty(x, y)) {
-                        foundFirstPickaxe = false;
-                    }
-                }
-            }
-        }
-        return foundFirstPickaxe;
-    }
-    
-    /**
-     * Checks if the current grid configuration matches the recipe for crafting a wooden shovel.
-     * 
-     * @return True if the recipe for a wooden shovel is satisfied, false otherwise.
-     */
-    private boolean isCraftingWoodShovel() {
-        //Recipe for the wooden shovel: one plank and 2 sticks vertically aligned
+    private boolean isCraftingShovel(String itemName) {
+        //Recipe for the shovel: one (itemName) and 2 sticks vertically aligned
         /*
          * #
          * #
          * #
          */
         boolean foundFirstShovel = false;
+        
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 2; y++) {
                 if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
                     if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("plank") && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals(itemName) && 
                         getSlot(x, y+1).getBlock().getName().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
                         
                         if (foundFirstShovel) {
-                            return false; //More than one sword recipe found
+                            return false; //More than one shovel recipe found
                         }
                         foundFirstShovel = true;
                     } else {
@@ -542,47 +572,168 @@ public class CraftingSystem extends GUI
     }
     
     /**
-     * Checks if the current grid configuration matches the recipe for crafting a stone shovel.
+     * Checks if the current grid configuration matches the recipe for crafting a helmet.
      * 
-     * @return True if the recipe for a stone shovel is satisfied, false otherwise.
+     * @param itemName the type of helmet
+     * @return True if the recipe for a helmet is satisfied, false otherwise.
      */
-    private boolean isCraftingStoneShovel() {
-        //Recipe for the stone shovel: one cobblestone and 2 sticks vertically aligned
+    private boolean isCraftingHelmet(String itemName) {
+        // Recipe for the helmet: 5 (itemName)s in an upside down U pattern
         /*
-         * #
-         * #
-         * #
+         * ###
+         * #-#
          */
-        boolean foundFirstShovel = false;
-        for (int x = 0; x < GRID_SIZE; x++) {
-            for (int y = 0; y < GRID_SIZE - 2; y++) {
-                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
-                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals("cobblestone") && 
-                        getSlot(x, y+1).getBlock().getName().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
-                        
-                        if (foundFirstShovel) {
-                            return false; //More than one sword recipe found
-                        }
-                        foundFirstShovel = true;
-                    } else {
-                        return false; //Another item found
+        boolean foundFirstHelmet = false;
+        for(int x=0; x < GRID_SIZE; x++) {
+            for(int y=0; y < GRID_SIZE-2; y++) {
+                if(!isEmpty(x, y) && !isEmpty(x + 1, y) && !isEmpty(x + 2, y) && !isEmpty(x, y + 1) && !isEmpty(x + 2, y + 1) &&
+                    getSlot(x, y).getItem().getType().equals(itemName) && getSlot(x + 1, y).getItem().getType().equals(itemName) && 
+                    getSlot(x + 2, y).getItem().getType().equals(itemName) && getSlot(x, y + 1).getItem().getType().equals(itemName) &&
+                    getSlot(x + 2, y + 1).getItem().getType().equals(itemName)) {
+                    
+                    if(foundFirstHelmet) {
+                        return false;
                     }
+                    
+                    foundFirstHelmet = true;
                 }
             }
         }
         
-        if(foundFirstShovel) {
+        if(foundFirstHelmet) {
             for(int x = 0; x < GRID_SIZE; x++) {
                 for(int y = 0; y < GRID_SIZE; y++) {
                     if(!isEmpty(x, y)) {
-                        foundFirstShovel = false;
+                        foundFirstHelmet = false;
                     }
                 }
             }
         }
         
-        return foundFirstShovel;
+        return foundFirstHelmet;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a chestplate.
+     * 
+     * @param itemName the type of chestplate
+     * @return True if the recipe for a chestplate is satisfied, false otherwise.
+     */
+    private boolean isCraftingChestplate(String itemName) {
+        // Recipe for the chestplate: 8 (itemName)s in a "W" pattern
+        /*
+         * #-#
+         * ###
+         * ###
+         */
         
+        boolean foundFirstChestplate = false;
+        
+        if (!isEmpty(0, 0) && !isEmpty(2, 0) && !isEmpty(0, 1) && !isEmpty(1, 1) && !isEmpty(2, 1) && !isEmpty(0, 2) && 
+            !isEmpty(1, 2) && !isEmpty(2, 2) && getSlot(0, 0).getItem().getType().equals(itemName) && 
+            getSlot(2, 0).getItem().getType().equals(itemName) && getSlot(0, 1).getItem().getType().equals(itemName) &&
+            getSlot(1, 1).getItem().getType().equals(itemName) && getSlot(2, 1).getItem().getType().equals(itemName) &&
+            getSlot(0, 2).getItem().getType().equals(itemName) && getSlot(1, 2).getItem().getType().equals(itemName) &&
+            getSlot(2, 2).getItem().getType().equals(itemName)) {
+
+            foundFirstChestplate = true;
+        }
+        else {
+            return false;
+        }
+        
+        if(foundFirstChestplate) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstChestplate = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstChestplate;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting leggings.
+     * 
+     * @param itemName the type of leggings
+     * @return True if the recipe for leggings is satisfied, false otherwise.
+     */
+    private boolean isCraftingLeggings(String itemName) {
+        // Recipe for the chestplate: 7 (itemName)s in an extended upside down U pattern
+        /*
+         * ###
+         * #-#
+         * #-#
+         */
+        
+        boolean foundFirstLeggings = false;
+        
+        if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(0, 1) && !isEmpty(2, 1) && !isEmpty(0, 2) && 
+            !isEmpty(2, 2) && getSlot(0, 0).getItem().getType().equals(itemName) &&
+            getSlot(1, 0).getItem().getType().equals(itemName) && getSlot(2, 0).getItem().getType().equals(itemName) &&
+            getSlot(0, 1).getItem().getType().equals(itemName) && getSlot(2, 1).getItem().getType().equals(itemName) &&
+            getSlot(0, 2).getItem().getType().equals(itemName) && getSlot(2, 2).getItem().getType().equals(itemName)) {
+
+            foundFirstLeggings = true;
+        }
+        else {
+            return false;
+        }
+        
+        if(foundFirstLeggings) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstLeggings = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstLeggings;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting boots.
+     * 
+     * @param itemName the type of boots
+     * @return True if the recipe for boots is satisfied, false otherwise.
+     */
+    private boolean isCraftingBoots(String itemName) {
+        // Recipe for the helmet: 4 (itemName)s in a | | pattern
+        /*
+         * #-#
+         * #-#
+         */
+        boolean foundFirstBoots = false;
+        for(int x=0; x < GRID_SIZE; x++) {
+            for(int y=0; y < GRID_SIZE-2; y++) {
+                if(!isEmpty(x, y) && !isEmpty(x + 2, y) && !isEmpty(x, y + 1) && !isEmpty(x + 2, y + 1) &&
+                    getSlot(x, y).getItem().getType().equals(itemName) && getSlot(x + 2, y).getItem().getType().equals(itemName) && 
+                    getSlot(x, y + 1).getItem().getType().equals(itemName) && getSlot(x + 2, y + 1).getItem().getType().equals(itemName)) {
+                    
+                    if(foundFirstBoots) {
+                        return false;
+                    }
+                    
+                    foundFirstBoots = true;
+                }
+            }
+        }
+        
+        if(foundFirstBoots) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstBoots = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstBoots;
     }
 }

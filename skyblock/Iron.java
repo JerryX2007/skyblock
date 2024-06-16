@@ -11,7 +11,7 @@ public class Iron extends Item
     private String image;
 
     public Iron(int length, int width, World world, int X, int Y){
-        super("items/Iron.png", 32, 32, world, true, X, Y, "iron");
+        super("items/Iron.png", 32, 32, world, true, X, Y, "iron", false);
         image = "items/Iron.png";
     }
 

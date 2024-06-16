@@ -11,7 +11,7 @@ public class StringItem extends Item
     private String image;
 
     public StringItem(int length, int width, World world, int X, int Y){
-        super("items/String.png", 32, 32, world, true, X, Y, "string");
+        super("items/String.png", 32, 32, world, true, X, Y, "string", false);
         image  = "items/String.png";
     }
 
