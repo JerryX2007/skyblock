@@ -29,6 +29,7 @@ public class GameWorld extends World {
     private static boolean openInventory = false;
     private static Inventory inventory;
     private static boolean openChest = false;
+    private static boolean openCrafting = false;
     private static boolean GUIOpened = false;
     private Steve player;
     private HealthBar hpBar;
@@ -162,6 +163,15 @@ public class GameWorld extends World {
      */
     public static void setOpenChest(boolean open) {
         openChest = open;
+    }
+    
+    /**
+     * Setter for openCrafting.
+     * 
+     * @param open New value for openCrafting.
+     */
+    public static void setOpenCrafting(boolean open) {
+        openCrafting = true;
     }
 
     /**
@@ -461,27 +471,5 @@ public class GameWorld extends World {
 
     public ArrayList<Actor> getActors() {
         return new ArrayList<>(getObjects(Actor.class));
-    }
-
-    /**
-     * Opens the crafting interface if it is not already visible.
-     */
-    public void openCraftingInterface() {
-        if (!isCraftingVisible) {
-            addObject(craftingSystem, getWidth()/2, getHeight()/2);
-            craftingSystem.showCrafting();
-            isCraftingVisible = true;
-        }
-    }
-
-    /**
-     * Closes the crafting interface if it is visible.
-     */
-    public void closeCraftingInterface() {
-        if (isCraftingVisible) {
-            removeObject(craftingSystem);
-            craftingSystem.hideCrafting();
-            isCraftingVisible = false;
-        }
     }
 }

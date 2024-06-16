@@ -18,6 +18,7 @@ public class CraftingSystem extends GUI
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
+    private boolean keyPreviouslyDown;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -28,8 +29,22 @@ public class CraftingSystem extends GUI
      */
     public CraftingSystem(int scale, World world) {
         super("craftingTableInterface.png", scale, world);
+        this.world = world;
+        
+        //Initialize itemArray
         itemArray = new CraftingSlot[GRID_SIZE][GRID_SIZE];
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for(int y = 0; y < GRID_SIZE; y++) {
+                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
+                itemArray[x][y] = new CraftingSlot(world, 424 + xAdjust, world.getHeight() / 2 - 348 + yAdjust, temp);
+                xAdjust += 54;
+            }
+            xAdjust = 0;
+            yAdjust += 54;
+        }
         isVisible = false;
+        xAdjust = 0;
+        yAdjust = 0;
     }
     
     /**
@@ -79,22 +94,29 @@ public class CraftingSystem extends GUI
             world.addObject(i, i.getXPos(), i.getYPos());
         }
         
-        // Add chest inventory slots to the world
+        // Add crafting slots to the world
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                world.addObject(chestSlots[j][i], 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
+            for (int j = 0; j < 3; j++) {
+                world.addObject(itemArray[i][j], 424 + xAdjust, world.getHeight() / 2 - 348 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
             yAdjust += 54;
         }
+        
         xAdjust = 0;
         yAdjust = 0;
+        isVisible = true;
+    }
+    
+    public void removeCrafting() {
         
-        // Add items in the chest to the world
-        for (Item i : contents) {
-            world.addObject(i, i.getXPos(), i.getYPos());
-        }
+        
+        isVisible = false;
+    }
+    
+    public void setVisible(boolean state) {
+        isVisible = state;
     }
     
     /**
@@ -404,7 +426,7 @@ public class CraftingSystem extends GUI
                     if(satisfied) {
                         return false; //If there is another block in the crafting system return false
                     }
-                    if(getSlot(x, y).getBlock().getName().equals("log")) {
+                    if(getSlot(x, y).getItem().getType().equals("log")) {
                         satisfied = true;
                     }
                 }
@@ -462,9 +484,9 @@ public class CraftingSystem extends GUI
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 2; y++) {
                 if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
-                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals(itemName) && 
-                        getSlot(x, y+1).getBlock().getName().equals(itemName) && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                    if (getSlot(x, y).getItem() != null && getSlot(x, y + 1).getItem() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getItem().getType().equals(itemName) && 
+                        getSlot(x, y+1).getItem().getType().equals(itemName) && getSlot(x, y+2).getItem().getType().equals("stick")) {
                         
                         if (foundFirstSword) {
                             return false; //More than one sword recipe found
@@ -542,9 +564,9 @@ public class CraftingSystem extends GUI
         for (int x = 0; x < GRID_SIZE; x++) {
             for (int y = 0; y < GRID_SIZE - 2; y++) {
                 if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
-                    if (getSlot(x, y).getBlock() != null && getSlot(x, y + 1).getBlock() != null && 
-                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getBlock().getName().equals(itemName) && 
-                        getSlot(x, y+1).getBlock().getName().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
+                    if (getSlot(x, y).getItem() != null && getSlot(x, y + 1).getItem() != null && 
+                        getSlot(x, y+2).getItem() != null && getSlot(x, y).getItem().getType().equals(itemName) && 
+                        getSlot(x, y+1).getItem().getType().equals("stick") && getSlot(x, y+2).getItem().getType().equals("stick")) {
                         
                         if (foundFirstShovel) {
                             return false; //More than one shovel recipe found

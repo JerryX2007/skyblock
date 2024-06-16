@@ -63,7 +63,6 @@ public abstract class Player extends SuperSmoothMover{
         this.inventory = inventory;
         walking = new GreenfootSound[3];
         walking[0] = new GreenfootSound("walking_dirt.mp3");
-        walking[0].setVolume(30);
         walking[1] = new GreenfootSound("walking_stone.mp3");
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
@@ -151,7 +150,10 @@ public abstract class Player extends SuperSmoothMover{
                         else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
                             craftingTable = (CraftingTable) block;
                             activated = true;
-                            //craftingTable.openGUI();
+                            craftingTable.openCraftingSystem();
+                            getWorld().addObject(craftingTable.getCraftingSystem(), getWorld().getWidth()/2, getWorld().getHeight()/2);
+                            GameWorld.setGUIOpened(true);
+                            GameWorld.setOpenCrafting(true);
                         }
                     }
                 }
