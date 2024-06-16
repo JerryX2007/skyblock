@@ -74,7 +74,7 @@ public class GameWorld extends World {
     public void act() {
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, SuperSmoothMover.class);
-        //pause();
+        pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
 
@@ -148,7 +148,7 @@ public class GameWorld extends World {
     }
 
     private void pause() {
-        if (Greenfoot.isKeyDown("p")) {
+        if (Greenfoot.isKeyDown("escape")) {
             // Capture current grid and actors
             Block[][] currentGrid = getGrid();
             ArrayList<Actor> currentActors = getActors();

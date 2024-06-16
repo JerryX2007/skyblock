@@ -1,24 +1,24 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class ColeOre here.
+ * Write a description of class DiamondOre here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class ColeOre extends Block
+public class DiamondOre extends Block
 {
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public ColeOre(){
-        super(Color.GRAY,5, "cole_ore");
-        img = new GreenfootImage("block/cole_ore.jpeg");
+    public DiamondOre(){
+        super(Color.GRAY,5, "diamond_ore");
+        img = new GreenfootImage("block/diamond_ore.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
         isStone = true;
-        itemDrop = 10;
+        itemDrop = 12;
     }
 
     /**
