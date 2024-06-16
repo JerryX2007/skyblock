@@ -92,15 +92,19 @@ public class ItemDrop extends SuperSmoothMover{
                 break;
             case 11:
                 img = new GreenfootImage("block/cole_ore.jpeg");
-                name = "plank";
+                name = "cole_ore";
                 break;
             case 12:
                 img = new GreenfootImage("block/iron_ore.png");
-                name = "plank";
+                name = "iron_ore";
                 break;
             case 13:
                 img = new GreenfootImage("block/diamond_ore.png");
-                name = "plank";
+                name = "diamond_ore";
+                break;
+            case 14:
+                img = new GreenfootImage("block/Torch_Block.png");
+                name = "torch_block";
                 break;
         }
         img.scale(15, 15); // Scales the item drop to be a mini version of the original 64x64 block
