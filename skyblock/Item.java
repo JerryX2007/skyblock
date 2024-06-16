@@ -11,6 +11,9 @@ import java.util.ArrayList;
 public class Item extends Actor {
     // Basic properties of the item
     protected String name;
+    protected String file;
+    protected int length;
+    protected int width;
     protected int X;
     protected int Y;
     protected MouseInfo mouse;
@@ -39,7 +42,7 @@ public class Item extends Actor {
     private int mY;
     protected boolean pressed = false;
     protected static boolean holdingSomething = false;
-
+    
     /**
      * Constructor for the Item class, given file name, size of scaled image length, size of scaled image width, the world its in, whether its draggable or not, x-coordinate of item, y-coordinate of item and the type of file
      * 
@@ -313,6 +316,14 @@ public class Item extends Actor {
         return touchingItems;
     }
     
+    /**
+     * Gets a string representation of the item.
+     * 
+     * @return A string representation of the item.
+     */
+    public String toString(){
+        return file + " " + length + " " + world + " " + draggable + " " + X + " " + Y + " " + type;
+    }
     
     /**
      * Get item under cursor
@@ -463,15 +474,6 @@ public class Item extends Actor {
      */
     public void setType(String type){
         this.type = type;
-    }
-
-    /**
-     * Gets a string representation of the item.
-     * 
-     * @return A string representation of the item.
-     */
-    public String toString(){
-        return "(" + X + ", " + Y + ")";
     }
 
     /**
