@@ -6,15 +6,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class WoodenPlank extends Block
+public class TNT extends Block
 {
     private static Color brown = new Color(77, 50, 36);
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public WoodenPlank(){
+    public TNT(){
         super(brown,2, "plank");
-        img = new GreenfootImage("block/wooden_plank.png");
+        img = new GreenfootImage("block/TNT.png");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
