@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Zombie extends Mob{
     public Zombie(){
-        super(true, 0, 2, 20, 0, 5);
+        super(true, 0, 2, 20);
         defaultImg = new GreenfootImage("mobs/zombie_1.png");
         movingImg = new GreenfootImage("mobs/zombie_2.png");
         hurtImg = new GreenfootImage("mobs/zombie_3.png");

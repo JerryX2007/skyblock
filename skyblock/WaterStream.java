@@ -15,15 +15,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class WaterStream extends WaterSource {
     public static int streamCount = 0;
     public static GreenfootImage[] left = {
-        new GreenfootImage("liquid/Lw1.png"), new GreenfootImage("liquid/Lw2.png"),
-        new GreenfootImage("liquid/Lw3.png"), new GreenfootImage("liquid/Lw4.png"),
-        new GreenfootImage("liquid/Lw5.png"), new GreenfootImage("liquid/Lw6.png")
-    };
+            new GreenfootImage("liquid/Lw1.png"), new GreenfootImage("liquid/Lw2.png"),
+            new GreenfootImage("liquid/Lw3.png"), new GreenfootImage("liquid/Lw4.png"),
+            new GreenfootImage("liquid/Lw5.png"), new GreenfootImage("liquid/Lw6.png")
+        };
     public static GreenfootImage[] right = {
-        new GreenfootImage("liquid/Rw1.png"), new GreenfootImage("liquid/Rw2.png"),
-        new GreenfootImage("liquid/Rw3.png"), new GreenfootImage("liquid/Rw4.png"),
-        new GreenfootImage("liquid/Rw5.png"), new GreenfootImage("liquid/Rw6.png")
-    };
+            new GreenfootImage("liquid/Rw1.png"), new GreenfootImage("liquid/Rw2.png"),
+            new GreenfootImage("liquid/Rw3.png"), new GreenfootImage("liquid/Rw4.png"),
+            new GreenfootImage("liquid/Rw5.png"), new GreenfootImage("liquid/Rw6.png")
+        };
     public static GreenfootImage normal = new GreenfootImage("liquid/w0.png");
 
     private WaterSource previousWater;
@@ -65,11 +65,17 @@ public class WaterStream extends WaterSource {
             }
 
         }
+        // Check if another block is placed on the same location
+        if (isBlocked()) {
+            remove();
+        }
         //remove me
         if(isRemoved){
             getWorld().removeObject(this);
         }
+        
     }
+
     /**
      * this method resize the static images
      */
@@ -82,6 +88,7 @@ public class WaterStream extends WaterSource {
             }
         }
     }
+
     /**
      * this method updates the image of this block
      */
@@ -98,13 +105,15 @@ public class WaterStream extends WaterSource {
     public int getDirection() {
         return direction;
     }
+
     public void setDirection(int d) {
         direction = d;
     }
-    
+
     public int getSidewaysCount() {
         return sidewaysCount;
     }
+
     public void setSidewaysCount(int count) {
         sidewaysCount = count;
     }
@@ -117,28 +126,32 @@ public class WaterStream extends WaterSource {
         Block below = (Block) getOneObjectAtOffset(0, 64, Block.class);
         Block above = (Block) getOneObjectAtOffset(0, -64, Block.class);
         //if below left or right is empty then flow into them by adding a new water stream
-        if (below == null) {
+        if(below instanceof LavaSource || below instanceof LavaStream){
+            //make a cobble stone if in contact with lava
+            getWorld().addObject(new CobbleStone(), getX(), getY() + 64);
+        }
+        else if(below == null){
+            //else if the space is empty add a stream
             getWorld().addObject(new WaterStream(this, 0, 0), getX(), getY() + 64);
-        } else if (!(below instanceof WaterSource || below instanceof WaterStream)) {
+        }
+        else if (!(below instanceof WaterSource || below instanceof WaterStream)) {
             //max range the water can flow sideways, currently 5
             if (sidewaysCount < 5) {
-                if (left == null) {
-                    if(left instanceof LavaSource){
-                        getWorld().addObject(new CobbleStone(), getX() + 64, getY());
-                    }
-                    else{
-                        getWorld().addObject(new WaterStream(this, sidewaysCount + 1, -1), getX() - 64, getY());
-                    }
+                if(left instanceof LavaSource || left instanceof LavaStream){
+                    //make a cobble stone if in contact with lava
+                    getWorld().addObject(new CobbleStone(), getX() - 64, getY());
                 }
-                if (right == null) {
-                    if(right instanceof LavaSource){
-                        //make a cobble stone if in contact with lava
-                        getWorld().addObject(new CobbleStone(), getX() - 64, getY());
-                    }
-                    else{
-                        //make a cobble stone if in contact with lava
-                        getWorld().addObject(new WaterStream(this, sidewaysCount + 1, 1), getX() + 64, getY());
-                    }
+                else if (left == null){
+                    //else if the space is empty add a stream
+                    getWorld().addObject(new WaterStream(this, sidewaysCount + 1, -1), getX() - 64, getY());
+                }
+                if(right instanceof LavaSource || right instanceof LavaStream){
+                    //make a cobble stone if in contact with lava
+                    getWorld().addObject(new CobbleStone(), getX() + 64, getY());
+                }
+                else if(right == null){
+                    //else if the space is empty add a stream
+                    getWorld().addObject(new WaterStream(this, sidewaysCount + 1, 1), getX() + 64, getY());
                 }
             }
         }

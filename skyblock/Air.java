@@ -26,22 +26,8 @@ public class Air extends Block
 
     }
 
-    public void act()
-    {
-        /*
-        //stop air from breaking
-        super.act();
+    public void act(){
 
-        if(isSelected){
-            setImage(img2);
-        }
-        if(!isSelected){
-            setImage(img);
-        }
-        if(subBreakTime < 10){
-            subBreakTime = breakTime;
-        }
-        */
     }
 
     public void drop(int itemDrop){

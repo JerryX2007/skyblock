@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Creeper extends Mob{
     public Creeper(){
-        super(true, 0, 2, 20, 0, 5);
+        super(true, 0, 2, 20);
         defaultImg = new GreenfootImage("mobs/creeper_1.png");
         movingImg = new GreenfootImage("mobs/creeper_2.png");
         hurtImg = new GreenfootImage("mobs/creeper_3.png");

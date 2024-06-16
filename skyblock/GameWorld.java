@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import java.util.Random;
+
 /**
  * Keeps track of everything that happens inside the world.
  * All block information is stored in a massive 2D array system.
@@ -21,7 +23,7 @@ import java.io.FileNotFoundException;
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
-    public static Block[][] grid;
+    public static Block[][] grid = new Block[100][36];
     private TitleScreen titleScreen;
     private ArrayList<Actor> actorList;
     private Fader blackScreen;
@@ -35,7 +37,7 @@ public class GameWorld extends World {
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
     private int worldTime;    
-
+    private boolean firstAct = true;
     SimpleTimer dayNightTimer = new SimpleTimer();
     Scanner s;
     FileWriter fWriter;
@@ -48,12 +50,10 @@ public class GameWorld extends World {
     public GameWorld(TitleScreen titleScreen) {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
-
-        // Initialize the grid
-        grid = new Block[100][36];
-
+        
         // Optionally fill the grid with initial values or objects
         loadWorld();
+        
         checkSave();
 
         // Inventory initialization
@@ -73,8 +73,14 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
+        
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
+        
+        if(firstAct){
+            loadInv();
+            firstAct = false;
+        }
         pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -92,6 +98,9 @@ public class GameWorld extends World {
                 removeObject(inventory);
 
             } 
+            for(Label l : getObjects(Label.class)){
+                removeObject(l);
+            }
         }
         keyPreviouslyDown = keyCurrentlyDown;
 
@@ -101,6 +110,10 @@ public class GameWorld extends World {
         checkSave();
         checkReset();
         checkTime();
+        
+        if(totalMobs() < 20){
+            attemptSpawn();
+        }        
     }
 
     /**
@@ -299,6 +312,48 @@ public class GameWorld extends World {
         grid[gridX][gridY] = newBlock;
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
     }
+    
+    private void saveInv(){
+        try{
+            fWriter = new FileWriter("saves/inv.txt");
+            pWriter = new PrintWriter(fWriter);
+            for(Item i : GUI.getItemList()){
+                pWriter.println(i.toString());
+            }
+            //System.out.println("World saved!");
+            pWriter.close();
+        }
+        catch(IOException e){
+            //System.out.println("Error: " + e);
+        }
+    }
+    
+    private void loadInv(){
+        try{
+            s = new Scanner(new File("saves/inv.txt"));
+            ArrayList<String> tempString = new ArrayList<>();
+            while(s.hasNext()){
+                tempString.add(s.nextLine());
+            }
+            for(String s : tempString){
+                String[] a = s.split(" ");
+                String file = a[0];
+                int lengthWidth = Integer.valueOf(a[1]);
+                boolean draggable = Boolean.valueOf(a[3]);
+                int X = Integer.valueOf(a[4]);
+                int Y = Integer.valueOf(a[5]);
+                String type = a[6];
+                boolean placeable = Boolean.valueOf(a[7]);
+                Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
+                //System.out.println(temp.toString());
+                GUI.getItemList().add(temp);
+            }
+            s.close();
+        }
+        catch(FileNotFoundException e){
+
+        }
+    }
 
     /**
      * Updates the entire world with the correct blocks
@@ -369,6 +424,9 @@ public class GameWorld extends World {
         for (int j = 16; j < 19; j++) {
             updateBlock(52, j, new Log());
         }
+        for(int i = 0; i < 100; i++){
+            updateBlock(i, 35, new Void());
+        }
     }
 
     private void loadWorld(){
@@ -376,7 +434,7 @@ public class GameWorld extends World {
             s = new Scanner(new File("world_info.txt"));
         }
         catch(FileNotFoundException e){
-            System.out.println("File not found");
+            //System.out.println("File not found");
         }
 
         while(s.hasNext()){
@@ -409,14 +467,21 @@ public class GameWorld extends World {
             pWriter.close();
         }
         catch(IOException e){
-            System.out.println("Error: " + e);
+            //System.out.println("Error: " + e);
         }
     }
 
     private void checkSave(){
         if(Greenfoot.isKeyDown("k")){
             saveWorld();
+            spoofInventory();
+            saveInv();
         }
+    }
+
+    private int totalMobs(){
+        ArrayList<Mob> mobList = (ArrayList<Mob>) getObjects(Mob.class);
+        return mobList.size();
     }
 
     private Block toBlock(String name){
@@ -451,6 +516,45 @@ public class GameWorld extends World {
         }
 
         return block;
+    }
+
+    private void attemptSpawn(){
+        Random random = new Random();        
+        for(int i = 1; i < 99; i++){
+            for(int j = 1; j < 35; j++){
+                Block block1 = grid[i][j];
+                Block block2 = grid[i][j + 1];
+                Block block3 = grid[i][j - 1];
+                Block block4 = grid[i - 1][j];
+                Block block5 = grid[i + 1][j];
+                if(!(block2.getName().equals("air"))){
+                    if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
+                        //System.out.println(getTime());
+                        if(block1.getBrightness() <= 2){
+                            int choice = random.nextInt(20000);
+                            if(choice == 1){
+                                addObject(new Sheep(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Cow(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                        }
+                        if(getTime() > 2){
+                            int choice = random.nextInt(30000);
+                            if(choice == 1){
+                                addObject(new Zombie(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Creeper(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 3){
+                                addObject(new Spider(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }                           
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
