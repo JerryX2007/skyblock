@@ -162,7 +162,7 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
-            if(under instanceof Air) {
+            if(under instanceof Air || under.isLiquid()) {
                 return false;
             }
             else {
@@ -180,7 +180,7 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean headClear(){
         Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
         if(above != null) {
-            if(above instanceof Air) {
+            if(above instanceof Air|| above.isLiquid()) {
                 return true;
             }
             else {
@@ -198,25 +198,25 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean rightClear(){ 
         Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getHeight()/4) * -1, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/2 - 5, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getHeight()/2) * -1, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
@@ -231,25 +231,25 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getHeight()/4) * -1, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/2 - 5, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getHeight()/2) * -1, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
@@ -406,7 +406,7 @@ public abstract class Player extends SuperSmoothMover{
     
             // Check if there is a block at the current position
             Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - playerX), (int) Math.round(currentY - playerY), Block.class);
-            if (block != null && block != targetBlock && !(block instanceof Air)) {
+            if (block != null && block != targetBlock && !(block instanceof Air|| block.isLiquid())) {
                 return false; // Block is obstructing the view
             }
         }
@@ -503,4 +503,5 @@ public abstract class Player extends SuperSmoothMover{
     public void deactivate() {
         activated = false;
     }
+    
 }

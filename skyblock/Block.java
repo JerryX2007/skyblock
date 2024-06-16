@@ -259,5 +259,13 @@ public abstract class  Block extends Actor{
     public String getName() {
         return name;
     }
+    /**
+     * check if a block is liquid or not
+     * 
+     * 
+     */
+    public boolean isLiquid(){
+        return (this instanceof WaterSource)||(this instanceof WaterStream)||(this instanceof LavaSource)|| (this instanceof LavaStream);
+    }
 }
 
