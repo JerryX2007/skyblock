@@ -1,28 +1,28 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class WoodPlank here.
+ * Write a description of class ColeOre here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class WoodenPlank extends Block
+public class ColeOre extends Block
 {
-    private static Color brown = new Color(77, 50, 36);
     private GreenfootImage img;
     private GreenfootImage img2;
 
-    public WoodenPlank(){
-        super(brown,2, "plank");
-        img = new GreenfootImage("block/wooden_plank.png");
+    public ColeOre(){
+        super(Color.GRAY,5, "cole_ore");
+        img = new GreenfootImage("block/cole_ore.jpeg");
         img.scale(64,64);
         setImage(img);
         img2 = addBorder(img, black);
-        isWood = true;
-        itemDrop = 8;
+        isStone = true;
+        itemDrop = 10;
     }
+
     /**
-     * Act - do whatever the Dirt wants to do. This method is called whenever
+     * Act - do whatever the Grass wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act()
