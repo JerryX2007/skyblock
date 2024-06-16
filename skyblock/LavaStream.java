@@ -60,6 +60,10 @@ public class LavaStream extends LavaSource {
             }
 
         }
+        // Check if another block is placed on the same location
+        if (isBlocked()) {
+            remove();
+        }
         //remove me
         if(isRemoved){
             getWorld().removeObject(this);
@@ -105,29 +109,44 @@ public class LavaStream extends LavaSource {
     }
 
     @Override
-    protected void flow() {
-        //checkblocks adjacent to this block
-        Block left = (Block) getOneObjectAtOffset(-64, 0, Block.class);
-        Block right = (Block) getOneObjectAtOffset(64, 0, Block.class);
-        Block below = (Block) getOneObjectAtOffset(0, 64, Block.class);
-        Block above = (Block) getOneObjectAtOffset(0, -64, Block.class);
-        //if below left or right is empty then flow into them by adding a new lava stream
-        if (below == null) {
-            getWorld().addObject(new LavaStream(this, 0, 0), getX(), getY() + 64);
-        } else if (!(below instanceof LavaSource || below instanceof LavaStream)) {
-            //max range the lava can flow sideways, currently 5
-            if (sidewaysCount < 3) {
-                if (left == null) {
-                    getWorld().addObject(new LavaStream(this, sidewaysCount + 1, -1), getX() - 64, getY());
-                }
-                if (right == null) {
-                    getWorld().addObject(new LavaStream(this, sidewaysCount + 1, 1), getX() + 64, getY());
-                }
+protected void flow() {
+    // Check blocks adjacent to this block
+    Block left = (Block) getOneObjectAtOffset(-64, 0, Block.class);
+    Block right = (Block) getOneObjectAtOffset(64, 0, Block.class);
+    Block below = (Block) getOneObjectAtOffset(0, 64, Block.class);
+    Block above = (Block) getOneObjectAtOffset(0, -64, Block.class);
+
+    // If below, left, or right is empty then flow into them by adding a new lava stream
+    if (below instanceof WaterSource || below instanceof WaterStream) {
+        // Make a cobblestone if in contact with water
+        getWorld().addObject(new CobbleStone(), getX(), getY() + 64);
+    } else if (below == null) {
+        // Else if the space is empty, add a stream
+        getWorld().addObject(new LavaStream(this, 0, 0), getX(), getY() + 64);
+    } else if (!(below instanceof LavaSource || below instanceof LavaStream)) {
+        // Max range the lava can flow sideways, currently 3
+        if (sidewaysCount < 3) {
+            if (left instanceof WaterSource || left instanceof WaterStream) {
+                // Make a cobblestone if in contact with water
+                getWorld().addObject(new CobbleStone(), getX() - 64, getY());
+            } else if (left == null) {
+                // Else if the space is empty, add a stream
+                getWorld().addObject(new LavaStream(this, sidewaysCount + 1, -1), getX() - 64, getY());
+            }
+            if (right instanceof WaterSource || right instanceof WaterStream) {
+                // Make a cobblestone if in contact with water
+                getWorld().addObject(new CobbleStone(), getX() + 64, getY());
+            } else if (right == null) {
+                // Else if the space is empty, add a stream
+                getWorld().addObject(new LavaStream(this, sidewaysCount + 1, 1), getX() + 64, getY());
             }
         }
-        //if the block above me is lava, adjust my picture to a full block
-        if(above instanceof LavaSource || above instanceof LavaStream){
-            setImage(normal);
-        }
     }
+
+    // If the block above me is lava, adjust my picture to a full block
+    if (above instanceof LavaSource || above instanceof LavaStream) {
+        setImage(normal);
+    }
+}
+
 }

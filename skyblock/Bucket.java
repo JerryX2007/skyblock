@@ -11,7 +11,7 @@ public class Bucket extends Item
     private String image;
 
     public Bucket(int length, int width, World world, int X, int Y){
-        super("items/Bucket.png", 32, 32, world, true, X, Y, "bucket");
+        super("items/Bucket.png", 32, 32, world, true, X, Y, "bucket", false);
         image  = "items/Bucket.png";
     }
 

@@ -265,25 +265,17 @@ public class Inventory extends GUI {
     }
 
     /**
-     * Sets the slot at the specified coordinates with the given item name.
-     * 
-     * @param x The x-coordinate of the slot.
-     * @param y The y-coordinate of the slot.
-     * @param itemName The name of the item to set in the slot.
-     */
-    public static void setSlot(int x, int y, String itemName) {
-        int tempX = slots[x][y].getX();
-        int tempY = slots[x][y].getY();
-        slots[x][y] = new Item("block/air.png", 16, 16, world, false, tempX, tempY, itemName);
-    }
-
-    /**
      * Adds an item to the inventory based on the item name.
      * 
      * @param item The name of the item to add.
      */
     public static void addItem(String item) {
-        Item temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item);
+        Item temp;
+        try{
+            temp = new Item(item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, false);
+        } catch (IllegalArgumentException e){
+            temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, true);
+        }
         tempItemsList.add(temp);
         addedYet = false;
     }

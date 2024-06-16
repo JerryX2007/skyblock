@@ -11,7 +11,7 @@ public class Coal extends Item
     private String image;
 
     public Coal(int length, int width, World world, int X, int Y){
-        super("items/Coal.png", 32, 32, world, true, X, Y, "coal");
+        super("items/Coal.png", 32, 32, world, true, X, Y, "coal", false);
         image = "items/Coal.png";
     }
 

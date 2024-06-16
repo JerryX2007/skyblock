@@ -11,7 +11,7 @@ public class WoodenPickaxe extends Item
     private String image;
 
     public WoodenPickaxe(World world, int X, int Y){
-        super("items/Wooden_Pickaxe.png", 32, 32, world, true, X, Y, "wooden_pickaxe");
+        super("items/Wooden_Pickaxe.png", 32, 32, world, true, X, Y, "wooden_pickaxe", false);
         image  = "items/Wooden_Pickaxe.png";
     }
 
