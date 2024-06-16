@@ -35,7 +35,7 @@ public class GameWorld extends World {
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
     private int worldTime;    
-    
+
     SimpleTimer dayNightTimer = new SimpleTimer();
     Scanner s;
     FileWriter fWriter;
@@ -45,7 +45,7 @@ public class GameWorld extends World {
      * Constructor for objects of class GameWorld.
      * Initializes the world, grid, player, inventory, and other components.
      */
-    public GameWorld() {    
+    public GameWorld(TitleScreen titleScreen) {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
 
@@ -59,7 +59,7 @@ public class GameWorld extends World {
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
-
+        this.titleScreen = titleScreen;
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
@@ -90,14 +90,14 @@ public class GameWorld extends World {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-                
+
             } 
         }
         keyPreviouslyDown = keyCurrentlyDown;
 
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
-        
+
         checkSave();
         checkReset();
         checkTime();
@@ -128,7 +128,7 @@ public class GameWorld extends World {
         }
         //System.out.println(dayNightTimer.millisElapsed());
     }
-    
+
     /**
      * Returns the world time for blocks to use and set their brightness
      * 
@@ -137,7 +137,7 @@ public class GameWorld extends World {
     public int getTime(){
         return worldTime;
     }
-    
+
     /**
      * Getter for openChest.
      * 
@@ -290,7 +290,7 @@ public class GameWorld extends World {
         grid[gridX][gridY] = newBlock;
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
     }
-    
+
     /**
      * Updates the entire world with the correct blocks
      */
@@ -369,7 +369,7 @@ public class GameWorld extends World {
         catch(FileNotFoundException e){
             System.out.println("File not found");
         }
-        
+
         while(s.hasNext()){
             for(int i = 0; i < 100; i++){
                 for(int j = 0; j < 36; j++){
@@ -379,13 +379,14 @@ public class GameWorld extends World {
         }
         refreshWorld();
     }
+
     private void checkReset(){
         if(Greenfoot.isKeyDown("l")){
             initializeGrid();
             prepareWorld();
         }
     }
-    
+
     private void saveWorld(){
         try{
             fWriter = new FileWriter("world_info.txt");
@@ -402,15 +403,16 @@ public class GameWorld extends World {
             System.out.println("Error: " + e);
         }
     }
+
     private void checkSave(){
         if(Greenfoot.isKeyDown("k")){
             saveWorld();
         }
     }
-    
+
     private Block toBlock(String name){
         Block block = new Air();
-    
+
         if(name.equals("air")){
             block = new Air();
         }
@@ -438,10 +440,10 @@ public class GameWorld extends World {
         else if(name.equals("sapling")){
             block = new Sapling();
         }
-        
+
         return block;
     }
-    
+
     /**
      * Starts the main menu music when the world starts.
      */

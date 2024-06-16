@@ -111,7 +111,7 @@ public class TitleScreen extends World
      */
     private void checkClick(){
         if(play.isPressed()){
-            game = new GameWorld();
+            game = new GameWorld(this);
             Greenfoot.setWorld(game);
             play.setPressedCondition(false);
         }
