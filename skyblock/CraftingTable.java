@@ -44,11 +44,12 @@ public class CraftingTable extends Block
     }
     
     public void openCraftingSystem() {
-        
+        craftingSystem.addCrafting();
+        craftingSystem.setVisible(true);
     }
     
     public void closeCraftingSystem() {
-        
+        craftingSystem.removeCrafting();
     }
     
     public CraftingSystem getCraftingSystem() {

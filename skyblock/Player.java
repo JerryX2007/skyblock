@@ -150,7 +150,10 @@ public abstract class Player extends SuperSmoothMover{
                         else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
                             craftingTable = (CraftingTable) block;
                             activated = true;
-                            //craftingTable.openGUI();
+                            craftingTable.openCraftingSystem();
+                            getWorld().addObject(craftingTable.getCraftingSystem(), getWorld().getWidth()/2, getWorld().getHeight()/2);
+                            GameWorld.setGUIOpened(true);
+                            GameWorld.setOpenCrafting(true);
                         }
                     }
                 }
