@@ -146,6 +146,15 @@ public class GameWorld extends World {
     public static boolean getOpenChest() {
         return openChest;
     }
+    
+    /**
+     * Getter for openChest.
+     * 
+     * @return boolean value of openChest.
+     */
+    public static boolean getOpenCrafting() {
+        return openChest;
+    }
 
     /**
      * Getter for GUIOpened.

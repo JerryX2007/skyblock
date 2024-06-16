@@ -35,8 +35,8 @@ public class CraftingSystem extends GUI
         itemArray = new CraftingSlot[GRID_SIZE][GRID_SIZE];
         for (int x = 0; x < GRID_SIZE; x++) {
             for(int y = 0; y < GRID_SIZE; y++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
-                itemArray[x][y] = new CraftingSlot(world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust, temp);
+                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[x][y] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -45,6 +45,8 @@ public class CraftingSystem extends GUI
         isVisible = false;
         xAdjust = 0;
         yAdjust = 0;
+        
+        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116);
     }
     
     /**
@@ -52,9 +54,16 @@ public class CraftingSystem extends GUI
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act() {
-        if(isVisible) {
-            checkCrafting();
+        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
+        manageItems();
+        if(GameWorld.getGUIOpened() && GameWorld.getOpenCrafting() && keyCurrentlyDown && !keyPreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenChest(false);
+            removeCrafting();
+            Player.setActivated(false);
+            world.removeObject(this);
         }
+        keyPreviouslyDown = keyCurrentlyDown;
     }
     
     public void addCrafting() {
@@ -88,7 +97,7 @@ public class CraftingSystem extends GUI
         // Add crafting slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                world.addObject(itemArray[i][j], 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                world.addObject(itemArray[i][j].getItem(), 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -97,17 +106,66 @@ public class CraftingSystem extends GUI
         
         xAdjust = 0;
         yAdjust = 0;
+        
+        world.addObject(outputSlot, 772, world.getHeight()/2 - 116);
         isVisible = true;
     }
     
     public void removeCrafting() {
         
+        // Remove player's items from the world
+        for (Item i : Inventory.getItemsList()) {
+            world.removeObject(i);
+            i.removeNum();
+        }
+        
+        // Remove player's inventory slots from the world
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                world.removeObject(slots[j][i]);
+            }
+        }
+        
+        for (CraftingSlot[] arr : itemArray) {
+            for (CraftingSlot i : arr) {
+                world.removeObject(i.getItem());
+                i.getItem().removeNum();
+            }
+        }
+        
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                world.removeObject(itemArray[i][j]);
+            }
+        }
         
         isVisible = false;
     }
     
     public void setVisible(boolean state) {
         isVisible = state;
+    }
+    
+    /**
+     * Manages the items between the player's inventory and the chest.
+     * Moves items between the player's inventory and the chest based on their position.
+     */
+    private void manageItems() {
+        // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
+        for (int i = 0; i < Inventory.getItemsList().size(); i++) {
+            if (Inventory.getItemsList().get(i).getY() <= 366) {
+                contents.add(Inventory.getItemsList().get(i));
+                Inventory.removeItem(Inventory.getItemsList().get(i));
+            }
+        }
+        
+        // Move items from the chest to the player's inventory if they are below a certain y-coordinate
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i).getY() > 366) {
+                Inventory.getItemsList().add(contents.get(i));
+                contents.remove(contents.get(i));
+            }
+        }
     }
     
     /**
