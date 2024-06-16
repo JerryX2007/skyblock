@@ -87,60 +87,60 @@ public abstract class  Block extends Actor{
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act(){
-        if (getWorld() instanceof GameWorld) {
-            MouseInfo mouse = Greenfoot.getMouseInfo();
-            GameWorld world = (GameWorld) getWorld();
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+        GameWorld world = (GameWorld) getWorld();
 
-            updateBrightness();
-            
-            if (mouse != null) {
-                // Extract the x and y coordinates of the mouse
-                int mouseX = mouse.getX();
-                int mouseY = mouse.getY();
+        brightness = world.getTime();
+        removeTouching(Shader.class);
+        world.addObject(new Shader(brightness), this.getX(), this.getY());;
+        
+        if (mouse != null) {
+            // Extract the x and y coordinates of the mouse
+            int mouseX = mouse.getX();
+            int mouseY = mouse.getY();
 
-                //borrowed mouseover code from Mr. Cohen
-                isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+            //borrowed mouseover code from Mr. Cohen
+            isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
 
-                if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
-                    // Mouse button is pressed
-                    isHoldingMouse = true;
-                }
-                if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
-                    isHoldingMouse = false; // Reset the flag
-                }   
+            if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
+                // Mouse button is pressed
+                isHoldingMouse = true;
             }
-            if(!isSelected){
-                stopBreaking();
-                isHoldingMouse = false;
+            if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
+                isHoldingMouse = false; // Reset the flag
+            }   
+        }
+        if(!isSelected){
+            stopBreaking();
+            isHoldingMouse = false;
+        }
+        //attempt to break the block when mouse is pressed on me
+        if(isHoldingMouse){
+            if(be == null){
+                be = new BreakingEffect(this);
             }
-            //attempt to break the block when mouse is pressed on me
-            if(isHoldingMouse){
-                if(be == null){
-                    be = new BreakingEffect(this);
-                }
-                isSelected = true;
-                breakMe(player, 0,0);
-            }
+            isSelected = true;
+            breakMe(player, 0,0);
+        }
 
-            else{
-                stopBreaking();
-                isSelected = false;
-            }
-            //add the breaking effect 
+        else{
+            stopBreaking();
+            isSelected = false;
+        }
+        //add the breaking effect 
+        if(be != null){
+            world.addObject(be, getX(),getY());
+        }
+        //block is broken
+        if(subBreakTime < 0){
+            drop(itemDrop);
             if(be != null){
-                world.addObject(be, getX(),getY());
+                world.removeObject(be);
             }
-            //block is broken
-            if(subBreakTime < 0){
-                drop(itemDrop);
-                if(be != null){
-                    world.removeObject(be);
-                }
-                
-                GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
-                removeTouching(Shader.class);
-                world.removeObject(this);
-            }
+            
+            GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
+            removeTouching(Shader.class);
+            world.removeObject(this);
         }
     }
 
@@ -156,7 +156,7 @@ public abstract class  Block extends Actor{
         removeTouching(Shader.class);
         world.addObject(new Shader(brightness), this.getX(), this.getY());
     }
-    
+
     /**
      * Check if the actor is intersecting with a given coordinate.
      * 
