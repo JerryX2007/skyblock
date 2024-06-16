@@ -9,7 +9,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * 
- * @author (your name) 
+ * @author Nick 
  * @version (a version number or a date)
  */
 public class WaterStream extends WaterSource {
@@ -28,38 +28,51 @@ public class WaterStream extends WaterSource {
 
     private WaterSource previousWater;
     private int actNum;
-    private int streamNumber;
-    private int streamLength;
-    private boolean direction; // true is right, false is left
-    private int imageType; // 0 is w0.png; 1-6 is streams flowing to right and -1 to -6 is streams flowing to left
+
+    private int direction; // 1 is right, 0 is down, -1 is left
     private int sidewaysCount;
-    
-    public WaterStream(WaterSource previous, int initialSidewaysCount) {
-        previousWater = previous;
-        sidewaysCount = initialSidewaysCount;
+    /**
+     * makes a block of water stream
+     * 
+     * @param previous                  the previous block of water
+     * @param initialSidewaysCount      how long this stream of water has been flowing sideways
+     * @param direction                 the direction of this waterstream
+     */
+    public WaterStream(WaterSource previous, int initialSidewaysCount, int direction) {
+        previousWater = previous;//preivious block of water
+        sidewaysCount = initialSidewaysCount;// howlong the water has flowed sideways
+        this.direction = direction;
         if (previous != null) {
             resizeImages();
             updateImage();
-            setState();
         }
         streamCount++;
+        if(streamCount > 9){
+            streamCount = 0;
+        }
         actNum = streamCount;
     }
 
     public void act() {
         actNum++;
-        if (actNum % 45 == 0) {
+        //set flowrate
+        if (actNum % 40 == 0) {
+            //remove me if the previous water is removed
             if (previousWater.isRemoved()) {
                 remove();
             } else {
                 flow();
             }
+
         }
+        //remove me
         if(isRemoved){
             getWorld().removeObject(this);
         }
     }
-
+    /**
+     * this method resize the static images
+     */
     private void resizeImages() {
         if (normal.getHeight() != 64) {
             normal.scale(64, 64);
@@ -69,78 +82,69 @@ public class WaterStream extends WaterSource {
             }
         }
     }
-
+    /**
+     * this method updates the image of this block
+     */
     private void updateImage() {
-        if (imageType < 0 && imageType > -7) {
-            setImage(left[-1 * imageType - 1]);
-        } else if (imageType > 0 && imageType < 7) {
-            setImage(right[imageType - 1]);
+        if (direction == -1) {
+            setImage(left[sidewaysCount-1]);
+        } else if (direction == 1) {
+            setImage(right[sidewaysCount-1]);
         } else {
             setImage(normal);
         }
     }
-
-    public void setState() {
-        if (previousWater instanceof WaterStream) {
-            direction = ((WaterStream) previousWater).getDirection();
-            streamNumber = ((WaterStream) previousWater).getStreamNum();
-            streamLength = ((WaterStream) previousWater).getStreamLength() + 1;
-            sidewaysCount = ((WaterStream) previousWater).getSidewaysCount();
-        } else {
-            streamNumber = 0;
-        }
-    }
-
-    public boolean getDirection() {
+    //getter setting methods
+    public int getDirection() {
         return direction;
     }
-
-    public void setDirection(boolean d) {
+    public void setDirection(int d) {
         direction = d;
     }
-
-    public int getStreamNum() {
-        return streamNumber;
-    }
-
-    public void setStreamNum(int i) {
-        streamNumber = i;
-    }
-
-    public int getStreamLength() {
-        return streamLength;
-    }
-
-    public void setStreamLength(int i) {
-        streamLength = i;
-    }
-
+    
     public int getSidewaysCount() {
         return sidewaysCount;
     }
-
     public void setSidewaysCount(int count) {
         sidewaysCount = count;
     }
 
     @Override
     protected void flow() {
+        //checkblocks adjacent to this block
         Block left = (Block) getOneObjectAtOffset(-64, 0, Block.class);
         Block right = (Block) getOneObjectAtOffset(64, 0, Block.class);
         Block below = (Block) getOneObjectAtOffset(0, 64, Block.class);
-
+        Block above = (Block) getOneObjectAtOffset(0, -64, Block.class);
+        //if below left or right is empty then flow into them by adding a new water stream
         if (below == null) {
-            // Reset sidewaysCount when flowing downward
-            getWorld().addObject(new WaterStream(this, 0), getX(), getY() + 64);
+            getWorld().addObject(new WaterStream(this, 0, 0), getX(), getY() + 64);
         } else if (!(below instanceof WaterSource || below instanceof WaterStream)) {
-            if (sidewaysCount < 6) {
+            //max range the water can flow sideways, currently 5
+            if (sidewaysCount < 5) {
                 if (left == null) {
-                    getWorld().addObject(new WaterStream(this, sidewaysCount + 1), getX() - 64, getY());
+                    if(left instanceof LavaSource){
+                        getWorld().addObject(new CobbleStone(), getX() + 64, getY());
+                    }
+                    else{
+                        getWorld().addObject(new WaterStream(this, sidewaysCount + 1, -1), getX() - 64, getY());
+                    }
                 }
                 if (right == null) {
-                    getWorld().addObject(new WaterStream(this, sidewaysCount + 1), getX() + 64, getY());
+                    if(right instanceof LavaSource){
+                        //make a cobble stone if in contact with lava
+                        getWorld().addObject(new CobbleStone(), getX() - 64, getY());
+                    }
+                    else{
+                        //make a cobble stone if in contact with lava
+                        getWorld().addObject(new WaterStream(this, sidewaysCount + 1, 1), getX() + 64, getY());
+                    }
                 }
             }
+        }
+        //if the block above me is water, adjust my picture to a full block
+        if(above instanceof WaterSource || above instanceof WaterStream){
+            setImage(normal);
         }
     }
 }
