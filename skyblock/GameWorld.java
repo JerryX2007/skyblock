@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import java.util.Random;
+
 /**
  * Keeps track of everything that happens inside the world.
  * All block information is stored in a massive 2D array system.
@@ -21,7 +23,7 @@ import java.io.FileNotFoundException;
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
-    public static Block[][] grid;
+    public static Block[][] grid = new Block[100][36];
     private TitleScreen titleScreen;
     private ArrayList<Actor> actorList;
     private Fader blackScreen;
@@ -47,10 +49,7 @@ public class GameWorld extends World {
     public GameWorld() {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
-
-        // Initialize the grid
-        grid = new Block[100][36];
-
+        
         // Optionally fill the grid with initial values or objects
         loadWorld();
         checkSave();
@@ -100,6 +99,10 @@ public class GameWorld extends World {
         checkSave();
         checkReset();
         checkTime();
+        
+        if(totalMobs() < 20){
+            attemptSpawn();
+        }        
     }
 
     /**
@@ -350,6 +353,9 @@ public class GameWorld extends World {
         for (int j = 16; j < 19; j++) {
             updateBlock(52, j, new Log());
         }
+        for(int i = 0; i < 100; i++){
+            updateBlock(i, 35, new Void());
+        }
     }
 
     private void loadWorld(){
@@ -398,6 +404,11 @@ public class GameWorld extends World {
         }
     }
     
+    private int totalMobs(){
+        ArrayList<Mob> mobList = (ArrayList<Mob>) getObjects(Mob.class);
+        return mobList.size();
+    }
+    
     private Block toBlock(String name){
         Block block = new Air();
     
@@ -430,6 +441,45 @@ public class GameWorld extends World {
         }
         
         return block;
+    }
+    
+    private void attemptSpawn(){
+        Random random = new Random();        
+        for(int i = 1; i < 99; i++){
+            for(int j = 1; j < 35; j++){
+                Block block1 = grid[i][j];
+                Block block2 = grid[i][j + 1];
+                Block block3 = grid[i][j - 1];
+                Block block4 = grid[i - 1][j];
+                Block block5 = grid[i + 1][j];
+                if(!(block2.getName().equals("air"))){
+                    if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
+                        System.out.println(getTime());
+                        if(block1.getBrightness() <= 2){
+                            int choice = random.nextInt(20000);
+                            if(choice == 1){
+                                addObject(new Sheep(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Cow(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                        }
+                        if(getTime() > 2){
+                            int choice = random.nextInt(30000);
+                            if(choice == 1){
+                                addObject(new Zombie(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Creeper(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 3){
+                                addObject(new Spider(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }                           
+                        }
+                    }
+                }
+            }
+        }
     }
     
     /**

@@ -41,13 +41,11 @@ public abstract class Mob extends SuperSmoothMover{
     protected GreenfootImage movingImg;
     protected GreenfootImage hurtImg;
     
-    public Mob(boolean hostile, int dmg, double spd, int hp, int minLight, int maxLight){
+    public Mob(boolean hostile, int dmg, double spd, int hp){
         isHostile = hostile;
         damage = dmg;
         speed = spd;
         health = hp;
-        minSpawnLight = minLight;
-        maxSpawnLight = maxLight;
         wanderTimer.mark();
     }
     
@@ -81,7 +79,6 @@ public abstract class Mob extends SuperSmoothMover{
             drop();
             getWorld().removeObject(this);
         }
-
     }
     
     /**
@@ -218,32 +215,23 @@ public abstract class Mob extends SuperSmoothMover{
         }
     }
     
-    public boolean canSpawn(int light, int gridX, int gridY){
-        GameWorld world = (GameWorld) getWorld();
-        if((light >= minSpawnLight) && (light <= maxSpawnLight)){ // Checks for light level requirement
-            if(world.getGridValue(gridX, gridY).equals(Air.class) && !world.getGridValue(gridX, gridY + 1).equals(Air.class)){ // Checks if floor is solid and space is vacant
-                if(world.getGridValue(gridX, gridY - 1).equals(Air.class) && world.getGridValue(gridX, gridY - 2).equals(Air.class)){ // Checks if there is at least two blocks above it
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
     /**
      * Checks if the mob in on solid ground
      * Gets the block directly under the mob.  If there exists a block and it isn't an air block, return true.
      */
     protected boolean onGround() {
-        Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+        Block under = (Block) getOneObjectAtOffset(getImage().getWidth()/2 - 20, getImage().getHeight()/2, Block.class);
         if(under != null) {
-            if(under instanceof Air) {
-                return false;
-            }
-            else {
+            if(!(under instanceof Air)){
                 return true;
             }
-        }        
+        }     
+        under = (Block) getOneObjectAtOffset(-(getImage().getWidth()/2), getImage().getHeight()/2, Block.class);
+        if(under != null) {
+            if(!(under instanceof Air)){
+                return true;
+            }
+        } 
         return false;
     }
 
@@ -252,7 +240,7 @@ public abstract class Mob extends SuperSmoothMover{
      * Gets the block directly above the mob.  If there exists a block that isn't an air block, return false.  Otherwise return true.
      */
     protected boolean headClear(){
-        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
+        Block above = (Block) getOneObjectAtOffset(0, -135, Block.class);
         if(above != null) {
             if(above instanceof Air) {
                 return true;
@@ -377,8 +365,8 @@ public abstract class Mob extends SuperSmoothMover{
      * Accelerate downwards to fall
      */
     protected void fall() {
-        setLocation(getX(), getY() + yVelocity);
         yVelocity = yVelocity + acceleration;
+        setLocation(getX(), getY() + yVelocity);
     }
 
     /**
