@@ -192,6 +192,42 @@ public class CraftingSystem extends GUI
             outputItem = null;
         }
         
+        else if (isCraftingHelmet("leather")) {
+            //outputItem = new LeatherHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingHelmet("iron")) {
+            //outputItem = new IronHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingHelmet("diamond")) {
+            //outputItem = new DiamondHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("leather")) {
+            //outputItem = new LeatherHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("iron")) {
+            //outputItem = new IronHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
+        else if (isCraftingChestplate("diamond")) {
+            //outputItem = new DiamondHelmet(world, outputSlot.getX(), outputSlot.getY());
+            outputSlot.setItem(outputItem);
+            outputItem = null;
+        }
+        
         else {
             outputItem = null;
         }
@@ -535,6 +571,12 @@ public class CraftingSystem extends GUI
         
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a helmet.
+     * 
+     * @param itemName the type of helmet
+     * @return True if the recipe for a helmet is satisfied, false otherwise.
+     */
     private boolean isCraftingHelmet(String itemName) {
         // Recipe for the helmet: 5 (itemName)s in an upside down U pattern
         /*
@@ -571,6 +613,12 @@ public class CraftingSystem extends GUI
         return foundFirstHelmet;
     }
     
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a chestplate.
+     * 
+     * @param itemName the type of chestplate
+     * @return True if the recipe for a chestplate is satisfied, false otherwise.
+     */
     private boolean isCraftingChestplate(String itemName) {
         // Recipe for the chestplate: 8 (itemName)s in a "W" pattern
         /*
@@ -582,7 +630,7 @@ public class CraftingSystem extends GUI
         boolean foundFirstChestplate = false;
         
         if (!isEmpty(0, 0) && !isEmpty(2, 0) && !isEmpty(0, 1) && !isEmpty(1, 1) && !isEmpty(2, 1) && !isEmpty(0, 2) && 
-            !isEmpty(1, 2) && !isEmpty(2, 2) && getSlot(0, 0).getItem().getType().equals(itemName) &&
+            !isEmpty(1, 2) && !isEmpty(2, 2) && getSlot(0, 0).getItem().getType().equals(itemName) && 
             getSlot(2, 0).getItem().getType().equals(itemName) && getSlot(0, 1).getItem().getType().equals(itemName) &&
             getSlot(1, 1).getItem().getType().equals(itemName) && getSlot(2, 1).getItem().getType().equals(itemName) &&
             getSlot(0, 2).getItem().getType().equals(itemName) && getSlot(1, 2).getItem().getType().equals(itemName) &&
@@ -605,5 +653,87 @@ public class CraftingSystem extends GUI
         }
         
         return foundFirstChestplate;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting leggings.
+     * 
+     * @param itemName the type of leggings
+     * @return True if the recipe for leggings is satisfied, false otherwise.
+     */
+    private boolean isCraftingLeggings(String itemName) {
+        // Recipe for the chestplate: 7 (itemName)s in an extended upside down U pattern
+        /*
+         * ###
+         * #-#
+         * #-#
+         */
+        
+        boolean foundFirstLeggings = false;
+        
+        if (!isEmpty(0, 0) && !isEmpty(1, 0) && !isEmpty(2, 0) && !isEmpty(0, 1) && !isEmpty(2, 1) && !isEmpty(0, 2) && 
+            !isEmpty(2, 2) && getSlot(0, 0).getItem().getType().equals(itemName) &&
+            getSlot(1, 0).getItem().getType().equals(itemName) && getSlot(2, 0).getItem().getType().equals(itemName) &&
+            getSlot(0, 1).getItem().getType().equals(itemName) && getSlot(2, 1).getItem().getType().equals(itemName) &&
+            getSlot(0, 2).getItem().getType().equals(itemName) && getSlot(2, 2).getItem().getType().equals(itemName)) {
+
+            foundFirstLeggings = true;
+        }
+        else {
+            return false;
+        }
+        
+        if(foundFirstLeggings) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstLeggings = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstLeggings;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting boots.
+     * 
+     * @param itemName the type of boots
+     * @return True if the recipe for boots is satisfied, false otherwise.
+     */
+    private boolean isCraftingBoots(String itemName) {
+        // Recipe for the helmet: 4 (itemName)s in a | | pattern
+        /*
+         * #-#
+         * #-#
+         */
+        boolean foundFirstBoots = false;
+        for(int x=0; x < GRID_SIZE; x++) {
+            for(int y=0; y < GRID_SIZE-2; y++) {
+                if(!isEmpty(x, y) && !isEmpty(x + 2, y) && !isEmpty(x, y + 1) && !isEmpty(x + 2, y + 1) &&
+                    getSlot(x, y).getItem().getType().equals(itemName) && getSlot(x + 2, y).getItem().getType().equals(itemName) && 
+                    getSlot(x, y + 1).getItem().getType().equals(itemName) && getSlot(x + 2, y + 1).getItem().getType().equals(itemName)) {
+                    
+                    if(foundFirstBoots) {
+                        return false;
+                    }
+                    
+                    foundFirstBoots = true;
+                }
+            }
+        }
+        
+        if(foundFirstBoots) {
+            for(int x = 0; x < GRID_SIZE; x++) {
+                for(int y = 0; y < GRID_SIZE; y++) {
+                    if(!isEmpty(x, y)) {
+                        foundFirstBoots = false;
+                    }
+                }
+            }
+        }
+        
+        return foundFirstBoots;
     }
 }
