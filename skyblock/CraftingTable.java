@@ -24,6 +24,7 @@ public class CraftingTable extends Block
         isWood = true;
         this.world = world;
         craftingSystem = new CraftingSystem(300, world);
+        itemDrop = 6;
     }
 
     /**

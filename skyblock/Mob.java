@@ -1,4 +1,4 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+    import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
 import java.util.List;
 
@@ -32,11 +32,10 @@ public abstract class Mob extends SuperSmoothMover{
     protected boolean huntLeft = false;
 
     protected boolean isFleeing;
-    SimpleTimer fleeTimer;
+    SimpleTimer fleeTimer = new SimpleTimer();
     
     protected int wanderDirection = 0;
-    SimpleTimer wanderTimer;
-    Random random;
+    SimpleTimer wanderTimer = new SimpleTimer();
     
     protected GreenfootImage defaultImg;
     protected GreenfootImage movingImg;
@@ -114,7 +113,7 @@ public abstract class Mob extends SuperSmoothMover{
             if(rightClear()){
                 moveRight();
             }
-            else if(headClear()){
+            else if(headClear() && onGround()){
                 jump();
                 moveRight();
             }
@@ -123,7 +122,7 @@ public abstract class Mob extends SuperSmoothMover{
             if(leftClear()){
                 moveLeft();
             }
-            else if(headClear()){
+            else if(headClear() && onGround()){
                 jump();
                 moveLeft();
             }
@@ -153,7 +152,7 @@ public abstract class Mob extends SuperSmoothMover{
                 if(leftClear()){
                     moveLeft();
                 }
-                else if(headClear()){
+                else if(headClear() && onGround()){
                     jump();
                     moveLeft();
                 }
@@ -162,7 +161,7 @@ public abstract class Mob extends SuperSmoothMover{
                 if(rightClear()){
                     moveRight();
                 }
-                else if(headClear()){
+                else if(headClear() && onGround()){
                     jump();
                     moveRight();
                 }
@@ -179,7 +178,7 @@ public abstract class Mob extends SuperSmoothMover{
                 if(leftClear()){
                     moveLeft();
                 }
-                else{
+                else if(headClear() && onGround()){
                     jump();
                     moveLeft();
                 }
@@ -188,7 +187,7 @@ public abstract class Mob extends SuperSmoothMover{
                 if(rightClear()){
                     moveRight();
                 }
-                else{
+                else if(headClear() && onGround()){
                     jump();
                     moveRight();
                 }
@@ -196,6 +195,7 @@ public abstract class Mob extends SuperSmoothMover{
         }
         if(wanderTimer.millisElapsed() > 4000){
             wanderTimer.mark();
+            Random random = new Random();
             wanderDirection = random.nextInt(2);
         }
     }
@@ -385,7 +385,7 @@ public abstract class Mob extends SuperSmoothMover{
      * Gains a small amount of momentum upwards to jump
      */
     protected void jump() {
-        yVelocity -= 4.9;
+        yVelocity -= 4.5;
         setLocation(getX(), getY() + yVelocity);
     }
 }

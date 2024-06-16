@@ -133,7 +133,6 @@ public abstract class  Block extends Actor{
                     world.removeObject(be);
                 }
                 
-                //world.updateBlock(getGridNumX(), getGridNumY(), new Air());
                 GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
                 world.removeObject(this);
             }
