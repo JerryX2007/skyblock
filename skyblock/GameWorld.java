@@ -520,7 +520,7 @@ public class GameWorld extends World {
                 Block block5 = grid[i + 1][j];
                 if(!(block2.getName().equals("air"))){
                     if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
-                        System.out.println(getTime());
+                        //System.out.println(getTime());
                         if(block1.getBrightness() <= 2){
                             int choice = random.nextInt(20000);
                             if(choice == 1){
