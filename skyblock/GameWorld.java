@@ -73,7 +73,7 @@ public class GameWorld extends World {
      */
     public void act() {
         // Determines what goes on top
-        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, SuperSmoothMover.class);
+        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
         pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -96,6 +96,7 @@ public class GameWorld extends World {
 
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
+        
         checkSave();
         checkReset();
         checkTime();
@@ -105,25 +106,26 @@ public class GameWorld extends World {
      * Updates the time of the day every 15 seconds, with a full day lasting 1m 30s
      */
     private void checkTime(){
-        if(dayNightTimer.millisElapsed() > 15000){
+        if(dayNightTimer.millisElapsed() < 15000){
             worldTime = 1;
         }
-        else if(dayNightTimer.millisElapsed() > 30000){
+        else if(dayNightTimer.millisElapsed() < 30000){
             worldTime = 2;
         }
-        else if(dayNightTimer.millisElapsed() > 45000){
+        else if(dayNightTimer.millisElapsed() < 45000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() > 60000){
+        else if(dayNightTimer.millisElapsed() < 60000){
             worldTime = 4;
         }
-        else if(dayNightTimer.millisElapsed() > 75000){
+        else if(dayNightTimer.millisElapsed() < 75000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() > 90000){
+        else if(dayNightTimer.millisElapsed() < 90000){
             worldTime = 2;
             dayNightTimer.mark();
         }
+        //System.out.println(dayNightTimer.millisElapsed());
     }
     
     /**

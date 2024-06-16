@@ -23,7 +23,7 @@ public abstract class  Block extends Actor{
     protected boolean isDirt;// i am a dirt and a shovel will break me faster
     protected boolean isSelected;//the mouse have hovered over this block
     protected boolean isHoldingMouse;
-    protected int brightness = 4;
+    protected int brightness = 1;
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
     protected Player player;
@@ -90,9 +90,9 @@ public abstract class  Block extends Actor{
         if (getWorld() instanceof GameWorld) {
             MouseInfo mouse = Greenfoot.getMouseInfo();
             GameWorld world = (GameWorld) getWorld();
-            
-            brightness = world.getTime();
 
+            updateBrightness();
+            
             if (mouse != null) {
                 // Extract the x and y coordinates of the mouse
                 int mouseX = mouse.getX();
@@ -138,6 +138,7 @@ public abstract class  Block extends Actor{
                 }
                 
                 GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
+                removeTouching(Shader.class);
                 world.removeObject(this);
             }
         }
@@ -148,7 +149,12 @@ public abstract class  Block extends Actor{
      * Uses a scale from 1 - 4, with 4 being brightest
      */
     private void updateBrightness(){
+        GameWorld world = (GameWorld) getWorld();
         
+        brightness = world.getTime();
+        
+        removeTouching(Shader.class);
+        world.addObject(new Shader(brightness), this.getX(), this.getY());
     }
     
     /**
