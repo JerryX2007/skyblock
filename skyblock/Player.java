@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public abstract class Player extends SuperSmoothMover{
     protected static double moveSpeed;
+    protected static int damage = 3;
     protected static int jumpHeight;
     protected static int reach;
     protected static boolean canDrop;
@@ -35,7 +36,12 @@ public abstract class Player extends SuperSmoothMover{
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    protected int hp;    
+    protected int hp; 
+    
+    protected static double totalXOffset;
+    protected static double totalYOffset;
+    
+    SimpleTimer healTimer = new SimpleTimer();
 
     /**
      * Constructor for Player class.
@@ -66,12 +72,14 @@ public abstract class Player extends SuperSmoothMover{
         walking[1] = new GreenfootSound("walking_stone.mp3");
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
+        healTimer.mark();
     }
 
     /**
      * Constantly checks for movement input and possible pickups around it
      */
     public void act(){
+        GameWorld world = (GameWorld) getWorld();
         if(!GameWorld.getGUIOpened()){
             checkKeys();
             checkPickup();
@@ -100,6 +108,20 @@ public abstract class Player extends SuperSmoothMover{
                 walking[i].pause();
             }
             isPlaying = false;
+        }
+        
+        if(isTouching(Void.class)){
+            hp -= 20;
+        }
+        
+        if(hp > 0){
+            if((healTimer.millisElapsed() > 2500) && (hp < 20)){
+                hp++;
+                healTimer.mark();
+            }
+        }
+        else{
+            world.pause();
         }
     }
 
@@ -158,8 +180,6 @@ public abstract class Player extends SuperSmoothMover{
                     }
                 }
             }
-        } else {
-
         }
     }
 
@@ -302,6 +322,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(1, 0);
             world.reverseShiftPlayer(1, 0);
+            totalXOffset--;
             if(!leftClear()){
                 return;
             }
@@ -317,6 +338,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(-1, 0);
             world.reverseShiftPlayer(-1, 0);
+            totalXOffset++;
             if(!rightClear()){
                 return;
             }
@@ -342,6 +364,7 @@ public abstract class Player extends SuperSmoothMover{
         yVelocity = yVelocity + acceleration;
         world.shiftWorld(0, - yVelocity);
         world.reverseShiftPlayer(0, -yVelocity + 0.05);
+        totalYOffset += yVelocity;
     }
 
     /**
@@ -352,6 +375,7 @@ public abstract class Player extends SuperSmoothMover{
         yVelocity -= 4.4;
         world.shiftWorld(0, -yVelocity);
         world.reverseShiftPlayer(0, -yVelocity);
+        totalYOffset += yVelocity;
     }
 
     /**
@@ -437,6 +461,28 @@ public abstract class Player extends SuperSmoothMover{
         return true; // No obstructions
     }
     
+    public void knockBack(int direction){
+        GameWorld world = (GameWorld) getWorld();
+        if(direction == 1){
+            for(int i = 0; i < 20; i++){
+                if(leftClear()){
+                    world.shiftWorld(1, 0);
+                    world.reverseShiftPlayer(1, 0);
+                    totalXOffset--;
+                }
+            }
+        }
+        else if(direction == 2){
+            for(int i = 0; i < 20; i++){
+                if(rightClear()){
+                    world.shiftWorld(-1, 0);
+                    world.reverseShiftPlayer(-1, 0);
+                    totalXOffset++;
+                }
+            }    
+        }
+    }
+    
     /**
      * Inflicts damage to the player.
      * 
@@ -444,9 +490,24 @@ public abstract class Player extends SuperSmoothMover{
      */
     public void doDamage(int damage) {
         this.hp -= damage;
-        if (hp <= 0) {
-            getWorld().removeObject(this);
-        }
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the x-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalXOffset(){
+        return (int) totalXOffset;
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the y-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalYOffset(){
+        return (int) totalYOffset;
     }
     
     /**
@@ -456,6 +517,15 @@ public abstract class Player extends SuperSmoothMover{
      */
     public double getMoveSpeed() {
         return this.moveSpeed;
+    }
+    
+    /**
+     * Gets the amount of damage the player does
+     * 
+     * @return the damage the stat
+     */
+    public static int getDamage(){
+        return damage;
     }
     
     /**
