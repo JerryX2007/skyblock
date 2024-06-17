@@ -60,6 +60,15 @@ public class ChestGUI extends GUI {
     }
 
     /**
+     * Add items to contents
+     * 
+     * @param item Item to add
+     */
+    public void addItem(Item item){
+        contents.add(item);
+    }
+    
+    /**
      * Adds the chest and inventory slots to the world and positions the items in the chest.
      */
     public void addChest() {
@@ -159,5 +168,14 @@ public class ChestGUI extends GUI {
                 contents.remove(contents.get(i));
             }
         }
+    }
+    
+    /**
+     * Getter for contents
+     * 
+     * @return returns an ArrayList of items
+     */
+    public ArrayList<Item> getContents(){
+        return contents;
     }
 }

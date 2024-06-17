@@ -22,6 +22,7 @@ public class WaterSource extends Block {
 
         if (water.getHeight() != 64) {
             water.scale(64, 64);
+            water.setTransparency(220);
         }
         setImage(water);
         actNum = 0;

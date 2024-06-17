@@ -38,4 +38,8 @@ public class GUI extends Actor
     public static ArrayList<Item> getItemList(){
         return itemsList;
     }
+    
+    public ArrayList<Item> getContents(){
+        return contents;
+    }
 }

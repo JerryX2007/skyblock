@@ -59,19 +59,21 @@ public class Item extends Actor {
      */
     public Item(String file, int length, int width, World world, boolean draggable, int X, int Y, String type, boolean placeable){
         this.setImage(file);
-        getImage().scale(length, width);
         this.draggable = draggable;
+        this.file = file;
         this.X = X;
         this.Y = Y;
         this.type = type;
-        tempX = X;
-        tempY = Y;
         this.world = world;
-        image = file;
         this.invX = invX;
         this.invY = invY;
-        counter.setLineColor(Label.getTransparent());
+        this.length = length;
         this.placeable = placeable;
+        image = file;
+        tempX = X;
+        tempY = Y;
+        counter.setLineColor(Label.getTransparent());
+        getImage().scale(length, width);
     }
 
     /**
