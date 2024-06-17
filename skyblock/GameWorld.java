@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import java.util.Random;
+
 /**
  * Keeps track of everything that happens inside the world.
  * All block information is stored in a massive 2D array system.
@@ -21,7 +23,7 @@ import java.io.FileNotFoundException;
 public class GameWorld extends World {
     private CraftingSystem craftingSystem;
     private boolean isCraftingVisible = false;
-    public static Block[][] grid;
+    public static Block[][] grid = new Block[100][36];
     private TitleScreen titleScreen;
     private ArrayList<Actor> actorList;
     private Fader blackScreen;
@@ -29,11 +31,14 @@ public class GameWorld extends World {
     private static boolean openInventory = false;
     private static Inventory inventory;
     private static boolean openChest = false;
+    private static boolean openCrafting = false;
     private static boolean GUIOpened = false;
     private Steve player;
     private HealthBar hpBar;
     private boolean keyPreviouslyDown = false;
-    
+    private int worldTime;    
+    private boolean firstAct = true;
+    SimpleTimer dayNightTimer = new SimpleTimer();
     Scanner s;
     FileWriter fWriter;
     PrintWriter pWriter;
@@ -42,29 +47,25 @@ public class GameWorld extends World {
      * Constructor for objects of class GameWorld.
      * Initializes the world, grid, player, inventory, and other components.
      */
-    public GameWorld() {    
+    public GameWorld(TitleScreen titleScreen) {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
-
-        // Initialize the grid
-        grid = new Block[100][36];
-
+        
         // Optionally fill the grid with initial values or objects
-        //initializeGrid();
-        //prepareWorld();
-        //refreshWorld();
         loadWorld();
+        
         checkSave();
 
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
-
+        this.titleScreen = titleScreen;
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
+        dayNightTimer.mark();
     }
 
     /**
@@ -72,9 +73,15 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
+        
         // Determines what goes on top
-        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, SuperSmoothMover.class);
-        //pause();
+        setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
+        
+        if(firstAct){
+            loadInv();
+            firstAct = false;
+        }
+        pause();
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
 
@@ -89,15 +96,59 @@ public class GameWorld extends World {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-                
+
             } 
+            for(Label l : getObjects(Label.class)){
+                removeObject(l);
+            }
         }
         keyPreviouslyDown = keyCurrentlyDown;
 
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
+
         checkSave();
         checkReset();
+        checkTime();
+        
+        if(totalMobs() < 20){
+            attemptSpawn();
+        }        
+    }
+
+    /**
+     * Updates the time of the day every 15 seconds, with a full day lasting 1m 30s
+     */
+    private void checkTime(){
+        if(dayNightTimer.millisElapsed() < 15000){
+            worldTime = 1;
+        }
+        else if(dayNightTimer.millisElapsed() < 30000){
+            worldTime = 2;
+        }
+        else if(dayNightTimer.millisElapsed() < 45000){
+            worldTime = 3;
+        }
+        else if(dayNightTimer.millisElapsed() < 60000){
+            worldTime = 4;
+        }
+        else if(dayNightTimer.millisElapsed() < 75000){
+            worldTime = 3;
+        }
+        else if(dayNightTimer.millisElapsed() < 90000){
+            worldTime = 2;
+            dayNightTimer.mark();
+        }
+        //System.out.println(dayNightTimer.millisElapsed());
+    }
+
+    /**
+     * Returns the world time for blocks to use and set their brightness
+     * 
+     * @return the time of the world
+     */
+    public int getTime(){
+        return worldTime;
     }
 
     /**
@@ -126,6 +177,15 @@ public class GameWorld extends World {
     public static void setOpenChest(boolean open) {
         openChest = open;
     }
+    
+    /**
+     * Setter for openCrafting.
+     * 
+     * @param open New value for openCrafting.
+     */
+    public static void setOpenCrafting(boolean open) {
+        openCrafting = true;
+    }
 
     /**
      * Setter for GUIOpened.
@@ -148,7 +208,7 @@ public class GameWorld extends World {
     }
 
     private void pause() {
-        if (Greenfoot.isKeyDown("p")) {
+        if (Greenfoot.isKeyDown("escape")) {
             // Capture current grid and actors
             Block[][] currentGrid = getGrid();
             ArrayList<Actor> currentActors = getActors();
@@ -244,6 +304,48 @@ public class GameWorld extends World {
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
     }
     
+    private void saveInv(){
+        try{
+            fWriter = new FileWriter("saves/inv.txt");
+            pWriter = new PrintWriter(fWriter);
+            for(Item i : GUI.getItemList()){
+                pWriter.println(i.toString());
+            }
+            //System.out.println("World saved!");
+            pWriter.close();
+        }
+        catch(IOException e){
+            //System.out.println("Error: " + e);
+        }
+    }
+    
+    private void loadInv(){
+        try{
+            s = new Scanner(new File("saves/inv.txt"));
+            ArrayList<String> tempString = new ArrayList<>();
+            while(s.hasNext()){
+                tempString.add(s.nextLine());
+            }
+            for(String s : tempString){
+                String[] a = s.split(" ");
+                String file = a[0];
+                int lengthWidth = Integer.valueOf(a[1]);
+                boolean draggable = Boolean.valueOf(a[3]);
+                int X = Integer.valueOf(a[4]);
+                int Y = Integer.valueOf(a[5]);
+                String type = a[6];
+                boolean placeable = Boolean.valueOf(a[7]);
+                Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
+                //System.out.println(temp.toString());
+                GUI.getItemList().add(temp);
+            }
+            s.close();
+        }
+        catch(FileNotFoundException e){
+
+        }
+    }
+
     /**
      * Updates the entire world with the correct blocks
      */
@@ -264,7 +366,7 @@ public class GameWorld extends World {
     public void shiftWorld(double xShift, double yShift) {
         ArrayList<Actor> allActors = (ArrayList<Actor>) getObjects(Actor.class);
         for (Actor object : allActors) {
-            object.setLocation((int) (object.getX() + xShift + 0.5), (int) (object.getY() + yShift + 0.5));
+            object.setLocation((int) ((object.getX() + xShift + Math.signum(object.getX()) * 0.5)), (int) ((object.getY() + yShift + Math.signum(object.getY()) * 0.5)));
         }
     }
 
@@ -277,7 +379,7 @@ public class GameWorld extends World {
     public void reverseShiftPlayer(double xShift, double yShift) {
         ArrayList<Player> allPlayers = (ArrayList<Player>) getObjects(Player.class);
         for (Actor player : allPlayers) {
-            player.setLocation((int) (player.getX() - xShift + 0.5), (int) (player.getY() - yShift + 0.5));
+            player.setLocation((int) (player.getX() - xShift + Math.signum(player.getX()) * 0.5), (int) ((player.getY() - yShift + Math.signum(player.getY()) * 0.5)));
         }
     }
 
@@ -313,6 +415,9 @@ public class GameWorld extends World {
         for (int j = 16; j < 19; j++) {
             updateBlock(52, j, new Log());
         }
+        for(int i = 0; i < 100; i++){
+            updateBlock(i, 35, new Void());
+        }
     }
 
     private void loadWorld(){
@@ -320,9 +425,9 @@ public class GameWorld extends World {
             s = new Scanner(new File("world_info.txt"));
         }
         catch(FileNotFoundException e){
-            System.out.println("File not found");
+            //System.out.println("File not found");
         }
-        
+
         while(s.hasNext()){
             for(int i = 0; i < 100; i++){
                 for(int j = 0; j < 36; j++){
@@ -332,13 +437,14 @@ public class GameWorld extends World {
         }
         refreshWorld();
     }
+
     private void checkReset(){
         if(Greenfoot.isKeyDown("l")){
             initializeGrid();
             prepareWorld();
         }
     }
-    
+
     private void saveWorld(){
         try{
             fWriter = new FileWriter("world_info.txt");
@@ -352,18 +458,26 @@ public class GameWorld extends World {
             pWriter.close();
         }
         catch(IOException e){
-            System.out.println("Error: " + e);
+            //System.out.println("Error: " + e);
         }
     }
+
     private void checkSave(){
         if(Greenfoot.isKeyDown("k")){
             saveWorld();
+            spoofInventory();
+            saveInv();
         }
     }
-    
+
+    private int totalMobs(){
+        ArrayList<Mob> mobList = (ArrayList<Mob>) getObjects(Mob.class);
+        return mobList.size();
+    }
+
     private Block toBlock(String name){
         Block block = new Air();
-    
+
         if(name.equals("air")){
             block = new Air();
         }
@@ -391,10 +505,49 @@ public class GameWorld extends World {
         else if(name.equals("sapling")){
             block = new Sapling();
         }
-        
+
         return block;
     }
-    
+
+    private void attemptSpawn(){
+        Random random = new Random();        
+        for(int i = 1; i < 99; i++){
+            for(int j = 1; j < 35; j++){
+                Block block1 = grid[i][j];
+                Block block2 = grid[i][j + 1];
+                Block block3 = grid[i][j - 1];
+                Block block4 = grid[i - 1][j];
+                Block block5 = grid[i + 1][j];
+                if(!(block2.getName().equals("air"))){
+                    if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
+                        //System.out.println(getTime());
+                        if(block1.getBrightness() <= 2){
+                            int choice = random.nextInt(20000);
+                            if(choice == 1){
+                                addObject(new Sheep(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Cow(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                        }
+                        if(getTime() > 2){
+                            int choice = random.nextInt(30000);
+                            if(choice == 1){
+                                addObject(new Zombie(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 2){
+                                addObject(new Creeper(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }
+                            else if(choice == 3){
+                                addObject(new Spider(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                            }                           
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Starts the main menu music when the world starts.
      */
@@ -424,27 +577,5 @@ public class GameWorld extends World {
 
     public ArrayList<Actor> getActors() {
         return new ArrayList<>(getObjects(Actor.class));
-    }
-
-    /**
-     * Opens the crafting interface if it is not already visible.
-     */
-    public void openCraftingInterface() {
-        if (!isCraftingVisible) {
-            addObject(craftingSystem, getWidth()/2, getHeight()/2);
-            craftingSystem.showCrafting();
-            isCraftingVisible = true;
-        }
-    }
-
-    /**
-     * Closes the crafting interface if it is visible.
-     */
-    public void closeCraftingInterface() {
-        if (isCraftingVisible) {
-            removeObject(craftingSystem);
-            craftingSystem.hideCrafting();
-            isCraftingVisible = false;
-        }
     }
 }

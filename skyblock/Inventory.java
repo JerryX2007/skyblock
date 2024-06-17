@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * Represents the inventory GUI in the game.
  * Manages the items in the player's inventory and crafting sections.
  * 
- * @arthor Benny Wang
+ * @author Benny Wang
  * Edited by: Evan Xi, Jerry Xing
  * @version (a version number or a date)
  */
@@ -161,6 +161,8 @@ public class Inventory extends GUI {
         // Add items in the inventory to the world
         for (Item i : itemsList) {
             world.addObject(i, i.getXPos(), i.getYPos());
+            //System.out.println(i.getXPos());
+            //System.out.println(i.getYPos());
         }
         
         world.addObject(heldItem[0], 631, 348);
@@ -265,25 +267,17 @@ public class Inventory extends GUI {
     }
 
     /**
-     * Sets the slot at the specified coordinates with the given item name.
-     * 
-     * @param x The x-coordinate of the slot.
-     * @param y The y-coordinate of the slot.
-     * @param itemName The name of the item to set in the slot.
-     */
-    public static void setSlot(int x, int y, String itemName) {
-        int tempX = slots[x][y].getX();
-        int tempY = slots[x][y].getY();
-        slots[x][y] = new Item("block/air.png", 16, 16, world, false, tempX, tempY, itemName);
-    }
-
-    /**
      * Adds an item to the inventory based on the item name.
      * 
      * @param item The name of the item to add.
      */
     public static void addItem(String item) {
-        Item temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item);
+        Item temp;
+        try{
+            temp = new Item(item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, false);
+        } catch (IllegalArgumentException e){
+            temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, true);
+        }
         tempItemsList.add(temp);
         addedYet = false;
     }

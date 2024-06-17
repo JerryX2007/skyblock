@@ -15,6 +15,8 @@ public abstract class Player extends SuperSmoothMover{
     protected static int pickUpRange;
     protected static boolean jumping;
     protected Inventory inventory;
+    protected static GreenfootSound[] walking;
+    protected boolean isPlaying;
 
     protected final int gravity = 2;
     protected double yVelocity;
@@ -26,7 +28,7 @@ public abstract class Player extends SuperSmoothMover{
     protected int sprintToggleCD = 50;
     protected static boolean activated;
     protected static boolean activated1;
-
+    
     protected Block block;
     protected Chest chest;
     protected CraftingTable craftingTable;
@@ -59,15 +61,46 @@ public abstract class Player extends SuperSmoothMover{
         this.hp = 20;
         activated = false;
         this.inventory = inventory;
+        walking = new GreenfootSound[3];
+        walking[0] = new GreenfootSound("walking_dirt.mp3");
+        walking[1] = new GreenfootSound("walking_stone.mp3");
+        walking[2] = new GreenfootSound("walking_wood.mp3");
+        isPlaying = false;
     }
 
     /**
      * Constantly checks for movement input and possible pickups around it
      */
     public void act(){
-        checkKeys();
-        checkPickup();
-        checkFalling();
+        if(!GameWorld.getGUIOpened()){
+            checkKeys();
+            checkPickup();
+            checkFalling();
+        }
+        
+        if (isMoving) {
+            Block blockBelow = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
+            if(blockBelow != null && !(blockBelow instanceof Air)) {
+                if(blockBelow.isDirt() && !isPlaying) {
+                    walking[0].playLoop();
+                    isPlaying = true;
+                }
+                else if (blockBelow.isStone() && !isPlaying) {
+                    walking[1].playLoop();
+                    isPlaying = true;
+                }
+                else if (blockBelow.isWood() && !isPlaying) {
+                    walking[2].playLoop();
+                    isPlaying = true;
+                }
+            }
+        }
+        else {
+            for(int i=0; i<walking.length; i++) {
+                walking[i].pause();
+            }
+            isPlaying = false;
+        }
     }
 
     /**
@@ -117,7 +150,10 @@ public abstract class Player extends SuperSmoothMover{
                         else if(block !=null && !activated1 && !GameWorld.getGUIOpened() && block instanceof CraftingTable) {
                             craftingTable = (CraftingTable) block;
                             activated = true;
-                            //craftingTable.openGUI();
+                            craftingTable.openCraftingSystem();
+                            getWorld().addObject(craftingTable.getCraftingSystem(), getWorld().getWidth()/2, getWorld().getHeight()/2);
+                            GameWorld.setGUIOpened(true);
+                            GameWorld.setOpenCrafting(true);
                         }
                     }
                 }
@@ -178,7 +214,7 @@ public abstract class Player extends SuperSmoothMover{
      * @return True if the player's head is clear, false otherwise
      */
     protected boolean headClear(){
-        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+4), Block.class);
+        Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+10), Block.class);
         if(above != null) {
             if(above instanceof Air|| above.isLiquid()) {
                 return true;
@@ -262,15 +298,12 @@ public abstract class Player extends SuperSmoothMover{
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveLeft(){
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            for(int i = 0; i < moveSpeed; i++){
-                world.shiftWorld(1, 0);
-                world.reverseShiftPlayer(1, 0);
-                if(!leftClear()){
-                    return;
-                }
+        GameWorld world = (GameWorld) getWorld();
+        for(int i = 0; i < moveSpeed; i++){
+            world.shiftWorld(1, 0);
+            world.reverseShiftPlayer(1, 0);
+            if(!leftClear()){
+                return;
             }
         }
     }
@@ -280,15 +313,12 @@ public abstract class Player extends SuperSmoothMover{
      * The loop is broken early if the left side is no longer clear for movement
      */
     protected void moveRight(){
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            for(int i = 0; i < moveSpeed; i++){
-                world.shiftWorld(-1, 0);
-                world.reverseShiftPlayer(-1, 0);
-                if(!rightClear()){
-                    return;
-                }
+        GameWorld world = (GameWorld) getWorld();
+        for(int i = 0; i < moveSpeed; i++){
+            world.shiftWorld(-1, 0);
+            world.reverseShiftPlayer(-1, 0);
+            if(!rightClear()){
+                return;
             }
         }
     }
@@ -308,26 +338,20 @@ public abstract class Player extends SuperSmoothMover{
      * Accelerate downwards to fall
      */
     protected void fall() {
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            world.shiftWorld(0, - yVelocity);
-            world.reverseShiftPlayer(0, -yVelocity);
-            yVelocity = yVelocity + acceleration;
-        }
+        GameWorld world = (GameWorld) getWorld();
+        yVelocity = yVelocity + acceleration;
+        world.shiftWorld(0, - yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity + 0.05);
     }
 
     /**
      * Makes the player jump.
      */
     protected void jump() {
-        if (getWorld() instanceof GameWorld) {
-
-            GameWorld world = (GameWorld) getWorld();
-            yVelocity -= 4.4;
-            world.shiftWorld(0, -yVelocity);
-            world.reverseShiftPlayer(0, -yVelocity);
-        }
+        GameWorld world = (GameWorld) getWorld();
+        yVelocity -= 4.4;
+        world.shiftWorld(0, -yVelocity);
+        world.reverseShiftPlayer(0, -yVelocity);
     }
 
     /**
@@ -344,7 +368,7 @@ public abstract class Player extends SuperSmoothMover{
         }
     }
 
-        /**
+    /**
      * Checks if a block is within a certain range of the player.
      * 
      * @param targetBlock The block to check.

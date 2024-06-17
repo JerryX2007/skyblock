@@ -24,6 +24,7 @@ public class Chest extends Block
         isWood = true;
         this.world = world;
         chestGUI = new ChestGUI(300, world);
+        itemDrop = 9;
     }
 
     /**

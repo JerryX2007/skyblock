@@ -6,6 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * Different types of blocks have different properties such as hardness and drop items.
  * 
  * @author Nick Chen
+ * Edited by: Evan Xi
  * @version 1.0.0
  */
 public abstract class  Block extends Actor{
@@ -22,6 +23,7 @@ public abstract class  Block extends Actor{
     protected boolean isDirt;// i am a dirt and a shovel will break me faster
     protected boolean isSelected;//the mouse have hovered over this block
     protected boolean isHoldingMouse;
+    protected int brightness = 1;
     protected int itemDrop; // The item drop it will spawn when mined
     protected Color black = new Color(0, 0, 0);
     protected Player player;
@@ -85,59 +87,74 @@ public abstract class  Block extends Actor{
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act(){
-        if (getWorld() instanceof GameWorld) {
-            MouseInfo mouse = Greenfoot.getMouseInfo();
-            GameWorld world = (GameWorld) getWorld();
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+        GameWorld world = (GameWorld) getWorld();
 
-            if (mouse != null) {
-                // Extract the x and y coordinates of the mouse
-                int mouseX = mouse.getX();
-                int mouseY = mouse.getY();
+        brightness = world.getTime();
+        removeTouching(Shader.class);
+        world.addObject(new Shader(brightness), this.getX(), this.getY());;
+        
+        if (mouse != null) {
+            // Extract the x and y coordinates of the mouse
+            int mouseX = mouse.getX();
+            int mouseY = mouse.getY();
 
-                //borrowed mouseover code from Mr. Cohen
-                isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
+            //borrowed mouseover code from Mr. Cohen
+            isSelected = isIntersectingWithCoordinate(this, mouseX, mouseY);
 
-                if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
-                    // Mouse button is pressed
-                    isHoldingMouse = true;
-                }
-                if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
-                    isHoldingMouse = false; // Reset the flag
-                }   
+            if (Greenfoot.mousePressed(this)||Greenfoot.mousePressed(be)) {
+                // Mouse button is pressed
+                isHoldingMouse = true;
             }
-            if(!isSelected){
-                stopBreaking();
-                isHoldingMouse = false;
-            }
-            //attempt to break the block when mouse is pressed on me
-            if(isHoldingMouse){
-                if(be == null){
-                    be = new BreakingEffect(this);
-                }
-                isSelected = true;
-                breakMe(player, 0,0);
-            }
-
-            else{
-                stopBreaking();
-                isSelected = false;
-            }
-            //add the breaking effect 
-            if(be != null){
-                world.addObject(be, getX(),getY());
-            }
-            //block is broken
-            if(subBreakTime < 0){
-                drop(itemDrop);
-                if(be != null){
-                    world.removeObject(be);
-                }
-                
-                //world.updateBlock(getGridNumX(), getGridNumY(), new Air());
-                GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
-                world.removeObject(this);
-            }
+            if (Greenfoot.mouseClicked(this)||Greenfoot.mouseClicked(be)) {
+                isHoldingMouse = false; // Reset the flag
+            }   
         }
+        if(!isSelected){
+            stopBreaking();
+            isHoldingMouse = false;
+        }
+        //attempt to break the block when mouse is pressed on me
+        if(isHoldingMouse){
+            if(be == null){
+                be = new BreakingEffect(this);
+            }
+            isSelected = true;
+            breakMe(player, 0,0);
+        }
+
+        else{
+            stopBreaking();
+            isSelected = false;
+        }
+        //add the breaking effect 
+        if(be != null){
+            world.addObject(be, getX(),getY());
+        }
+        //block is broken
+        if(subBreakTime < 0){
+            drop(itemDrop);
+            if(be != null){
+                world.removeObject(be);
+            }
+            
+            GameWorld.grid[getGridNumX()][getGridNumY()] = new Air();
+            removeTouching(Shader.class);
+            world.removeObject(this);
+        }
+    }
+
+    /**
+     * Adds a transparent block on top depending on the brightness of the block
+     * Uses a scale from 1 - 4, with 4 being brightest
+     */
+    private void updateBrightness(){
+        GameWorld world = (GameWorld) getWorld();
+        
+        brightness = world.getTime();
+        
+        removeTouching(Shader.class);
+        world.addObject(new Shader(brightness), this.getX(), this.getY());
     }
 
     /**
@@ -259,6 +276,7 @@ public abstract class  Block extends Actor{
     public String getName() {
         return name;
     }
+
     /**
      * check if a block is liquid or not
      * 
@@ -266,6 +284,43 @@ public abstract class  Block extends Actor{
      */
     public boolean isLiquid(){
         return (this instanceof WaterSource)||(this instanceof WaterStream)||(this instanceof LavaSource)|| (this instanceof LavaStream);
+
+    
+    /**
+     * Get whether or not the block is a type of dirt
+     * 
+     * @return if the block is a type of dirt
+     */
+    public boolean isDirt() {
+        return isDirt;
+    }
+    
+    /**
+     * Get whether or not the block is a type of stone
+     * 
+     * @return if the block is a type of stone
+     */
+    public boolean isStone() {
+        return isStone;
+    }
+    
+    /**
+     * Get whether or not the block is a type of wood
+     * 
+     * @return if the block is a type of wood
+     */
+    public boolean isWood() {
+        return isWood;
+    }
+    
+    /**
+     * Get the brightness of the block
+     * 
+     * @return the brightness of the block
+     */
+    public int getBrightness(){
+        return brightness;
+
     }
 }
 

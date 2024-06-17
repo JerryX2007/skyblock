@@ -11,7 +11,7 @@ public class StonePickaxe extends Item
     private String image;
 
     public StonePickaxe(World world, int X, int Y){
-        super("items/Stone_Pickaxe.png", 32, 32, world, true, X, Y, "stone_pickaxe");
+        super("items/Stone_Pickaxe.png", 32, 32, world, true, X, Y, "stone_pickaxe", false);
         image  = "items/Stone_Pickaxe.png";
     }
 
