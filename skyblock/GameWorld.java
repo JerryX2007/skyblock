@@ -83,6 +83,7 @@ public class GameWorld extends World {
             firstAct = false;
         }
         pause();
+
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
 
@@ -111,6 +112,7 @@ public class GameWorld extends World {
         checkSave();
         checkReset();
         checkTime();
+        checkPause();
         
         if(totalMobs() < 20){
             //attemptSpawn();
@@ -118,25 +120,25 @@ public class GameWorld extends World {
     }
 
     /**
-     * Updates the time of the day every 15 seconds, with a full day lasting 1m 30s
+     * Updates the time of the day every 20 seconds
      */
     private void checkTime(){
-        if(dayNightTimer.millisElapsed() < 15000){
+        if(dayNightTimer.millisElapsed() < 20000){
             worldTime = 1;
         }
-        else if(dayNightTimer.millisElapsed() < 30000){
+        else if(dayNightTimer.millisElapsed() < 40000){
             worldTime = 2;
         }
-        else if(dayNightTimer.millisElapsed() < 45000){
+        else if(dayNightTimer.millisElapsed() < 60000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() < 60000){
+        else if(dayNightTimer.millisElapsed() < 80000){
             worldTime = 4;
         }
-        else if(dayNightTimer.millisElapsed() < 75000){
+        else if(dayNightTimer.millisElapsed() < 100000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() < 90000){
+        else if(dayNightTimer.millisElapsed() < 120000){
             worldTime = 2;
             dayNightTimer.mark();
         }
@@ -208,12 +210,16 @@ public class GameWorld extends World {
         removeObject(inventory);
     }
 
-    private void pause() {
-        if (Greenfoot.isKeyDown("escape")) {
-            // Capture current grid and actors
-            Block[][] currentGrid = getGrid();
-            ArrayList<Actor> currentActors = getActors();
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
+    public void pause() {
+        // Capture current grid and actors
+        Block[][] currentGrid = getGrid();
+        ArrayList<Actor> currentActors = getActors();
+        Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
+    }
+    
+    public void checkPause(){
+        if(Greenfoot.isKeyDown("escape")){
+            pause();
         }
     }
 
@@ -601,22 +607,22 @@ public class GameWorld extends World {
                         if(block1.getBrightness() <= 2){
                             int choice = random.nextInt(20000);
                             if(choice == 1){
-                                addObject(new Sheep(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Sheep(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 2){
-                                addObject(new Cow(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Cow(), (((i - 40) * 64) - 32), (((j - 12) * 64) - 32));
                             }
                         }
                         if(getTime() > 2){
                             int choice = random.nextInt(30000);
                             if(choice == 1){
-                                addObject(new Zombie(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Zombie(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 2){
-                                addObject(new Creeper(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Creeper(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 3){
-                                addObject(new Spider(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Spider(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }                           
                         }
                     }

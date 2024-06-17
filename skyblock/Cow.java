@@ -14,9 +14,17 @@ public class Cow extends Mob{
         movingImg = new GreenfootImage("mobs/cow_2.png");
         hurtImg = new GreenfootImage("mobs/cow_3.png");
         
+        defaultImgMirrored = new GreenfootImage("mobs/cow_1 - Copy.png");
+        movingImgMirrored = new GreenfootImage("mobs/cow_2 - Copy.png");
+        hurtImgMirrored = new GreenfootImage("mobs/cow_1 - Copy.png");
+        
         defaultImg.scale(80, 64);
         movingImg.scale(80, 64);
         hurtImg.scale(80, 64);
+        
+        defaultImgMirrored.scale(80, 64);
+        movingImgMirrored.scale(80, 64);
+        hurtImgMirrored.scale(80, 64);
         
         setImage(defaultImg);
     }
@@ -26,6 +34,11 @@ public class Cow extends Mob{
     }
     
     public void drop(){
+        Random random = new Random();
+        int choice = random.nextInt(5);
         
+        if(choice == 1){
+            getWorld().addObject(new ItemDrop(16), getX(), getY());
+        }
     }
 }

@@ -92,19 +92,43 @@ public class ItemDrop extends SuperSmoothMover{
                 break;
             case 11:
                 img = new GreenfootImage("block/coal_ore.jpeg");
-                name = "plank";
+                name = "coal";
                 break;
             case 12:
                 img = new GreenfootImage("block/iron_ore.png");
-                name = "iron_ore";
+                name = "iron";
                 break;
             case 13:
-                img = new GreenfootImage("block/diamond_ore.png");
-                name = "diamond_ore";
+                img = new GreenfootImage("items/Diamond.png");
+                name = "diamond";
                 break;
             case 14:
-                img = new GreenfootImage("block/Torch_Block.png");
-                name = "torch_block";
+                img = new GreenfootImage("items/torch.png");
+                name = "torch";
+                break;
+            case 15:
+                img = new GreenfootImage("block/wool.png");
+                name = "wool";
+                break;
+            case 16:
+                img = new GreenfootImage("items/leather.png");
+                name = "leather";
+                break;
+            case 17:
+                img = new GreenfootImage("items/gunpowder.png");
+                name = "gunpowder";
+                break;
+            case 18:
+                img = new GreenfootImage("items/String.png");
+                name = "string";
+                break;
+            case 19:
+                img = new GreenfootImage("items/Coal.png");
+                name = "coal";
+                break;
+            case 20:
+                img = new GreenfootImage("items/Iron.png");
+                name = "iron";
                 break;
         }
         img.scale(15, 15); // Scales the item drop to be a mini version of the original 64x64 block

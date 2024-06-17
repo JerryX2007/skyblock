@@ -1,4 +1,4 @@
-    import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
 import java.util.List;
 
@@ -31,6 +31,8 @@ public abstract class Mob extends SuperSmoothMover{
     protected boolean huntRight = false;
     protected boolean huntLeft = false;
 
+    SimpleTimer attackCD = new SimpleTimer();
+    
     protected boolean isFleeing;
     SimpleTimer fleeTimer = new SimpleTimer();
     
@@ -41,12 +43,17 @@ public abstract class Mob extends SuperSmoothMover{
     protected GreenfootImage movingImg;
     protected GreenfootImage hurtImg;
     
+    protected GreenfootImage defaultImgMirrored;
+    protected GreenfootImage movingImgMirrored;
+    protected GreenfootImage hurtImgMirrored;
+    
     public Mob(boolean hostile, int dmg, double spd, int hp){
         isHostile = hostile;
         damage = dmg;
         speed = spd;
         health = hp;
         wanderTimer.mark();
+        attackCD.mark();
     }
     
     public void act(){
@@ -74,6 +81,12 @@ public abstract class Mob extends SuperSmoothMover{
         }
         
         checkFalling();
+        tryDamageMe();
+        attack();
+        
+        if(isTouching(Void.class)){
+            health -= 20;
+        }
         
         if(health <= 0){
             drop();
@@ -100,6 +113,10 @@ public abstract class Mob extends SuperSmoothMover{
         }
     }
     
+    /**
+     * If the hostile mob has a target, finds the difference in x-location between the player and itself
+     * Will walk towards the player, jumping over obstacles along the way
+     */
     protected void pursue(){
         if(!hasTarget()){
             huntRight = false;
@@ -108,18 +125,22 @@ public abstract class Mob extends SuperSmoothMover{
         }
         if(huntRight){
             if(rightClear()){
+                setImage(defaultImg);
                 moveRight();
             }
             else if(headClear() && onGround()){
+                setImage(defaultImg);
                 jump();
                 moveRight();
             }
         }
         if(huntLeft){
             if(leftClear()){
+                setImage(defaultImgMirrored);
                 moveLeft();
             }
             else if(headClear() && onGround()){
+                setImage(defaultImgMirrored);
                 jump();
                 moveLeft();
             }
@@ -138,6 +159,22 @@ public abstract class Mob extends SuperSmoothMover{
         return false;
     }
     
+    protected void attack(){
+        if(isHostile && attackCD.millisElapsed() > 2000){
+            List<Player> players = getIntersectingObjects(Player.class);
+            for(Player player : players){
+                player.doDamage(damage);
+                if(this.getX() > player.getX()){
+                    player.knockBack(1);
+                }
+                else{
+                    player.knockBack(2);
+                }
+                attackCD.mark();
+            }
+        }
+    }
+    
     /**
      * Applies to passive mobs only
      * If isFleeing = true, will run in the opposite direction of the player
@@ -148,19 +185,23 @@ public abstract class Mob extends SuperSmoothMover{
             if(player.getX() > this.getX()){
                 if(leftClear()){
                     moveLeft();
+                    setImage(defaultImgMirrored);
                 }
                 else if(headClear() && onGround()){
                     jump();
                     moveLeft();
+                    setImage(defaultImgMirrored);
                 }
             }
             else{
                 if(rightClear()){
                     moveRight();
+                    setImage(defaultImg);
                 }
                 else if(headClear() && onGround()){
                     jump();
                     moveRight();
+                    setImage(defaultImg);
                 }
             }
         }
@@ -174,19 +215,23 @@ public abstract class Mob extends SuperSmoothMover{
             if(wanderDirection == 0){
                 if(leftClear()){
                     moveLeft();
+                    setImage(defaultImgMirrored);
                 }
                 else if(headClear() && onGround()){
                     jump();
                     moveLeft();
+                    setImage(defaultImgMirrored);
                 }
             }
             else if(wanderDirection == 1){
                 if(rightClear()){
                     moveRight();
+                    setImage(defaultImg);
                 }
                 else if(headClear() && onGround()){
                     jump();
                     moveRight();
+                    setImage(defaultImg);
                 }
             }                    
         }
@@ -198,6 +243,75 @@ public abstract class Mob extends SuperSmoothMover{
     }
     
     /**
+     * Checks if the player is within a certain range of the the mob.
+     * 
+     * @return True if the player is within range, false otherwise.
+     */
+    public boolean isPlayerWithinRange() {
+        // Get self position
+        int selfX = this.getX();
+        int selfY = this.getY();
+    
+        // Get player's position
+        int playerX = 640;
+        int playerY = 384;
+    
+        // Calculate the direction vector
+        int dirX = playerX - selfX;
+        int dirY = playerY - selfY;
+    
+        // Check if the player is within a certain range
+        if (dirX - dirY < 378) {
+            return true;
+        } 
+        else {
+            return false;
+        }
+    }
+    
+    /**
+     * Checks if a block is visible from the player's current position.
+     * 
+     * @param targetBlock The block to check.
+     * @param increment The y-coordinate increment to adjust the player's position.
+     * @return True if the block is visible, false otherwise.
+     */
+    public boolean isPlayerVisible(int increment) {
+        // Get self position
+        int selfX = this.getX();
+        int selfY = this.getY() - increment;
+    
+        // Get player's position
+        int playerX = 640;
+        int playerY = 384;
+    
+        // Calculate the direction vector
+        int dirX = playerX - selfX;
+        int dirY = playerY - selfY;
+        int steps = Math.max(Math.abs(dirX), Math.abs(dirY));
+    
+        // Normalize the direction vector
+        double stepX = dirX / (double) steps;
+        double stepY = dirY / (double) steps;
+    
+        // Cast the ray
+        double currentX = selfX;
+        double currentY = selfY;
+        for (int i = 0; i < steps; i++) {
+            // Increment to the position of the block
+            currentX += stepX;
+            currentY += stepY;
+    
+            // Check if there is a block at the current position
+            Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - selfX), (int) Math.round(currentY - selfY), Block.class);
+            if (block != null && !(block instanceof Air)) {
+                return false; // Block is obstructing the view
+            }
+        }
+        return true; // No obstructions
+    }
+    
+    /**
      * All mobs will drop something upon death
      */
     protected abstract void drop();
@@ -206,12 +320,19 @@ public abstract class Mob extends SuperSmoothMover{
      * Allows other entities to damage the mob
      * If the mob is passive, will flee from the player
      */
-    public void damageMe(int damage){
-        health -= damage;
-        if(!isHostile){
-            isFleeing = true;
-            fleeTimer = new SimpleTimer();
-            fleeTimer.mark();
+    public void tryDamageMe(){
+        if(Greenfoot.mousePressed(this)){
+            if(isPlayerWithinRange() && (isPlayerVisible(40) || isPlayerVisible(0) || isPlayerVisible(40))){
+                health -= Player.getDamage();
+                setImage(hurtImg);
+                
+                if(!isHostile){
+                    isFleeing = true;
+                    fleeTimer = new SimpleTimer();
+                    fleeTimer.mark();
+                }                
+            }
+
         }
     }
     
@@ -375,5 +496,9 @@ public abstract class Mob extends SuperSmoothMover{
     protected void jump() {
         yVelocity -= 4.5;
         setLocation(getX(), getY() + yVelocity);
+    }
+    
+    protected int getDamage(){
+        return damage;
     }
 }
