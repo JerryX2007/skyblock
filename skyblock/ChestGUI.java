@@ -16,8 +16,6 @@ public class ChestGUI extends GUI {
     private int tempX;
     private int tempY;
     private boolean keyPreviouslyDown;
-    protected static int counter = 0;
-    private int num;
 
     /**
      * Constructor for the ChestGUI class.
@@ -42,8 +40,6 @@ public class ChestGUI extends GUI {
         }
         xAdjust = 0;
         yAdjust = 0;
-        num = counter;
-        counter++;
     }
 
     /**
@@ -63,6 +59,15 @@ public class ChestGUI extends GUI {
         keyPreviouslyDown = keyCurrentlyDown;
     }
 
+    /**
+     * Add items to contents
+     * 
+     * @param item Item to add
+     */
+    public void addItem(Item item){
+        contents.add(item);
+    }
+    
     /**
      * Adds the chest and inventory slots to the world and positions the items in the chest.
      */
@@ -163,5 +168,14 @@ public class ChestGUI extends GUI {
                 contents.remove(contents.get(i));
             }
         }
+    }
+    
+    /**
+     * Getter for contents
+     * 
+     * @return returns an ArrayList of items
+     */
+    public ArrayList<Item> getContents(){
+        return contents;
     }
 }

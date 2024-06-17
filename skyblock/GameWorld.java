@@ -79,6 +79,7 @@ public class GameWorld extends World {
         
         if(firstAct){
             loadInv();
+            loadChest();
             firstAct = false;
         }
         pause();
@@ -112,7 +113,7 @@ public class GameWorld extends World {
         checkTime();
         
         if(totalMobs() < 20){
-            attemptSpawn();
+            //attemptSpawn();
         }        
     }
 
@@ -139,7 +140,7 @@ public class GameWorld extends World {
             worldTime = 2;
             dayNightTimer.mark();
         }
-        //System.out.println(dayNightTimer.millisElapsed());
+
     }
 
     /**
@@ -311,11 +312,12 @@ public class GameWorld extends World {
             for(Item i : GUI.getItemList()){
                 pWriter.println(i.toString());
             }
-            //System.out.println("World saved!");
+
             pWriter.close();
+            fWriter.close();
         }
         catch(IOException e){
-            //System.out.println("Error: " + e);
+        
         }
     }
     
@@ -336,7 +338,7 @@ public class GameWorld extends World {
                 String type = a[6];
                 boolean placeable = Boolean.valueOf(a[7]);
                 Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
-                //System.out.println(temp.toString());
+ 
                 GUI.getItemList().add(temp);
             }
             s.close();
@@ -422,20 +424,23 @@ public class GameWorld extends World {
 
     private void loadWorld(){
         try{
-            s = new Scanner(new File("world_info.txt"));
-        }
-        catch(FileNotFoundException e){
-            //System.out.println("File not found");
-        }
-
-        while(s.hasNext()){
-            for(int i = 0; i < 100; i++){
-                for(int j = 0; j < 36; j++){
-                    grid[i][j] = toBlock(s.nextLine());
+            s = new Scanner(new File("saves/world_info.txt"));
+            while(s.hasNext()){
+                for(int i = 0; i < 100; i++){
+                    for(int j = 0; j < 36; j++){
+                        grid[i][j] = toBlock(s.nextLine());
+                    }
                 }
             }
+            refreshWorld();
         }
-        refreshWorld();
+        catch(FileNotFoundException e){
+            prepareWorld();
+        } catch(NullPointerException e){
+            prepareWorld();
+        }
+
+        
     }
 
     private void checkReset(){
@@ -447,15 +452,86 @@ public class GameWorld extends World {
 
     private void saveWorld(){
         try{
-            fWriter = new FileWriter("world_info.txt");
-            pWriter = new PrintWriter(fWriter);
+            FileWriter f = new FileWriter("saves/world_info.txt");
+            PrintWriter p = new PrintWriter(f);
             for(int i = 0; i < 100; i++){
                 for(int j = 0; j < 36; j++){
-                    pWriter.println(grid[i][j].getName());
+                    if(grid[i][j] == null){
+                        p.println("air");
+                    } else{
+                        p.println(grid[i][j].getName());
+                    }
+                    
                 }
             }
-            //System.out.println("World saved!");
-            pWriter.close();
+            p.close();
+            f.close();
+        }
+        catch(IOException e){
+
+        }
+    }
+    
+    private void saveChest(){
+        try{
+            int x = 0;
+            for(int i = 0; i < 100; i++){
+                for(int j = 0; j < 36; j++){
+                    if(grid[i][j] instanceof Chest){
+                        Chest tempBlock = (Chest) grid[i][j];
+                        fWriter = new FileWriter("saves" + File.separator + "chest" + x + ".txt");
+                        pWriter = new PrintWriter(fWriter);
+                        
+                        for(Item item : tempBlock.getChestGUI().getContents()){
+                            pWriter.println(item.toString());
+                        }
+                        x++;
+                        fWriter.close();
+                        pWriter.close();
+                    }
+                }
+            }
+
+            
+            
+            
+        }
+        catch(IOException e){
+
+        }
+    }
+    
+    private void loadChest(){
+        try{
+            int x = 0;
+            for(int i = 0; i < 100; i++){
+                for(int j = 0; j < 36; j++){
+                    if(grid[i][j] instanceof Chest){
+                        Chest tempBlock = (Chest) grid[i][j];
+                        s = new Scanner(new File("saves" + File.separator + "chest" + x + ".txt"));
+                        ArrayList<String> tempString = new ArrayList<>();
+                        while(s.hasNext()){
+                            tempString.add(s.nextLine());
+                        }
+                        for(String s : tempString){
+                            String[] a = s.split(" ");
+                            String file = a[0];
+                            int lengthWidth = Integer.valueOf(a[1]);
+                            boolean draggable = Boolean.valueOf(a[3]);
+                            int X = Integer.valueOf(a[4]);
+                            int Y = Integer.valueOf(a[5]);
+                            String type = a[6];
+                            boolean placeable = Boolean.valueOf(a[7]);
+                            Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
+
+                            tempBlock.getChestGUI().addItem(temp);
+                        }
+                        s.close();
+                        x++;
+                    }
+                }
+            }
+            
         }
         catch(IOException e){
             //System.out.println("Error: " + e);
@@ -467,6 +543,7 @@ public class GameWorld extends World {
             saveWorld();
             spoofInventory();
             saveInv();
+            saveChest();
         }
     }
 
@@ -520,7 +597,6 @@ public class GameWorld extends World {
                 Block block5 = grid[i + 1][j];
                 if(!(block2.getName().equals("air"))){
                     if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
-                        //System.out.println(getTime());
                         if(block1.getBrightness() <= 2){
                             int choice = random.nextInt(20000);
                             if(choice == 1){
