@@ -93,7 +93,6 @@ public class PauseScreen extends World
            // TitleScreen.playMusic();
         }
         if (resume.isPressed()) {
-            
             Greenfoot.setWorld(world);
             resume.setPressedCondition(false);
         }

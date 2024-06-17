@@ -130,25 +130,19 @@ public class TitleScreen extends World
         
         if(playNewWorld.isPressed()){
             game = new GameWorld(this);
-            game.initializeGrid();
-            game.prepareWorld();
+            game.checkReset();
             Greenfoot.setWorld(game);
             playNewWorld.setPressedCondition(false);
         }
         
         if(instructions.isPressed()){
             game = new GameWorld(this);
-            game.initializeGrid();
-            game.prepareWorld();
-            Greenfoot.setWorld(game);
             playNewWorld.setPressedCondition(false);
         }
         
         if(credits.isPressed()){
             game = new GameWorld(this);
-            game.initializeGrid();
-            game.prepareWorld();
-            Greenfoot.setWorld(game);
+            
             playNewWorld.setPressedCondition(false);
         }
     }
