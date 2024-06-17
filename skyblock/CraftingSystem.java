@@ -54,6 +54,7 @@ public class CraftingSystem extends GUI
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act() {
+        
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
         manageItems();
         if(GameWorld.getGUIOpened() && GameWorld.getOpenCrafting() && keyCurrentlyDown && !keyPreviouslyDown){
@@ -64,6 +65,7 @@ public class CraftingSystem extends GUI
             world.removeObject(this);
         }
         keyPreviouslyDown = keyCurrentlyDown;
+        
     }
     
     public void addCrafting() {
@@ -112,11 +114,17 @@ public class CraftingSystem extends GUI
     }
     
     public void removeCrafting() {
-        
         // Remove player's items from the world
         for (Item i : Inventory.getItemsList()) {
             world.removeObject(i);
             i.removeNum();
+        }
+        
+        // Remove player's items from the crafting table
+        for(CraftingSlot[] arr : itemArray) {
+            for(CraftingSlot cs : arr) {
+                world.removeObject(cs);
+            }
         }
         
         // Remove player's inventory slots from the world
@@ -125,21 +133,6 @@ public class CraftingSystem extends GUI
                 world.removeObject(slots[j][i]);
             }
         }
-        
-        for (CraftingSlot[] arr : itemArray) {
-            for (CraftingSlot i : arr) {
-                world.removeObject(i.getItem());
-                i.getItem().removeNum();
-            }
-        }
-        
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                world.removeObject(itemArray[i][j]);
-            }
-        }
-        
-        isVisible = false;
     }
     
     public void setVisible(boolean state) {
@@ -154,16 +147,16 @@ public class CraftingSystem extends GUI
         // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
         for (int i = 0; i < Inventory.getItemsList().size(); i++) {
             if (Inventory.getItemsList().get(i).getY() <= 366) {
-                contents.add(Inventory.getItemsList().get(i));
+                craftingSlotItems.add(Inventory.getItemsList().get(i));
                 Inventory.removeItem(Inventory.getItemsList().get(i));
             }
         }
         
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
-        for (int i = 0; i < contents.size(); i++) {
+        for (int i = 0; i < craftingSlotItems.size(); i++) {
             if (contents.get(i).getY() > 366) {
-                Inventory.getItemsList().add(contents.get(i));
-                contents.remove(contents.get(i));
+                Inventory.getItemsList().add(craftingSlotItems.get(i));
+                craftingSlotItems.remove(craftingSlotItems.get(i));
             }
         }
     }
