@@ -40,6 +40,7 @@ public class CraftingSystem extends GUI
             for(int y = 0; y < GRID_SIZE; y++) {
                 Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 itemArray[x][y] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
+                craftingSlotItems.add(temp);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -102,10 +103,14 @@ public class CraftingSystem extends GUI
             world.addObject(i, i.getXPos(), i.getYPos());
         }
         
+        
         // Add crafting slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                world.addObject(itemArray[i][j].getItem(), 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[i][j] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
+                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                craftingSlotItems.add(temp);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -129,10 +134,7 @@ public class CraftingSystem extends GUI
             }
         }
         
-        for (Item i : craftingSlotItems) {
-            world.removeObject(i);
-            i.removeNum();
-        }
+        System.out.println(craftingSlotItems.size());
         // Remove player's items from the world
         for (Item i : Inventory.getItemsList()) {
             world.removeObject(i);
@@ -140,13 +142,11 @@ public class CraftingSystem extends GUI
         }
         
         // Remove player's items from the crafting table
-        for(CraftingSlot[] arr : itemArray) {
-            for(CraftingSlot cs : arr) {
-                world.removeObject(cs.getItem());
-                cs.getItem().removeNum();
-            }
+        for(Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
         }
-        
+                
         world.removeObject(outputSlot.getItem());
         outputSlot.removeNum();
         world.removeObject(outputSlot);
