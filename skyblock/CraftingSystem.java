@@ -225,8 +225,6 @@ public class CraftingSystem extends GUI
             }
         }
         
-        
-        System.out.println(craftingSlotItems.size());
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         try {
             for (int i = 0; i < craftingSlotItems.size(); i++) {
@@ -236,7 +234,7 @@ public class CraftingSystem extends GUI
                 }
             }
         } catch (IllegalStateException e) {
-            System.out.println("fail");
+            //System.out.println("fail");
         }
         
     } 
@@ -263,6 +261,10 @@ public class CraftingSystem extends GUI
             increaseItemAmount(outputSlot, 3);
             crafted = true;
         }
+        else if (isCraftingTorch()) {
+            world.addObject(new Torch(world, 772, 268), 772, 268);
+            crafted = true; //Crafting is true or not. After crafting is true, just make it so that the crafting wont occur again. 
+        }
         if(crafted) {
             update(outputSlot);
             if(needFour) {
@@ -272,6 +274,7 @@ public class CraftingSystem extends GUI
             }
             needFour = false;
         }
+        
         /*
         else if (isCraftingSword("plank")) {
             outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
