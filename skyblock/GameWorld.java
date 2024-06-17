@@ -57,7 +57,7 @@ public class GameWorld extends World {
     public GameWorld(TitleScreen titleScreen) {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
-        
+
         // Load saved information
         loadWorld();
         loadInv();
@@ -67,7 +67,7 @@ public class GameWorld extends World {
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
-        
+
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
@@ -81,7 +81,7 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
-        
+
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
 
@@ -110,11 +110,11 @@ public class GameWorld extends World {
         hpBar.setLocation(player.getX(), player.getY() - 90);
 
         // Checks for inputs and updates certain variables
-        checkSave();
+        //checkSave();
         checkReset();
         checkTime();
         checkPause();
-        
+
         // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
             attemptSpawn();
@@ -164,7 +164,7 @@ public class GameWorld extends World {
     public static boolean getOpenChest() {
         return openChest;
     }
-    
+
     /**
      * Getter for openChest.
      * 
@@ -191,7 +191,7 @@ public class GameWorld extends World {
     public static void setOpenChest(boolean open) {
         openChest = open;
     }
-    
+
     /**
      * Setter for openCrafting.
      * 
@@ -227,7 +227,7 @@ public class GameWorld extends World {
         ArrayList<Actor> currentActors = getActors();
         Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
     }
-    
+
     public void checkPause(){
         if(Greenfoot.isKeyDown("escape")){
             pause();
@@ -321,7 +321,7 @@ public class GameWorld extends World {
         grid[gridX][gridY] = newBlock;
         addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
     }
-    
+
     private void saveInv(){
         try{
             fWriter = new FileWriter("saves/inv.txt");
@@ -334,10 +334,10 @@ public class GameWorld extends World {
             fWriter.close();
         }
         catch(IOException e){
-        
+
         }
     }
-    
+
     private void loadInv(){
         try{
             s = new Scanner(new File("saves/inv.txt"));
@@ -355,7 +355,7 @@ public class GameWorld extends World {
                 String type = a[6];
                 boolean placeable = Boolean.valueOf(a[7]);
                 Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
- 
+
                 GUI.getItemList().add(temp);
             }
             s.close();
@@ -490,7 +490,7 @@ public class GameWorld extends World {
                     } else{
                         p.println(grid[i][j].getName());
                     }
-                    
+
                 }
             }
             p.close();
@@ -500,7 +500,7 @@ public class GameWorld extends World {
 
         }
     }
-    
+
     /**
      * Gets all the chests in the world and saves them into separate text files
      */
@@ -513,7 +513,7 @@ public class GameWorld extends World {
                         Chest tempBlock = (Chest) grid[i][j];
                         fWriter = new FileWriter("saves" + File.separator + "chest" + x + ".txt");
                         pWriter = new PrintWriter(fWriter);
-                        
+
                         for(Item item : tempBlock.getChestGUI().getContents()){
                             pWriter.println(item.toString());
                         }
@@ -528,7 +528,7 @@ public class GameWorld extends World {
 
         }
     }
-    
+
     /**
      * Loads information from all chests and places them in their respective places
      */
@@ -572,13 +572,13 @@ public class GameWorld extends World {
      * Placeholder key for saving the world
      * Should be replaced by a button during pause screen
      */
-    private void checkSave(){
-        if(Greenfoot.isKeyDown("k")){
-            saveWorld();
-            spoofInventory();
-            saveInv();
-            saveChest();
-        }
+    public void checkSave(){
+        //  if(Greenfoot.isKeyDown("k")){
+        saveWorld();
+        spoofInventory();
+        saveInv();
+        saveChest();
+        //  }
     }
 
     /**
