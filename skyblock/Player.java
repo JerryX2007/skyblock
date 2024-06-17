@@ -5,6 +5,15 @@ import java.util.ArrayList;
  * The Player superclass represents a player in the game. 
  * It provides methods for movement, interaction with objects, and other player-related functionalities.
  * 
+ * Uses A/D to move left and right
+ * Uses W or Space to jump
+ * Uses E to open inventory or close related interfaces
+ * 
+ * Will move the world instead of self
+ * 
+ * The player has 20hp initially indicated by a following health bar
+ * The player will slowly regenerate hp over time
+ * 
  * @author Jerry Xing, Evan Xi, Benny Wang, Nick Chen
  */
 public abstract class Player extends SuperSmoothMover{
@@ -110,10 +119,12 @@ public abstract class Player extends SuperSmoothMover{
             isPlaying = false;
         }
         
+        // Instantly kill self if touching void
         if(isTouching(Void.class)){
             hp -= 20;
         }
         
+        // If the player is alive, will attempt to heal 1hp every 2.5 seconds.  If it is dead, pause the world.
         if(hp > 0){
             if((healTimer.millisElapsed() > 2500) && (hp < 20)){
                 hp++;
@@ -127,8 +138,7 @@ public abstract class Player extends SuperSmoothMover{
 
     /**
      * Check movement input 
-     * Uses a WASD system and checks respective conditions to see if they can be executed
-     * Can toggle sneaking and sprinting
+     * Uses a WAD system and checks respective conditions to see if they can be executed
      */
     public void checkKeys() {
         if (getWorld() instanceof GameWorld) {
@@ -346,7 +356,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Accelerate downwards to fall.
+     * Checks if the player should fall
      */
     protected void checkFalling() {
         if(onGround()) {
@@ -368,7 +378,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Makes the player jump.
+     * Makes the player jump by giving it a small amount of velocity in the y-axis
      */
     protected void jump() {
         GameWorld world = (GameWorld) getWorld();
@@ -461,6 +471,10 @@ public abstract class Player extends SuperSmoothMover{
         return true; // No obstructions
     }
     
+    /**
+     * Knockbacks the player in a direction
+     * Will be stopped pre-emptively if it hits a wall
+     */
     public void knockBack(int direction){
         GameWorld world = (GameWorld) getWorld();
         if(direction == 1){

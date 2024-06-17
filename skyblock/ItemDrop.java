@@ -135,6 +135,11 @@ public class ItemDrop extends SuperSmoothMover{
         setImage(img);
     }
 
+    /**
+     * Checks if the block is on the ground
+     * 
+     * @return the status of the block
+     */
     private boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2 + 20, Block.class);
         if(under != null) {
@@ -168,9 +173,20 @@ public class ItemDrop extends SuperSmoothMover{
         }
     }
 
+    /**
+     * Gets the integer representation of the item drop
+     * 
+     * @return the integer representation
+     */
     public int getType(){
         return type;
     }
+    
+    /**
+     * Gets the string representation of the item drop
+     * 
+     * @return the string representation
+     */
     public String getName(){
         return name;
     }
