@@ -391,7 +391,7 @@ public class GameWorld extends World {
      */
     private void prepareWorld() {
         updateBlock(42, 18, new Chest(this));
-        updateBlock(42, 19, new Chest(this));
+        updateBlock(42, 17, new Chest(this));
         updateBlock(44, 18, new Chest(this));
         updateBlock(45, 18, new CraftingTable(this));
         for (int i = 42; i < 58; i++) {
