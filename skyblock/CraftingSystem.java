@@ -201,7 +201,6 @@ public class CraftingSystem extends GUI
         }
         if(crafted) {
             update(outputSlot);
-            crafted = false;
         }
         /*
         else if (isCraftingSword("plank")) {
@@ -478,7 +477,6 @@ public class CraftingSystem extends GUI
          * #
          */
         boolean satisfied = false;
-        System.out.println(!isEmpty(0, 0));
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
                 if (!isEmpty(x, y)) {
