@@ -13,7 +13,7 @@ public class CraftingSystem extends GUI
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
-    private Item outputSlot;
+    private OutputSlot outputSlot;
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
@@ -21,6 +21,7 @@ public class CraftingSystem extends GUI
     private boolean crafted;
     private ArrayList<CraftingSlot> affectedSlots;
     private ArrayList<int[]> usedCoords;
+    private boolean needFour;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -48,9 +49,10 @@ public class CraftingSystem extends GUI
         xAdjust = 0;
         yAdjust = 0;
         crafted = false;
-        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116);
+        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116, new Empty(16, 16, world, 772, world.getHeight()/2-116));
         affectedSlots = new ArrayList<CraftingSlot>();
         usedCoords = new ArrayList<int[]>();
+        needFour = false;
     }
     
     /**
@@ -113,7 +115,7 @@ public class CraftingSystem extends GUI
         xAdjust = 0;
         yAdjust = 0;
         
-        outputSlot = new Empty(16, 16, world, 772, world.getHeight()/2 - 116);
+        outputSlot = new OutputSlot(world, 772, world.getHeight()/2-116, new Empty(16, 16, world, 772, world.getHeight()/2-116));
         world.addObject(outputSlot, 772, world.getHeight()/2 - 116);
         GameWorld.setOpenCrafting(true);
     }
@@ -146,14 +148,11 @@ public class CraftingSystem extends GUI
             craftingSlotItems.remove(craftingSlotItems.get(i));
         }
         
-        world.removeObject(outputSlot);
+        world.removeObject(outputSlot.getItem());
         outputSlot.removeNum();
         world.removeObject(outputSlot);
     }
     
-    public void setVisible(boolean state) {
-        isVisible = state;
-    }
     
     /**
      * Manages the items between the player's inventory and the chest.
@@ -186,7 +185,8 @@ public class CraftingSystem extends GUI
         //Also try to hard code the possible positions of every single combination ;-;
         if(!crafted) {
             if (isCraftingPlanks()) {
-                outputSlot = new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                needFour = true;
                 increaseItemAmount(outputSlot, 3);
                 crafted = true;
                 
@@ -195,13 +195,18 @@ public class CraftingSystem extends GUI
         
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
-            outputSlot = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
+            //outputSlot = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
             increaseItemAmount(outputSlot, 3);
             crafted = true;
         }
         if(crafted) {
             update(outputSlot);
-            crafted = false;
+            if(needFour) {
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+            }
+            needFour = false;
         }
         /*
         else if (isCraftingSword("plank")) {
@@ -478,7 +483,6 @@ public class CraftingSystem extends GUI
          * #
          */
         boolean satisfied = false;
-        System.out.println(!isEmpty(0, 0));
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
                 if (!isEmpty(x, y)) {

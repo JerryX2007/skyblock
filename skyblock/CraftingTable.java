@@ -45,7 +45,6 @@ public class CraftingTable extends Block
     
     public void openCraftingSystem() {
         craftingSystem.addCrafting();
-        craftingSystem.setVisible(true);
     }
     
     public void closeCraftingSystem() {
