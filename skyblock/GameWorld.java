@@ -99,7 +99,6 @@ public class GameWorld extends World {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-
             } 
             for(Label l : getObjects(Label.class)){
                 removeObject(l);
@@ -119,7 +118,7 @@ public class GameWorld extends World {
         // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
             attemptSpawn();
-        }        
+        }
     }
 
     /**
@@ -165,6 +164,15 @@ public class GameWorld extends World {
     public static boolean getOpenChest() {
         return openChest;
     }
+    
+    /**
+     * Getter for openChest.
+     * 
+     * @return boolean value of openChest.
+     */
+    public static boolean getOpenCrafting() {
+        return openChest;
+    }
 
     /**
      * Getter for GUIOpened.
@@ -190,7 +198,7 @@ public class GameWorld extends World {
      * @param open New value for openCrafting.
      */
     public static void setOpenCrafting(boolean open) {
-        openCrafting = true;
+        openCrafting = open;
     }
 
     /**

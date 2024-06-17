@@ -9,17 +9,19 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author Jerry Xing 
  * @version (a version number or a date)
  */
-public class OutputSlot extends Actor
+public class OutputSlot extends Item
 {
     private Item item; // The item held in this output slot
+    private String image;
     
     /**
      * Constructs a new OutputSlot object with an initial item.
      * 
      * @param item The item to be placed in this output slot initially.
      */
-    public OutputSlot(Item item) {
-        this.item = item;
+    public OutputSlot(World world, int X, int Y) {
+        super("block/air.png", 64, 64, world, false, X, Y, "urmomlol", false);
+        image  = "block/air.png";
     }
     
     /**
@@ -28,7 +30,7 @@ public class OutputSlot extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        super.act();
     }
 
     /**
@@ -46,7 +48,7 @@ public class OutputSlot extends Actor
      * @return true if this slot contains an item, false otherwise.
      */
     public boolean hasItem() {
-        return item != null;
+        return !(item instanceof Empty);
     }
     
     /**
@@ -56,5 +58,14 @@ public class OutputSlot extends Actor
      */
     public void setItem(Item item ) {
         this.item = item;
+    }
+    
+    /**
+     * Getter for image
+     * 
+     * @return image Type of image as a String
+     */
+    public String getItemImage(){
+        return image;
     }
 }
