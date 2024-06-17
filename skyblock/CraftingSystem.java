@@ -121,6 +121,18 @@ public class CraftingSystem extends GUI
     }
     
     public void removeCrafting() {
+        
+        // Remove player's inventory slots from the world
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                world.removeObject(slots[j][i]);
+            }
+        }
+        
+        for (Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
+        }
         // Remove player's items from the world
         for (Item i : Inventory.getItemsList()) {
             world.removeObject(i);
@@ -133,27 +145,6 @@ public class CraftingSystem extends GUI
                 world.removeObject(cs.getItem());
                 cs.getItem().removeNum();
             }
-        }
-        
-        // Remove player's inventory slots from the world
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 9; j++) {
-                world.removeObject(slots[j][i]);
-            }
-        }
-        
-        for (Item i : craftingSlotItems) {
-            if(Inventory.hasSpaceFor(i.getType())) {
-                Inventory.addItem(i.getType());
-                craftingSlotItems.remove(i);
-                i.removeNum();
-            }
-            else {
-                world.removeObject(i);
-                i.removeNum();
-                craftingSlotItems.remove(i);
-            }
-            
         }
         
         world.removeObject(outputSlot.getItem());
