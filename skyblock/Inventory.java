@@ -274,7 +274,7 @@ public class Inventory extends GUI {
     public static void addItem(String item) {
         Item temp;
         try{
-            temp = new Item(item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, false);
+            temp = new Item("items/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, false);
         } catch (IllegalArgumentException e){
             temp = new Item("block/" + item + ".png", 32, 32, world, true, 424, world.getHeight() / 2 + 27, item, true);
         }
