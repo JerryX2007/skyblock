@@ -36,7 +36,7 @@ public class TitleScreen extends World
             background = new GreenfootImage("midnight.png");
         }
         setBackground(background);
-        play = new Button("play", 3, ".jpg");
+        play = new Button("pfs", 3, ".png");
 
         Button.init();
 
