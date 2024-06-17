@@ -11,13 +11,14 @@ public class GUI extends Actor
 {
     protected static World world;
     protected Inventory inventory;
-    protected static ArrayList<Item> itemsList = new ArrayList<>();
+    protected static ArrayList<Item> itemsList = new ArrayList<Item>();
     protected ArrayList<Item> contents = new ArrayList<>();
-    protected static ArrayList<Item> tempItemsList = new ArrayList<>();
+    protected static ArrayList<Item> tempItemsList = new ArrayList<Item>();
     protected static Item[][] slots = new Item[9][4];
     protected static Item[][] crafting = new Item[2][2];
     protected Item[][] chestSlots = new Item[9][3];
     protected Item[] heldItem = new Item[1];
+    protected ArrayList<Item> craftingSlotItems = new ArrayList<Item>();
     
     /**
      * Create an image with given file name and size
