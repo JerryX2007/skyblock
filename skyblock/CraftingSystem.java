@@ -159,7 +159,7 @@ public class CraftingSystem extends GUI
             for (int j = 0; j < 3; j++) {
                 Item temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 itemArray[i][j].setItem(temp);
-                world.addObject(itemArray[i][j].getItem(), 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -175,7 +175,7 @@ public class CraftingSystem extends GUI
         
         
         outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
-        world.addObject(outputSlot, 772, world.getHeight() / 2 - 116);
+        world.addObject(outputSlot.getItem(), 772, world.getHeight() / 2 - 116);
         GameWorld.setOpenCrafting(true);
     }
 
@@ -199,9 +199,13 @@ public class CraftingSystem extends GUI
             }
         }
         
+        for (Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
+        }
         
         world.removeObject(outputSlot.getItem());
-        outputSlot.removeNum();
+        outputSlot.getItem().removeNum();
         world.removeObject(outputSlot);
     }
     
@@ -224,12 +228,17 @@ public class CraftingSystem extends GUI
         
         System.out.println(craftingSlotItems.size());
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
-        for (int i = 0; i < craftingSlotItems.size(); i++) {
-            if (craftingSlotItems.get(i).getY() > 366) {
-                Inventory.getItemsList().add(craftingSlotItems.get(i));
-                craftingSlotItems.remove(craftingSlotItems.get(i));
+        try {
+            for (int i = 0; i < craftingSlotItems.size(); i++) {
+                if (craftingSlotItems.get(i).getY() > 366) {
+                    Inventory.getItemsList().add(craftingSlotItems.get(i));
+                    craftingSlotItems.remove(craftingSlotItems.get(i));
+                }
             }
+        } catch (IllegalStateException e) {
+            System.out.println("fail");
         }
+        
     } 
     
     /**
