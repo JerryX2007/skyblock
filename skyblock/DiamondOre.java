@@ -18,7 +18,7 @@ public class DiamondOre extends Block
         setImage(img);
         img2 = addBorder(img, black);
         isStone = true;
-        itemDrop = 12;
+        itemDrop = 13;
     }
 
     /**

@@ -1,13 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * Sets pictures of water according to its relative location to previous blocks and the source block
  * 
  * @author Nick 
  * @version (a version number or a date)
@@ -18,12 +12,12 @@ public class WaterStream extends WaterSource {
             new GreenfootImage("liquid/Lw1.png"), new GreenfootImage("liquid/Lw2.png"),
             new GreenfootImage("liquid/Lw3.png"), new GreenfootImage("liquid/Lw4.png"),
             new GreenfootImage("liquid/Lw5.png"), new GreenfootImage("liquid/Lw6.png")
-        };
+            };
     public static GreenfootImage[] right = {
             new GreenfootImage("liquid/Rw1.png"), new GreenfootImage("liquid/Rw2.png"),
             new GreenfootImage("liquid/Rw3.png"), new GreenfootImage("liquid/Rw4.png"),
             new GreenfootImage("liquid/Rw5.png"), new GreenfootImage("liquid/Rw6.png")
-        };
+            };
     public static GreenfootImage normal = new GreenfootImage("liquid/w0.png");
 
     private WaterSource previousWater;
@@ -82,9 +76,12 @@ public class WaterStream extends WaterSource {
     private void resizeImages() {
         if (normal.getHeight() != 64) {
             normal.scale(64, 64);
+            normal.setTransparency(220);
             for (int i = 0; i < left.length; i++) {
                 left[i].scale(64, 64);
+                left[i].setTransparency(220);
                 right[i].scale(64, 64);
+                right[i].setTransparency(220);
             }
         }
     }

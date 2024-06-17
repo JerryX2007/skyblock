@@ -5,10 +5,20 @@ import java.util.ArrayList;
  * The Player superclass represents a player in the game. 
  * It provides methods for movement, interaction with objects, and other player-related functionalities.
  * 
+ * Uses A/D to move left and right
+ * Uses W or Space to jump
+ * Uses E to open inventory or close related interfaces
+ * 
+ * Will move the world instead of self
+ * 
+ * The player has 20hp initially indicated by a following health bar
+ * The player will slowly regenerate hp over time
+ * 
  * @author Jerry Xing, Evan Xi, Benny Wang, Nick Chen
  */
 public abstract class Player extends SuperSmoothMover{
     protected static double moveSpeed;
+    protected static int damage = 3;
     protected static int jumpHeight;
     protected static int reach;
     protected static boolean canDrop;
@@ -35,7 +45,12 @@ public abstract class Player extends SuperSmoothMover{
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    protected int hp;    
+    protected int hp; 
+    
+    protected static double totalXOffset;
+    protected static double totalYOffset;
+    
+    SimpleTimer healTimer = new SimpleTimer();
 
     /**
      * Constructor for Player class.
@@ -66,12 +81,14 @@ public abstract class Player extends SuperSmoothMover{
         walking[1] = new GreenfootSound("walking_stone.mp3");
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
+        healTimer.mark();
     }
 
     /**
      * Constantly checks for movement input and possible pickups around it
      */
     public void act(){
+        GameWorld world = (GameWorld) getWorld();
         if(!GameWorld.getGUIOpened()){
             checkKeys();
             checkPickup();
@@ -101,12 +118,27 @@ public abstract class Player extends SuperSmoothMover{
             }
             isPlaying = false;
         }
+        
+        // Instantly kill self if touching void
+        if(isTouching(Void.class)){
+            hp -= 20;
+        }
+        
+        // If the player is alive, will attempt to heal 1hp every 2.5 seconds.  If it is dead, pause the world.
+        if(hp > 0){
+            if((healTimer.millisElapsed() > 2500) && (hp < 20)){
+                hp++;
+                healTimer.mark();
+            }
+        }
+        else{
+            world.pause();
+        }
     }
 
     /**
      * Check movement input 
-     * Uses a WASD system and checks respective conditions to see if they can be executed
-     * Can toggle sneaking and sprinting
+     * Uses a WAD system and checks respective conditions to see if they can be executed
      */
     public void checkKeys() {
         if (getWorld() instanceof GameWorld) {
@@ -159,8 +191,6 @@ public abstract class Player extends SuperSmoothMover{
                     }
                 }
             }
-        } else {
-
         }
     }
 
@@ -199,7 +229,7 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2, Block.class);
         if(under != null) {
-            if(under instanceof Air) {
+            if(under instanceof Air || under.isLiquid()) {
                 return false;
             }
             else {
@@ -217,7 +247,7 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean headClear(){
         Block above = (Block) getOneObjectAtOffset(0, -(getImage().getHeight()/2+10), Block.class);
         if(above != null) {
-            if(above instanceof Air) {
+            if(above instanceof Air|| above.isLiquid()) {
                 return true;
             }
             else {
@@ -235,25 +265,25 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean rightClear(){ 
         Block right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/4, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getHeight()/4) * -1, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, getImage().getHeight()/2 - 5, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
         right = (Block) getOneObjectAtOffset(getImage().getWidth()/2 + 5, (getImage().getHeight()/2) * -1, Block.class);
         if(right != null) {
-            if(!(right instanceof Air)){
+            if(!(right instanceof Air|| right.isLiquid())){
                 return false;
             }
         }
@@ -268,25 +298,25 @@ public abstract class Player extends SuperSmoothMover{
     protected boolean leftClear(){
         Block left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/4, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getHeight()/4) * -1, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, getImage().getHeight()/2 - 5, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
         left = (Block) getOneObjectAtOffset((getImage().getWidth()/2 + 5) * -1, (getImage().getHeight()/2) * -1, Block.class);
         if(left != null) {
-            if(!(left instanceof Air)){
+            if(!(left instanceof Air|| left.isLiquid())){
                 return false;
             }
         }
@@ -303,6 +333,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(1, 0);
             world.reverseShiftPlayer(1, 0);
+            totalXOffset--;
             if(!leftClear()){
                 return;
             }
@@ -318,6 +349,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(-1, 0);
             world.reverseShiftPlayer(-1, 0);
+            totalXOffset++;
             if(!rightClear()){
                 return;
             }
@@ -325,7 +357,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Accelerate downwards to fall.
+     * Checks if the player should fall
      */
     protected void checkFalling() {
         if(onGround()) {
@@ -343,16 +375,18 @@ public abstract class Player extends SuperSmoothMover{
         yVelocity = yVelocity + acceleration;
         world.shiftWorld(0, - yVelocity);
         world.reverseShiftPlayer(0, -yVelocity + 0.05);
+        totalYOffset += yVelocity;
     }
 
     /**
-     * Makes the player jump.
+     * Makes the player jump by giving it a small amount of velocity in the y-axis
      */
     protected void jump() {
         GameWorld world = (GameWorld) getWorld();
         yVelocity -= 4.4;
         world.shiftWorld(0, -yVelocity);
         world.reverseShiftPlayer(0, -yVelocity);
+        totalYOffset += yVelocity;
     }
 
     /**
@@ -431,11 +465,37 @@ public abstract class Player extends SuperSmoothMover{
     
             // Check if there is a block at the current position
             Block block = (Block) getOneObjectAtOffset((int) Math.round(currentX - playerX), (int) Math.round(currentY - playerY), Block.class);
-            if (block != null && block != targetBlock && !(block instanceof Air)) {
+            if (block != null && block != targetBlock && !(block instanceof Air|| block.isLiquid())) {
                 return false; // Block is obstructing the view
             }
         }
         return true; // No obstructions
+    }
+    
+    /**
+     * Knockbacks the player in a direction
+     * Will be stopped pre-emptively if it hits a wall
+     */
+    public void knockBack(int direction){
+        GameWorld world = (GameWorld) getWorld();
+        if(direction == 1){
+            for(int i = 0; i < 20; i++){
+                if(leftClear()){
+                    world.shiftWorld(1, 0);
+                    world.reverseShiftPlayer(1, 0);
+                    totalXOffset--;
+                }
+            }
+        }
+        else if(direction == 2){
+            for(int i = 0; i < 20; i++){
+                if(rightClear()){
+                    world.shiftWorld(-1, 0);
+                    world.reverseShiftPlayer(-1, 0);
+                    totalXOffset++;
+                }
+            }    
+        }
     }
     
     /**
@@ -445,9 +505,24 @@ public abstract class Player extends SuperSmoothMover{
      */
     public void doDamage(int damage) {
         this.hp -= damage;
-        if (hp <= 0) {
-            getWorld().removeObject(this);
-        }
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the x-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalXOffset(){
+        return (int) totalXOffset;
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the y-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalYOffset(){
+        return (int) totalYOffset;
     }
     
     /**
@@ -457,6 +532,15 @@ public abstract class Player extends SuperSmoothMover{
      */
     public double getMoveSpeed() {
         return this.moveSpeed;
+    }
+    
+    /**
+     * Gets the amount of damage the player does
+     * 
+     * @return the damage the stat
+     */
+    public static int getDamage(){
+        return damage;
     }
     
     /**
@@ -528,4 +612,5 @@ public abstract class Player extends SuperSmoothMover{
     public void deactivate() {
         activated = false;
     }
+    
 }

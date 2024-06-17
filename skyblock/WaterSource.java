@@ -1,13 +1,8 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(water)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * The source of all water
+ * Creates waterstreams that flow and spread
  * 
  * @author Nick
  * @version (a version number or a date)
@@ -22,12 +17,16 @@ public class WaterSource extends Block {
 
         if (water.getHeight() != 64) {
             water.scale(64, 64);
+            water.setTransparency(220);
         }
         setImage(water);
         actNum = 0;
         isRemoved = false;
     }
 
+    /**
+     * Physics for water movement
+     */
     public void act() {
         actNum++;
         //set the flowrate

@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class ColeOre here.
+ * Write a description of class CoalOre here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
@@ -18,7 +18,7 @@ public class CoalOre extends Block
         setImage(img);
         img2 = addBorder(img, black);
         isStone = true;
-        itemDrop = 10;
+        itemDrop = 11;
     }
 
     /**
