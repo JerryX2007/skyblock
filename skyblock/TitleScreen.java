@@ -12,6 +12,8 @@ public class TitleScreen extends World
 {
     private GreenfootImage background;
     private Button play;
+    private Button playFromSave;
+    private Button playNewWorld;
     private GameWorld game;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
@@ -36,11 +38,12 @@ public class TitleScreen extends World
             background = new GreenfootImage("midnight.png");
         }
         setBackground(background);
-        play = new Button("pfs", 3, ".png");
-
+        playNewWorld = new Button("NEW_WORLD", 3, ".png");
+        playFromSave = new Button("pfs", 3, ".png");
         Button.init();
 
-        addObject(play, getWidth() / 2, getHeight() / 2 + 150);
+        addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 200);
+        addObject(playFromSave, getWidth() / 2, getHeight() / 2 + 200);
         addObject(logo, getWidth() / 2, 100);
         prepare();
     }
@@ -110,13 +113,13 @@ public class TitleScreen extends World
      * Checks if buttons are pressed
      */
     private void checkClick(){
-        if(play.isPressed()){
+        if(playFromSave.isPressed()){
             game = new GameWorld(this);
             Greenfoot.setWorld(game);
             play.setPressedCondition(false);
         }
     }
-    
+
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.
