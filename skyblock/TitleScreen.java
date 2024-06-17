@@ -14,6 +14,8 @@ public class TitleScreen extends World
     private Button play;
     private Button playFromSave;
     private Button playNewWorld;
+    private Button credits;
+    private Button instructions;
     private GameWorld game;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
@@ -40,18 +42,21 @@ public class TitleScreen extends World
         setBackground(background);
         playNewWorld = new Button("NEW_WORLD", 3, ".png");
         playFromSave = new Button("pfs", 3, ".png");
+        credits = new Button("credits", 3, ".png");
+        instructions = new Button("Instructions", 3, ".png");
         Button.init();
 
         addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 150);
         addObject(playFromSave, getWidth() / 2, getHeight() / 2 + 200);
+        addObject(instructions, getWidth() / 2, getHeight() / 2 + 250);
+        addObject(credits, getWidth() / 2, getHeight() / 2 + 300);
         
         addObject(logo, getWidth() / 2, 100);
         prepare();
     }
 
     public void act(){
-        checkClickFromSave();
-        checkClickNewWorld();
+        checkIfPressed();
         startMusic();
     }
 
@@ -111,10 +116,18 @@ public class TitleScreen extends World
         }
     }
 
+    
     /**
      * Checks if buttons are pressed
      */
-    private void checkClickNewWorld(){
+    private void checkIfPressed()
+    {
+        if(playFromSave.isPressed()){
+            game = new GameWorld(this);
+            Greenfoot.setWorld(game);
+            playFromSave.setPressedCondition(false);
+        }
+        
         if(playNewWorld.isPressed()){
             game = new GameWorld(this);
             game.initializeGrid();
@@ -122,16 +135,21 @@ public class TitleScreen extends World
             Greenfoot.setWorld(game);
             playNewWorld.setPressedCondition(false);
         }
-    }
-
-        /**
-     * Checks if buttons are pressed
-     */
-    private void checkClickFromSave(){
-        if(playFromSave.isPressed()){
+        
+        if(instructions.isPressed()){
             game = new GameWorld(this);
+            game.initializeGrid();
+            game.prepareWorld();
             Greenfoot.setWorld(game);
-            playFromSave.setPressedCondition(false);
+            playNewWorld.setPressedCondition(false);
+        }
+        
+        if(credits.isPressed()){
+            game = new GameWorld(this);
+            game.initializeGrid();
+            game.prepareWorld();
+            Greenfoot.setWorld(game);
+            playNewWorld.setPressedCondition(false);
         }
     }
     
