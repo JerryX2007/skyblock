@@ -151,9 +151,6 @@ public class CraftingSystem extends GUI
         world.removeObject(outputSlot);
     }
     
-    public void setVisible(boolean state) {
-        isVisible = state;
-    }
     
     /**
      * Manages the items between the player's inventory and the chest.
