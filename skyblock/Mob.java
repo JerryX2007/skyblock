@@ -56,11 +56,19 @@ public abstract class Mob extends SuperSmoothMover{
         attackCD.mark();
     }
     
+    /**
+     * Perform tasks based on current condition
+     * 
+     * If it is hostile, will attempt to find players to attack
+     * If it is peaceful, will flee when attacked
+     * Both types will wander around with nothing to do
+     */
     public void act(){
         if(fleeTimer.millisElapsed() > 2000){
             isFleeing = false;
         }
         
+        // Actions to perform for a hostile mob
         if(isHostile){
             if(hasTarget()){
                 hunt();
@@ -71,6 +79,7 @@ public abstract class Mob extends SuperSmoothMover{
             pursue();
         }
         
+        // Actions to perform for a peaceful mob
         if(!isHostile){
             if(isFleeing){
                 flee();
@@ -80,14 +89,17 @@ public abstract class Mob extends SuperSmoothMover{
             }
         }
         
+        // Update world conditions and check for attack/damage
         checkFalling();
         tryDamageMe();
         attack();
         
+        // Instantly kill self when touching void
         if(isTouching(Void.class)){
             health -= 20;
         }
         
+        // Drop items and remove self upon death
         if(health <= 0){
             drop();
             getWorld().removeObject(this);
@@ -498,6 +510,11 @@ public abstract class Mob extends SuperSmoothMover{
         setLocation(getX(), getY() + yVelocity);
     }
     
+    /**
+     * Gets the damage the mob does
+     * 
+     * @return the amount of damage
+     */
     protected int getDamage(){
         return damage;
     }

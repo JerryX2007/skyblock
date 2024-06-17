@@ -17,6 +17,13 @@ import java.util.Random;
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
+ * The player moves using WAD and shifts the world instead of moving itself
+ * Use left click to mine blocks and attack mobs
+ * Use right click to interact with blocks such as inventory or place down blocks
+ * E to open inventory and close opened interfaces, such as crafting
+ * 
+ * Survive for as long as possible and build 
+ * 
  * @author Evan Xi, Benny Wang
  * @version 1.0.0
  */
@@ -51,15 +58,16 @@ public class GameWorld extends World {
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
         
-        // Optionally fill the grid with initial values or objects
+        // Load saved information
         loadWorld();
-        
-        checkSave();
+        loadInv();
+        loadChest();
 
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
+        
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
@@ -76,13 +84,6 @@ public class GameWorld extends World {
         
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
-        
-        if(firstAct){
-            loadInv();
-            loadChest();
-            firstAct = false;
-        }
-        pause();
 
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
@@ -109,13 +110,15 @@ public class GameWorld extends World {
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
 
+        // Checks for inputs and updates certain variables
         checkSave();
         checkReset();
         checkTime();
         checkPause();
         
+        // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
-            //attemptSpawn();
+            attemptSpawn();
         }        
     }
 
@@ -397,7 +400,6 @@ public class GameWorld extends World {
      */
     private void prepareWorld() {
         updateBlock(42, 18, new Chest(this));
-        updateBlock(42, 17, new Chest(this));
         updateBlock(44, 18, new Chest(this));
         updateBlock(45, 18, new CraftingTable(this));
         for (int i = 42; i < 58; i++) {
@@ -429,6 +431,10 @@ public class GameWorld extends World {
         }
     }
 
+    /**
+     * Loads world information from the saved text file
+     * If there is no saved word, create one.
+     */
     private void loadWorld(){
         try{
             s = new Scanner(new File("saves/world_info.txt"));
@@ -442,14 +448,18 @@ public class GameWorld extends World {
             refreshWorld();
         }
         catch(FileNotFoundException e){
+            initializeGrid();
             prepareWorld();
-        } catch(NullPointerException e){
+        } 
+        catch(NullPointerException e){
+            initializeGrid();
             prepareWorld();
         }
-
-        
     }
 
+    /**
+     * Placeholder code for world reset
+     */
     private void checkReset(){
         if(Greenfoot.isKeyDown("l")){
             initializeGrid();
@@ -457,6 +467,10 @@ public class GameWorld extends World {
         }
     }
 
+    /**
+     * Saves the world to a text file
+     * Converts all blocks into their respective String names
+     */
     private void saveWorld(){
         try{
             FileWriter f = new FileWriter("saves/world_info.txt");
@@ -479,6 +493,9 @@ public class GameWorld extends World {
         }
     }
     
+    /**
+     * Gets all the chests in the world and saves them into separate text files
+     */
     private void saveChest(){
         try{
             int x = 0;
@@ -497,17 +514,16 @@ public class GameWorld extends World {
                         pWriter.close();
                     }
                 }
-            }
-
-            
-            
-            
+            } 
         }
         catch(IOException e){
 
         }
     }
     
+    /**
+     * Loads information from all chests and places them in their respective places
+     */
     private void loadChest(){
         try{
             int x = 0;
@@ -537,14 +553,17 @@ public class GameWorld extends World {
                         x++;
                     }
                 }
-            }
-            
+            }            
         }
         catch(IOException e){
-            //System.out.println("Error: " + e);
+            System.out.println("Error: " + e);
         }
     }
 
+    /**
+     * Placeholder key for saving the world
+     * Should be replaced by a button during pause screen
+     */
     private void checkSave(){
         if(Greenfoot.isKeyDown("k")){
             saveWorld();
@@ -554,11 +573,19 @@ public class GameWorld extends World {
         }
     }
 
+    /**
+     * Finds the total number of mobs in the world
+     * 
+     * @return the number of mobs found
+     */
     private int totalMobs(){
         ArrayList<Mob> mobList = (ArrayList<Mob>) getObjects(Mob.class);
         return mobList.size();
     }
 
+    /**
+     * Returns a Block representation of strings, used when loading information from text files
+     */
     private Block toBlock(String name){
         Block block = new Air();
 
@@ -589,14 +616,40 @@ public class GameWorld extends World {
         else if(name.equals("sapling")){
             block = new Sapling();
         }
+        else if(name.equals("iron_ore")){
+            block = new IronOre();
+        }
+        else if(name.equals("tnt")){
+            block = new TNT();
+        }
+        else if(name.equals("coal ore")){
+            block = new CoalOre();
+        }
+        else if(name.equals("torch")){
+            block = new TorchBlock();
+        }
+        else if(name.equals("void")){
+            block = new Void();
+        }
+        else if(name.equals("WaterSource")){
+            block = new WaterSource();
+        }
+        else if(name.equals("LavaSource")){
+            block = new LavaSource();
+        }
 
         return block;
     }
 
+    /**
+     * Check for all blocks in the world and the 4 adjacent tiles
+     * If light level requirements are met and it can spawn on solid ground, triggers a chance to spawn the mob
+     */
     private void attemptSpawn(){
         Random random = new Random();        
         for(int i = 1; i < 99; i++){
             for(int j = 1; j < 35; j++){
+                // Checks for the tile and 4 tiles surrounding it
                 Block block1 = grid[i][j];
                 Block block2 = grid[i][j + 1];
                 Block block3 = grid[i][j - 1];
@@ -605,7 +658,8 @@ public class GameWorld extends World {
                 if(!(block2.getName().equals("air"))){
                     if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
                         if(block1.getBrightness() <= 2){
-                            int choice = random.nextInt(20000);
+                            int choice = random.nextInt(20000); // Chance of mob spawn
+                            // Adjust location based on player offset
                             if(choice == 1){
                                 addObject(new Sheep(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
@@ -614,7 +668,8 @@ public class GameWorld extends World {
                             }
                         }
                         if(getTime() > 2){
-                            int choice = random.nextInt(30000);
+                            int choice = random.nextInt(30000); // Chance of mob spawn
+                            // Adjust location based on player offset
                             if(choice == 1){
                                 addObject(new Zombie(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
@@ -654,10 +709,20 @@ public class GameWorld extends World {
         return player;
     }
 
+    /**
+     * Gets the grid in the world system
+     * 
+     * @return the grid returned
+     */
     public Block[][] getGrid() {
         return grid;
     }
 
+    /**
+     * Gets all actors in the world
+     * 
+     * @return an ArrayList of all actors
+     */
     public ArrayList<Actor> getActors() {
         return new ArrayList<>(getObjects(Actor.class));
     }

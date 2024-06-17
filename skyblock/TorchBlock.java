@@ -13,7 +13,7 @@ public class TorchBlock extends Block
     private GreenfootImage img2;
 
     public TorchBlock(){
-        super(brown, 0.1, "torch_block");
+        super(brown, 0.1, "torch");
         img = new GreenfootImage("block/Torch_Block.png");
         img.scale(32,32);
         setImage(img);

@@ -53,7 +53,7 @@ public class Creeper extends Mob{
     }
     
     /**
-     * Override damage with explosion effect
+     * Override damage with AOE damage instead of contact damage
      */
     public void attack(){
         List<Player> playersInRange = getObjectsInRange(64, Player.class);
@@ -63,6 +63,9 @@ public class Creeper extends Mob{
         }
     }
     
+    /**
+     * Explodes and deals massive damage to a player within radius
+     */
     private void promptExplosion(){
         if(exploding){
             List<Player> playersInRange = getObjectsInRange(128, Player.class);
