@@ -16,8 +16,6 @@ public class ChestGUI extends GUI {
     private int tempX;
     private int tempY;
     private boolean keyPreviouslyDown;
-    protected static int counter = 0;
-    private int num;
 
     /**
      * Constructor for the ChestGUI class.
@@ -42,8 +40,6 @@ public class ChestGUI extends GUI {
         }
         xAdjust = 0;
         yAdjust = 0;
-        num = counter;
-        counter++;
     }
 
     /**

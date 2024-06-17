@@ -20,7 +20,7 @@ public class OutputSlot extends Item
      * @param item The item to be placed in this output slot initially.
      */
     public OutputSlot(World world, int X, int Y) {
-        super("block/leaves.png", 64, 64, world, false, X, Y, "air", false);
+        super("block/air.png", 64, 64, world, false, X, Y, "urmomlol", false);
         image  = "block/air.png";
     }
     
@@ -30,9 +30,7 @@ public class OutputSlot extends Item
      */
     public void act()
     {
-        //if(Greenfoot.isClicked(this)) {
-            
-        //}
+        super.act();
     }
 
     /**

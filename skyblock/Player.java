@@ -152,6 +152,7 @@ public abstract class Player extends SuperSmoothMover{
                             activated = true;
                             craftingTable.openCraftingSystem();
                             getWorld().addObject(craftingTable.getCraftingSystem(), getWorld().getWidth()/2, getWorld().getHeight()/2);
+                            inventory.act();
                             GameWorld.setGUIOpened(true);
                             GameWorld.setOpenCrafting(true);
                         }

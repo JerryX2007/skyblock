@@ -96,7 +96,6 @@ public class GameWorld extends World {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-
             } 
             for(Label l : getObjects(Label.class)){
                 removeObject(l);
@@ -113,7 +112,7 @@ public class GameWorld extends World {
         
         if(totalMobs() < 20){
             attemptSpawn();
-        }        
+        }
     }
 
     /**
@@ -193,7 +192,7 @@ public class GameWorld extends World {
      * @param open New value for openCrafting.
      */
     public static void setOpenCrafting(boolean open) {
-        openCrafting = true;
+        openCrafting = open;
     }
 
     /**

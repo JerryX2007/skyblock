@@ -1,5 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-
+import java.util.ArrayList;
 /**
  * CraftingSystem class handles the crafting mechanics in the game.
  * It checks for specific crafting recipes and updates the output slot with the crafted item.
@@ -13,12 +13,13 @@ public class CraftingSystem extends GUI
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
-    private Item outputItem;
-    private OutputSlot outputSlot;
+    private Item outputSlot;
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
-    private boolean keyPreviouslyDown;
+    private boolean key1PreviouslyDown;
+    private boolean crafted;
+    private ArrayList<CraftingSlot> affectedSlots;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -45,8 +46,9 @@ public class CraftingSystem extends GUI
         isVisible = false;
         xAdjust = 0;
         yAdjust = 0;
-        
+        crafted = false;
         outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116);
+        affectedSlots = new ArrayList<CraftingSlot>();
     }
     
     /**
@@ -54,18 +56,18 @@ public class CraftingSystem extends GUI
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act() {
+        boolean key1CurrentlyDown = Greenfoot.isKeyDown("e");
+        checkCrafting();
         
-        boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
-        manageItems();
-        if(GameWorld.getGUIOpened() && GameWorld.getOpenCrafting() && keyCurrentlyDown && !keyPreviouslyDown){
+        //manageItems();
+        if(!GameWorld.getOpenCrafting() && GameWorld.getGUIOpened() && key1CurrentlyDown && !key1PreviouslyDown){
             GameWorld.setGUIOpened(false);
-            GameWorld.setOpenChest(false);
+            GameWorld.setOpenCrafting(false);
             removeCrafting();
             Player.setActivated(false);
             world.removeObject(this);
         }
-        keyPreviouslyDown = keyCurrentlyDown;
-        
+        key1PreviouslyDown = key1CurrentlyDown;
     }
     
     public void addCrafting() {
@@ -109,8 +111,9 @@ public class CraftingSystem extends GUI
         xAdjust = 0;
         yAdjust = 0;
         
+        outputSlot = new Empty(16, 16, world, 772, world.getHeight()/2 - 116);
         world.addObject(outputSlot, 772, world.getHeight()/2 - 116);
-        isVisible = true;
+        GameWorld.setOpenCrafting(true);
     }
     
     public void removeCrafting() {
@@ -123,7 +126,8 @@ public class CraftingSystem extends GUI
         // Remove player's items from the crafting table
         for(CraftingSlot[] arr : itemArray) {
             for(CraftingSlot cs : arr) {
-                world.removeObject(cs);
+                world.removeObject(cs.getItem());
+                cs.getItem().removeNum();
             }
         }
         
@@ -133,6 +137,16 @@ public class CraftingSystem extends GUI
                 world.removeObject(slots[j][i]);
             }
         }
+        
+        // Move items from the chest to the player's inventory if they are below a certain y-coordinate
+        for (int i = 0; i < craftingSlotItems.size(); i++) {
+            Inventory.getItemsList().add(craftingSlotItems.get(i));
+            craftingSlotItems.remove(craftingSlotItems.get(i));
+        }
+        
+        world.removeObject(outputSlot);
+        outputSlot.removeNum();
+        world.removeObject(outputSlot);
     }
     
     public void setVisible(boolean state) {
@@ -143,6 +157,7 @@ public class CraftingSystem extends GUI
      * Manages the items between the player's inventory and the chest.
      * Moves items between the player's inventory and the chest based on their position.
      */
+    /*
     private void manageItems() {
         // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
         for (int i = 0; i < Inventory.getItemsList().size(); i++) {
@@ -159,7 +174,7 @@ public class CraftingSystem extends GUI
                 craftingSlotItems.remove(craftingSlotItems.get(i));
             }
         }
-    }
+    } */
     
     /**
      * Checks the crafting grid for valid crafting recipes and updates the output slot with the crafted item.
@@ -167,14 +182,17 @@ public class CraftingSystem extends GUI
     private void checkCrafting() {
         //Hard code recipes
         //Also try to hard code the possible positions of every single combination ;-;
-        
-        if (isCraftingPlanks()) {
-            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank", true);
-            increaseItemAmount(outputItem, 3);
-            outputSlot.setItem(outputItem);
-            outputItem = null;
-            
-        } 
+        if(!crafted) {
+            if (isCraftingPlanks()) {
+                outputSlot = new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true);
+                increaseItemAmount(outputSlot, 3);
+                world.removeObject(outputSlot);
+                world.addObject(outputSlot, 772, 268);
+                crafted = true;
+                
+            }
+        }
+        /*
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
             outputItem = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
@@ -294,7 +312,7 @@ public class CraftingSystem extends GUI
         
         else {
             outputItem = null;
-        }
+        } */
         
     }
     
@@ -306,7 +324,7 @@ public class CraftingSystem extends GUI
      * @return True if the slot is empty, false otherwise.
      */
     private boolean isEmpty(int x, int y) {
-        return itemArray[y][x].getItem() instanceof Empty;
+        return itemArray[y][x].getItem().getType().equals("air");
     }
     
     /**
@@ -443,15 +461,6 @@ public class CraftingSystem extends GUI
     }
     
     /**
-     * Gets the output item from the crafting process.
-     * 
-     * @return The crafted item.
-     */
-    public Item getOutputItem() {
-        return outputItem;
-    }
-    
-    /**
      * Checks if the current grid configuration matches the recipe for crafting planks.
      * 
      * @return True if the recipe for planks is satisfied, false otherwise.
@@ -462,13 +471,15 @@ public class CraftingSystem extends GUI
          * #
          */
         boolean satisfied = false;
+        System.out.println(!isEmpty(0, 0));
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
                 if (!isEmpty(x, y)) {
                     if(satisfied) {
+                        System.out.println("foundAnother:");
                         return false; //If there is another block in the crafting system return false
                     }
-                    if(getSlot(x, y).getItem().getType().equals("log")) {
+                    if(getSlot(x, y).getItem().getType().equals("wood")) {
                         satisfied = true;
                     }
                 }
