@@ -20,7 +20,7 @@ public class OutputSlot extends Item
      * @param item The item to be placed in this output slot initially.
      */
     public OutputSlot(World world, int X, int Y, Item item) {
-        super("block/air.png", 64, 64, world, false, X, Y, "urmomlol", false);
+        super("block/air.png", 64, 64, world, false, X, Y, "air", false);
         image  = "block/air.png";
         this.item = item;
     }
