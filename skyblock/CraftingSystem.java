@@ -63,7 +63,7 @@ public class CraftingSystem extends GUI
         boolean key1CurrentlyDown = Greenfoot.isKeyDown("e");
         checkCrafting();
         
-        //manageItems();
+        manageItems();
         if(!GameWorld.getOpenCrafting() && GameWorld.getGUIOpened() && key1CurrentlyDown && !key1PreviouslyDown){
             GameWorld.setGUIOpened(false);
             GameWorld.setOpenCrafting(false);
@@ -142,10 +142,9 @@ public class CraftingSystem extends GUI
             }
         }
         
-        // Move items from the chest to the player's inventory if they are below a certain y-coordinate
-        for (int i = 0; i < craftingSlotItems.size(); i++) {
-            Inventory.getItemsList().add(craftingSlotItems.get(i));
-            craftingSlotItems.remove(craftingSlotItems.get(i));
+        for (Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
         }
         
         world.removeObject(outputSlot.getItem());
@@ -158,8 +157,9 @@ public class CraftingSystem extends GUI
      * Manages the items between the player's inventory and the chest.
      * Moves items between the player's inventory and the chest based on their position.
      */
-    /*
+    
     private void manageItems() {
+        
         // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
         for (int i = 0; i < Inventory.getItemsList().size(); i++) {
             if (Inventory.getItemsList().get(i).getY() <= 366) {
@@ -170,12 +170,12 @@ public class CraftingSystem extends GUI
         
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         for (int i = 0; i < craftingSlotItems.size(); i++) {
-            if (contents.get(i).getY() > 366) {
+            if (craftingSlotItems.get(i).getY() > 366) {
                 Inventory.getItemsList().add(craftingSlotItems.get(i));
                 craftingSlotItems.remove(craftingSlotItems.get(i));
             }
         }
-    } */
+    } 
     
     /**
      * Checks the crafting grid for valid crafting recipes and updates the output slot with the crafted item.
