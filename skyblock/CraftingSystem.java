@@ -143,8 +143,17 @@ public class CraftingSystem extends GUI
         }
         
         for (Item i : craftingSlotItems) {
-            world.removeObject(i);
-            i.removeNum();
+            if(Inventory.hasSpaceFor(i.getType())) {
+                Inventory.addItem(i.getType());
+                craftingSlotItems.remove(i);
+                i.removeNum();
+            }
+            else {
+                world.removeObject(i);
+                i.removeNum();
+                craftingSlotItems.remove(i);
+            }
+            
         }
         
         world.removeObject(outputSlot.getItem());
@@ -167,6 +176,7 @@ public class CraftingSystem extends GUI
                 Inventory.removeItem(Inventory.getItemsList().get(i));
             }
         }
+        
         
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         for (int i = 0; i < craftingSlotItems.size(); i++) {
