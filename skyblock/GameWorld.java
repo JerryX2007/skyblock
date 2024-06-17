@@ -237,7 +237,7 @@ public class GameWorld extends World {
     /**
      * Initializes the grid with air blocks.
      */
-    private void initializeGrid() {
+    public void initializeGrid() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
                 updateBlock(i, j, new Air());
@@ -406,7 +406,7 @@ public class GameWorld extends World {
      * Loads the initial island by placing associated blocks.
      * Called when the world is generated.
      */
-    private void prepareWorld() {
+    public void prepareWorld() {
         updateBlock(42, 18, new Chest(this));
         updateBlock(44, 18, new Chest(this));
         updateBlock(45, 18, new CraftingTable(this));

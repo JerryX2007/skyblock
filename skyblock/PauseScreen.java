@@ -21,10 +21,10 @@ import java.util.ArrayList;
  */
 public class PauseScreen extends World
 {
-    private Button menu = new Button("menu", 3, ".png");
+    private Button menu = new Button("SAVE_QUIT", 3, ".png");
     private TitleScreen titleScreen;
     private GameWorld world;
-    private Button resume = new Button("resume", 3, ".png");
+    private Button resume = new Button("RESUME", 3, ".png");
     private ArrayList<Actor> pauseLocation;
     private GreenfootImage overlay = new GreenfootImage(1260, 720);
     private ValueBox volumeSlider;

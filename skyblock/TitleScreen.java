@@ -42,14 +42,16 @@ public class TitleScreen extends World
         playFromSave = new Button("pfs", 3, ".png");
         Button.init();
 
-        addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 200);
+        addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 150);
         addObject(playFromSave, getWidth() / 2, getHeight() / 2 + 200);
+        
         addObject(logo, getWidth() / 2, 100);
         prepare();
     }
 
     public void act(){
-        checkClick();
+        checkClickFromSave();
+        checkClickNewWorld();
         startMusic();
     }
 
@@ -112,14 +114,27 @@ public class TitleScreen extends World
     /**
      * Checks if buttons are pressed
      */
-    private void checkClick(){
-        if(playFromSave.isPressed()){
+    private void checkClickNewWorld(){
+        if(playNewWorld.isPressed()){
             game = new GameWorld(this);
+            game.initializeGrid();
+            game.prepareWorld();
             Greenfoot.setWorld(game);
-            play.setPressedCondition(false);
+            playNewWorld.setPressedCondition(false);
         }
     }
 
+        /**
+     * Checks if buttons are pressed
+     */
+    private void checkClickFromSave(){
+        if(playFromSave.isPressed()){
+            game = new GameWorld(this);
+            Greenfoot.setWorld(game);
+            playFromSave.setPressedCondition(false);
+        }
+    }
+    
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.
