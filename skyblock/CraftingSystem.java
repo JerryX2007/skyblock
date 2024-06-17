@@ -13,7 +13,7 @@ public class CraftingSystem extends GUI
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
-    private Item outputSlot;
+    private OutputSlot outputSlot;
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
@@ -21,6 +21,9 @@ public class CraftingSystem extends GUI
     private boolean crafted;
     private ArrayList<CraftingSlot> affectedSlots;
     private ArrayList<int[]> usedCoords;
+    private boolean needFour;
+    private ArrayList<Item> craftingSlotItems = new ArrayList<Item>();
+    private boolean initialized = false;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -48,9 +51,10 @@ public class CraftingSystem extends GUI
         xAdjust = 0;
         yAdjust = 0;
         crafted = false;
-        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116);
+        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116, new Empty(16, 16, world, 772, world.getHeight()/2-116));
         affectedSlots = new ArrayList<CraftingSlot>();
         usedCoords = new ArrayList<int[]>();
+        needFour = false;
     }
     
     /**
@@ -61,7 +65,7 @@ public class CraftingSystem extends GUI
         boolean key1CurrentlyDown = Greenfoot.isKeyDown("e");
         checkCrafting();
         
-        //manageItems();
+        
         if(!GameWorld.getOpenCrafting() && GameWorld.getGUIOpened() && key1CurrentlyDown && !key1PreviouslyDown){
             GameWorld.setGUIOpened(false);
             GameWorld.setOpenCrafting(false);
@@ -69,10 +73,60 @@ public class CraftingSystem extends GUI
             Player.setActivated(false);
             world.removeObject(this);
         }
+        manageItems();
         key1PreviouslyDown = key1CurrentlyDown;
     }
     
     public void addCrafting() {
+        /*
+        xAdjust = 0;
+        yAdjust = 0;
+        
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (i == 0) {
+                    world.addObject(slots[j][i], 424 + xAdjust, 588);
+                    xAdjust += 54;
+                } else {
+                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
+                    xAdjust += 54;
+                }
+            }
+            xAdjust = 0;
+            if (i != 0) {
+                yAdjust += 54;
+            }
+        }
+        xAdjust = 0;
+        yAdjust = 0;
+
+        for (Item i : Inventory.getItemsList()) {
+            world.addObject(i, i.getXPos(), i.getYPos());
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[i][j] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
+                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                if(!initialized) {
+                    craftingSlotItems.add(temp);
+                    initialized = true;
+                }
+                xAdjust += 54;
+            }
+            xAdjust = 0;
+            yAdjust += 54;
+        }
+
+        xAdjust = 0;
+        yAdjust = 0;
+        
+        outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
+        world.addObject(outputSlot, 772, world.getHeight() / 2 - 116);
+        GameWorld.setOpenCrafting(true);
+        */
+        
         xAdjust = 0;
         yAdjust = 0;
         
@@ -100,67 +154,69 @@ public class CraftingSystem extends GUI
             world.addObject(i, i.getXPos(), i.getYPos());
         }
         
-        // Add crafting slots to the world
+        // Add crafting grid slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                world.addObject(itemArray[i][j].getItem(), 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                Item temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[i][j].setItem(temp);
+                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
             yAdjust += 54;
         }
-        
         xAdjust = 0;
         yAdjust = 0;
         
-        outputSlot = new Empty(16, 16, world, 772, world.getHeight()/2 - 116);
-        world.addObject(outputSlot, 772, world.getHeight()/2 - 116);
+        // Add items in the chest to the world
+        for (Item i : craftingSlotItems) {
+            world.addObject(i, i.getXPos(), i.getYPos());
+        }
+        
+        
+        outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
+        world.addObject(outputSlot.getItem(), 772, world.getHeight() / 2 - 116);
         GameWorld.setOpenCrafting(true);
     }
-    
+
     public void removeCrafting() {
-        // Remove player's items from the world
-        for (Item i : Inventory.getItemsList()) {
-            world.removeObject(i);
-            i.removeNum();
-        }
         
-        // Remove player's items from the crafting table
-        for(CraftingSlot[] arr : itemArray) {
-            for(CraftingSlot cs : arr) {
-                world.removeObject(cs.getItem());
-                cs.getItem().removeNum();
-            }
-        }
-        
-        // Remove player's inventory slots from the world
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 9; j++) {
                 world.removeObject(slots[j][i]);
             }
         }
-        
-        // Move items from the chest to the player's inventory if they are below a certain y-coordinate
-        for (int i = 0; i < craftingSlotItems.size(); i++) {
-            Inventory.getItemsList().add(craftingSlotItems.get(i));
-            craftingSlotItems.remove(craftingSlotItems.get(i));
+
+        for (Item i : Inventory.getItemsList()) {
+            world.removeObject(i);
+            i.removeNum();
         }
         
-        world.removeObject(outputSlot);
-        outputSlot.removeNum();
+        
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                world.removeObject(itemArray[i][j].getItem());
+            }
+        }
+        
+        for (Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
+        }
+        
+        world.removeObject(outputSlot.getItem());
+        outputSlot.getItem().removeNum();
         world.removeObject(outputSlot);
     }
     
-    public void setVisible(boolean state) {
-        isVisible = state;
-    }
     
     /**
      * Manages the items between the player's inventory and the chest.
      * Moves items between the player's inventory and the chest based on their position.
      */
-    /*
+    
     private void manageItems() {
+        
         // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
         for (int i = 0; i < Inventory.getItemsList().size(); i++) {
             if (Inventory.getItemsList().get(i).getY() <= 366) {
@@ -169,14 +225,21 @@ public class CraftingSystem extends GUI
             }
         }
         
+        
+        System.out.println(craftingSlotItems.size());
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
-        for (int i = 0; i < craftingSlotItems.size(); i++) {
-            if (contents.get(i).getY() > 366) {
-                Inventory.getItemsList().add(craftingSlotItems.get(i));
-                craftingSlotItems.remove(craftingSlotItems.get(i));
+        try {
+            for (int i = 0; i < craftingSlotItems.size(); i++) {
+                if (craftingSlotItems.get(i).getY() > 366) {
+                    Inventory.getItemsList().add(craftingSlotItems.get(i));
+                    craftingSlotItems.remove(craftingSlotItems.get(i));
+                }
             }
+        } catch (IllegalStateException e) {
+            System.out.println("fail");
         }
-    } */
+        
+    } 
     
     /**
      * Checks the crafting grid for valid crafting recipes and updates the output slot with the crafted item.
@@ -186,7 +249,8 @@ public class CraftingSystem extends GUI
         //Also try to hard code the possible positions of every single combination ;-;
         if(!crafted) {
             if (isCraftingPlanks()) {
-                outputSlot = new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                needFour = true;
                 increaseItemAmount(outputSlot, 3);
                 crafted = true;
                 
@@ -195,13 +259,18 @@ public class CraftingSystem extends GUI
         
         // Check for stick recipe (two planks vertically aligned)
         else if (isCraftingSticks()) {
-            outputSlot = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
+            //outputSlot = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
             increaseItemAmount(outputSlot, 3);
             crafted = true;
         }
         if(crafted) {
             update(outputSlot);
-            crafted = false;
+            if(needFour) {
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+            }
+            needFour = false;
         }
         /*
         else if (isCraftingSword("plank")) {
@@ -478,7 +547,6 @@ public class CraftingSystem extends GUI
          * #
          */
         boolean satisfied = false;
-        System.out.println(!isEmpty(0, 0));
         for (int y = 0; y < GRID_SIZE; y++) {
             for (int x = 0; x < GRID_SIZE; x++) {
                 if (!isEmpty(x, y)) {
