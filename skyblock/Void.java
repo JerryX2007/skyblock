@@ -13,7 +13,7 @@ public class Void extends Block
 
     public Void(){
         super(brown,1000000000, "void");
-        setImage((GreenfootImage)null);
+        setImage(new GreenfootImage(16, 16));
     }
 
     /**
