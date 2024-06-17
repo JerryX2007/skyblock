@@ -82,9 +82,12 @@ public class WaterStream extends WaterSource {
     private void resizeImages() {
         if (normal.getHeight() != 64) {
             normal.scale(64, 64);
+            normal.setTransparency(220);
             for (int i = 0; i < left.length; i++) {
                 left[i].scale(64, 64);
+                left[i].setTransparency(220);
                 right[i].scale(64, 64);
+                right[i].setTransparency(220);
             }
         }
     }
