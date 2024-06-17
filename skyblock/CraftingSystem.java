@@ -225,8 +225,6 @@ public class CraftingSystem extends GUI
             }
         }
         
-        
-        System.out.println(craftingSlotItems.size());
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         try {
             for (int i = 0; i < craftingSlotItems.size(); i++) {
@@ -236,7 +234,7 @@ public class CraftingSystem extends GUI
                 }
             }
         } catch (IllegalStateException e) {
-            System.out.println("fail");
+            //System.out.println("fail");
         }
         
     } 
