@@ -261,6 +261,10 @@ public class CraftingSystem extends GUI
             increaseItemAmount(outputSlot, 3);
             crafted = true;
         }
+        else if (isCraftingTorch()) {
+            world.addObject(new Torch(world, 772, 268), 772, 268);
+            crafted = true; //Crafting is true or not. After crafting is true, just make it so that the crafting wont occur again. 
+        }
         if(crafted) {
             update(outputSlot);
             if(needFour) {
@@ -270,6 +274,7 @@ public class CraftingSystem extends GUI
             }
             needFour = false;
         }
+        
         /*
         else if (isCraftingSword("plank")) {
             outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
