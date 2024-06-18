@@ -1,10 +1,9 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class WoodPlank here.
+ * Write a description of class TNT here.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * At the moment, TNT is more of a cosmetic block and does not explode (due to the lack of flint & steel)
  */
 public class TNT extends Block
 {
