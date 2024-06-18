@@ -188,6 +188,7 @@ public class Steve extends Player
         int time = actNum/10;//swing speed
         double radians = Math.sin(time);//swing angle
         double oppositeRadians = Math.sin(time+ Math.PI);
+        //show the animation differenty depending on the players direction, if its punching or if it is holding an item
         if(isPunching && direction){
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
@@ -197,6 +198,19 @@ public class Steve extends Player
             rightArm.setRotation(40*radians);
             leftLeg.setRotation(45*radians);
             rightLeg.setRotation(45*oppositeRadians);
+        }
+        else if(isHoldingItem && direction){
+            rightArm.setRotation(45);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(40*oppositeRadians);
+
+        }
+        else if(isHoldingItem && !direction){
+            rightArm.setRotation(40*radians);
+            leftLeg.setRotation(45*radians);
+            rightLeg.setRotation(45*oppositeRadians);
+            leftArm.setRotation(225);
         }
         else{
             rightArm.setRotation(40*radians);
@@ -263,38 +277,37 @@ public class Steve extends Player
     /**
      * makes steve holds an item
      */
-    public void holdItem(){
+    /**
+     * Makes the player hold an item.
+     */
+    public void holdItem() {
         String key = Greenfoot.getKey();
         int numberPressed;
-        //check if player can hold the item
+        // Check if player can hold the item
         if (key != null && key.matches("[1-9]")) {
-            numberPressed =  (int)Integer.parseInt(key);
-            if(heldItems.size() > 0 && numberPressed < heldItems.size() - 1){
-                //if the number key pressed on a item that exist, set it to that item
+            numberPressed = Integer.parseInt(key) - 1;  // Convert to 0-based index
+            if (numberPressed < heldItems.size()) {
+                // If the number key pressed on an item that exists, set it to that item
                 //itemInHand = heldItems.get(numberPressed);
-                itemInHand = new Bones(32, 32, getWorld(), 0,0);
-            }
-            else{
-                //else make an empty item
-                //itemInHand = new Empty(32, 32, getWorld(), 0,0);
-                itemInHand = new Bones(32, 32, getWorld(), 0,0);
+                itemInHand = new Bones(32, 32, getWorld(), 0, 0);
+            } else {
+                // Else make an empty item
+                //itemInHand = new Empty(32, 32, getWorld(), 0, 0);
+                itemInHand = new Bones(32, 32, getWorld(), 0, 0);
             }
         }
-        //check if player's hand is empty
-        if(itemInHand != null && !(itemInHand instanceof Empty)){
+        // Check if player's hand is empty
+        if (itemInHand != null && !(itemInHand instanceof Empty)) {
             isHoldingItem = true;
-        }
-        else{
+        } else {
             isHoldingItem = false;
         }
-        //let the player hold the item if it exists
-        if(isHoldingItem){
-            if(direction){
-                itemInHand.setLocation(getX() + 32, getY()-16);
-
-            }
-            else{
-                itemInHand.setLocation(getX() - 32, getY()-16);
+        // Let the player hold the item if it exists
+        if (isHoldingItem) {
+            if (direction) {
+                itemInHand.setLocation(getX() + 32, getY() - 16);
+            } else {
+                itemInHand.setLocation(getX() - 32, getY() - 16);
             }
         }
     }
