@@ -70,6 +70,8 @@ public class GameWorld extends World {
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
 
+        
+        
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
