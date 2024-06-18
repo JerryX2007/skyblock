@@ -154,7 +154,7 @@ public class GameWorld extends World {
         
         
         
-        if(timer.millisElapsed() > 6000 && counter == 0){
+        if(timer.millisElapsed() > 600000 && counter == 0){
             addObject(winScreen, getWidth()/2, getHeight()/2);
             counter++;
             
