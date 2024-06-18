@@ -182,7 +182,6 @@ public class GameWorld extends World {
             brightCount++;
         }
         
-        System.out.println(darkCount + " " + brightCount);
     }
 
     /**
