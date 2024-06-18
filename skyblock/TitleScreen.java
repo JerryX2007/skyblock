@@ -235,7 +235,6 @@ public class TitleScreen extends World
         
         else if(playNewWorld.isPressed()){ // creates new world
             GameWorld.deleteStuff();
-            Greenfoot.delay(30);
             // game.clearWorld();
             game = new GameWorld(this);
             Greenfoot.setWorld(game);

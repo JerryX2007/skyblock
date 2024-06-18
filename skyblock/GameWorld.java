@@ -92,7 +92,6 @@ public class GameWorld extends World {
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
-        Greenfoot.delay(30);
     }
 
     /**
