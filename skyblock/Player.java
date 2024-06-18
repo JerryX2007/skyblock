@@ -45,12 +45,14 @@ public abstract class Player extends SuperSmoothMover{
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
+
     protected int hp; 
     
     protected static double totalXOffset;
     protected static double totalYOffset;
     
     SimpleTimer healTimer = new SimpleTimer();
+
 
     /**
      * Constructor for Player class.
@@ -159,6 +161,7 @@ public abstract class Player extends SuperSmoothMover{
                     moveLeft();
                     isMoving = true;
                 }
+
 
                 MouseInfo mi = Greenfoot.getMouseInfo();
 

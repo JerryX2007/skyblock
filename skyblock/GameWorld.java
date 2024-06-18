@@ -1,6 +1,11 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -467,7 +472,31 @@ public class GameWorld extends World {
      */
     public void checkReset(){
         initializeGrid();
+        Path directory = Paths.get("saves");
+
+        // Help from ChatGPT
+        // Delete all files and subdirectories in the specified directory
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path entry : stream) {
+                deleteRecursively(entry);
+            }
+            //System.out.println("All contents in the 'saves' folder have been deleted.");
+        } catch (IOException e) {
+            //System.err.println("An error occurred while deleting the contents of the directory.");
+        } 
         prepareWorld();
+    }
+    
+    // Help from ChatGPT
+    private static void deleteRecursively(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+                for (Path entry : entries) {
+                    deleteRecursively(entry);
+                }
+            }
+        }
+        Files.delete(path);
     }
 
     /**
@@ -559,7 +588,7 @@ public class GameWorld extends World {
             }            
         }
         catch(IOException e){
-            System.out.println("Error: " + e);
+            //System.out.println("Error: " + e);
         }
     }
 

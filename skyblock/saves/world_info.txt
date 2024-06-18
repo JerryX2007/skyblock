@@ -1781,7 +1781,7 @@ air
 air
 air
 air
-grass
+air
 dirt
 cobblestone
 cobblestone
@@ -1817,7 +1817,7 @@ leaf
 leaf
 air
 air
-air
+grass
 dirt
 cobblestone
 cobblestone
