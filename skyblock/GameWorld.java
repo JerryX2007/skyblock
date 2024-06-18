@@ -697,13 +697,12 @@ public class GameWorld extends World {
         MouseInfo mi = Greenfoot.getMouseInfo();
         if(mi != null){
             if(mi.getButton() == 3){
-                System.out.println("piss");
-                if(Inventory.getHeldItems() != null){
+                if(Inventory.hasHeldItem()){
                     
-                    //String placingBlock = Inventory.getHeldItems().get(0).getType();
-                    //Block block = toBlock(placingBlock);
-                    updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, new Log());
-                    //Inventory.removeItem(Inventory.getHeldItems().get(0));
+                    String placingBlock = Inventory.getHeldItems().get(0).getType();
+                    Block block = toBlock(placingBlock);
+                    updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, block);
+                    Inventory.removeItem(Inventory.getHeldItems().get(0));
                 }
             }                
         }     
