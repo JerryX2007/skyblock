@@ -478,6 +478,7 @@ public class GameWorld extends World {
         initializeGrid();
         Path directory = Paths.get("saves");
 
+        // Help from ChatGPT
         // Delete all files and subdirectories in the specified directory
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
@@ -490,6 +491,7 @@ public class GameWorld extends World {
         prepareWorld();
     }
     
+    // Help from ChatGPT
     private static void deleteRecursively(Path path) throws IOException {
         if (Files.isDirectory(path)) {
             try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
