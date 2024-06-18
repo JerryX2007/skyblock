@@ -288,6 +288,19 @@ public class Inventory extends GUI {
         tempItemsList.add(temp);
         addedYet = false;
     }
+    
+    public static boolean hasHeldItem(){
+        ArrayList<Item> b = new ArrayList<>(1);
+        for(Item i : itemsList){
+            if(i.getXPos() == heldItem[0].getXPos() && i.getYPos() == heldItem[0].getYPos()){
+                b.add(i);
+            }
+        }
+        if(b.size() > 0){
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Returns the number of empty slots in the given 2D array of slots.
