@@ -137,11 +137,16 @@ public class CraftingSystem extends GUI
                 world.removeObject(slots[j][i]);
             }
         }
-
-        for (Item i : Inventory.getItemsList()) {
-            world.removeObject(i);
-            i.removeNum();
+        
+        try {
+            for (Item i : Inventory.getItemsList()) {
+                world.removeObject(i);
+                i.removeNum();
+            }
+        } catch (IllegalStateException e) {
+            System.out.println("fail");
         }
+        
         
         
         for (int i = 0; i < GRID_SIZE; i++) {
@@ -168,16 +173,17 @@ public class CraftingSystem extends GUI
     
     private void manageItems() {
         
-        // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
-        for (int i = 0; i < Inventory.getItemsList().size(); i++) {
-            if (Inventory.getItemsList().get(i).getY() <= 366) {
-                craftingSlotItems.add(Inventory.getItemsList().get(i));
-                Inventory.removeItem(Inventory.getItemsList().get(i));
-            }
-        }
+        
         
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         try {
+            // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
+            for (int i = 0; i < Inventory.getItemsList().size(); i++) {
+                if (Inventory.getItemsList().get(i).getY() <= 366) {
+                    craftingSlotItems.add(Inventory.getItemsList().get(i));
+                    Inventory.removeItem(Inventory.getItemsList().get(i));
+                }
+            }
             for (int i = 0; i < craftingSlotItems.size(); i++) {
                 if (craftingSlotItems.get(i).getY() > 366) {
                     Inventory.getItemsList().add(craftingSlotItems.get(i));
