@@ -26,7 +26,7 @@ import java.util.Random;
  * Blocks don't place correctly at times
  * Java heapspace error (very rarely happens; can close and reopen program to reset)
  * 
- * @author Evan Xi, Benny Wang
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
  * @version 1.0.0
  */
 public class GameWorld extends World {
