@@ -22,12 +22,9 @@ import java.util.Random;
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
- * The player moves using WAD and shifts the world instead of moving itself
- * Use left click to mine blocks and attack mobs
- * Use right click to interact with blocks such as inventory or place down blocks
- * E to open inventory and close opened interfaces, such as crafting
- * 
- * Survive for as long as possible and build 
+ * Known bugs:
+ * Blocks don't place correctly at times
+ * Java heapspace error (very rarely happens; can close and reopen program to reset)
  * 
  * @author Evan Xi, Benny Wang
  * @version 1.0.0
@@ -64,9 +61,7 @@ public class GameWorld extends World {
         super(1280, 768, 1, false);
 
         // Load saved information
-        //loadWorld();
-        initializeGrid();
-        prepareWorld();
+        loadWorld();
         loadInv();
         loadChest();
 
@@ -81,6 +76,7 @@ public class GameWorld extends World {
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
+        
     }
 
     /**
