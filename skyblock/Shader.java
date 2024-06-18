@@ -1,9 +1,9 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Shader here.
+ * Places a semi-transparent version on blocks based on world lighting to create a night effect
  * 
- * @author (your name) 
+ * @author Evan Xi 
  * @version (a version number or a date)
  */
 public class Shader extends Actor{

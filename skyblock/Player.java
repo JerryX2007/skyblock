@@ -5,10 +5,20 @@ import java.util.ArrayList;
  * The Player superclass represents a player in the game. 
  * It provides methods for movement, interaction with objects, and other player-related functionalities.
  * 
+ * Uses A/D to move left and right
+ * Uses W or Space to jump
+ * Uses E to open inventory or close related interfaces
+ * 
+ * Will move the world instead of self
+ * 
+ * The player has 20hp initially indicated by a following health bar
+ * The player will slowly regenerate hp over time
+ * 
  * @author Jerry Xing, Evan Xi, Benny Wang, Nick Chen
  */
 public abstract class Player extends SuperSmoothMover{
     protected static double moveSpeed;
+    protected static int damage = 3;
     protected static int jumpHeight;
     protected static int reach;
     protected static boolean canDrop;
@@ -35,7 +45,15 @@ public abstract class Player extends SuperSmoothMover{
 
     protected int moveLeftCounter;
     protected int moveRightCounter;
-    protected int hp;    
+
+    protected int hp; 
+    
+    protected static double totalXOffset;
+    protected static double totalYOffset;
+    
+    SimpleTimer healTimer = new SimpleTimer();
+
+
     /**
      * Constructor for Player class.
      * 
@@ -65,12 +83,16 @@ public abstract class Player extends SuperSmoothMover{
         walking[1] = new GreenfootSound("walking_stone.mp3");
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
+        healTimer.mark();
+        totalXOffset = 0;
+        totalYOffset = 0;
     }
 
     /**
      * Constantly checks for movement input and possible pickups around it
      */
     public void act(){
+        GameWorld world = (GameWorld) getWorld();
         if(!GameWorld.getGUIOpened()){
             checkKeys();
             checkPickup();
@@ -100,12 +122,27 @@ public abstract class Player extends SuperSmoothMover{
             }
             isPlaying = false;
         }
+        
+        // Instantly kill self if touching void
+        if(isTouching(Void.class)){
+            hp -= 20;
+        }
+        
+        // If the player is alive, will attempt to heal 1hp every 2.5 seconds.  If it is dead, pause the world.
+        if(hp > 0){
+            if((healTimer.millisElapsed() > 2500) && (hp < 20)){
+                hp++;
+                healTimer.mark();
+            }
+        }
+        else{
+            world.pause();
+        }
     }
 
     /**
      * Check movement input 
-     * Uses a WASD system and checks respective conditions to see if they can be executed
-     * Can toggle sneaking and sprinting
+     * Uses a WAD system and checks respective conditions to see if they can be executed
      */
     public void checkKeys() {
         if (getWorld() instanceof GameWorld) {
@@ -152,14 +189,13 @@ public abstract class Player extends SuperSmoothMover{
                             activated = true;
                             craftingTable.openCraftingSystem();
                             getWorld().addObject(craftingTable.getCraftingSystem(), getWorld().getWidth()/2, getWorld().getHeight()/2);
+                            inventory.act();
                             GameWorld.setGUIOpened(true);
                             GameWorld.setOpenCrafting(true);
                         }
                     }
                 }
             }
-        } else {
-
         }
     }
 
@@ -302,6 +338,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(1, 0);
             world.reverseShiftPlayer(1, 0);
+            totalXOffset--;
             if(!leftClear()){
                 return;
             }
@@ -317,6 +354,7 @@ public abstract class Player extends SuperSmoothMover{
         for(int i = 0; i < moveSpeed; i++){
             world.shiftWorld(-1, 0);
             world.reverseShiftPlayer(-1, 0);
+            totalXOffset++;
             if(!rightClear()){
                 return;
             }
@@ -324,7 +362,7 @@ public abstract class Player extends SuperSmoothMover{
     }
 
     /**
-     * Accelerate downwards to fall.
+     * Checks if the player should fall
      */
     protected void checkFalling() {
         if(onGround()) {
@@ -342,29 +380,28 @@ public abstract class Player extends SuperSmoothMover{
         yVelocity = yVelocity + acceleration;
         world.shiftWorld(0, - yVelocity);
         world.reverseShiftPlayer(0, -yVelocity + 0.05);
+        totalYOffset += yVelocity;
     }
 
     /**
-     * Makes the player jump.
+     * Makes the player jump by giving it a small amount of velocity in the y-axis
      */
     protected void jump() {
         GameWorld world = (GameWorld) getWorld();
         yVelocity -= 4.4;
         world.shiftWorld(0, -yVelocity);
         world.reverseShiftPlayer(0, -yVelocity);
+        totalYOffset += yVelocity;
     }
 
     /**
      * Gets a list of all items in a radius for pick up 
-     * If there is space in the inventory, pick it up
      */
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
-            if(Inventory.hasSpaceFor(item.getName())){
-                Inventory.addItem(item.getName());
-                getWorld().removeObject(item);
-            }
+            Inventory.addItem(item.getName());
+            getWorld().removeObject(item);
         }
     }
 
@@ -438,15 +475,56 @@ public abstract class Player extends SuperSmoothMover{
     }
     
     /**
+     * Knockbacks the player in a direction
+     * Will be stopped pre-emptively if it hits a wall
+     */
+    public void knockBack(int direction){
+        GameWorld world = (GameWorld) getWorld();
+        if(direction == 1){
+            for(int i = 0; i < 20; i++){
+                if(leftClear()){
+                    world.shiftWorld(1, 0);
+                    world.reverseShiftPlayer(1, 0);
+                    totalXOffset--;
+                }
+            }
+        }
+        else if(direction == 2){
+            for(int i = 0; i < 20; i++){
+                if(rightClear()){
+                    world.shiftWorld(-1, 0);
+                    world.reverseShiftPlayer(-1, 0);
+                    totalXOffset++;
+                }
+            }    
+        }
+    }
+    
+    /**
      * Inflicts damage to the player.
      * 
      * @param damage The amount of damage to inflict.
      */
     public void doDamage(int damage) {
         this.hp -= damage;
-        if (hp <= 0) {
-            getWorld().removeObject(this);
-        }
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the x-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalXOffset(){
+        return (int) totalXOffset;
+    }
+    
+    /**
+     * Returns how much the player has moved since the start of the game on the y-axis
+     * 
+     * @return the distance moved
+     */
+    public static int getTotalYOffset(){
+        return (int) totalYOffset;
     }
     
     /**
@@ -456,6 +534,15 @@ public abstract class Player extends SuperSmoothMover{
      */
     public double getMoveSpeed() {
         return this.moveSpeed;
+    }
+    
+    /**
+     * Gets the amount of damage the player does
+     * 
+     * @return the damage the stat
+     */
+    public static int getDamage(){
+        return damage;
     }
     
     /**

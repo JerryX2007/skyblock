@@ -1,5 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-
+import java.util.ArrayList;
 /**
  * CraftingSystem class handles the crafting mechanics in the game.
  * It checks for specific crafting recipes and updates the output slot with the crafted item.
@@ -13,12 +13,17 @@ public class CraftingSystem extends GUI
     private boolean isVisible;
     private final int GRID_SIZE = 3;
     private CraftingSlot[][] itemArray;
-    private Item outputItem;
     private OutputSlot outputSlot;
     private static World world;
     private int xAdjust = 0;
     private int yAdjust = 0;
-    private boolean keyPreviouslyDown;
+    private boolean key1PreviouslyDown;
+    private boolean crafted;
+    private ArrayList<CraftingSlot> affectedSlots;
+    private ArrayList<int[]> usedCoords;
+    private boolean needFour;
+    private ArrayList<Item> craftingSlotItems = new ArrayList<Item>();
+    private boolean initialized = false;
     
     /**
      * Constructor for objects of class CraftingSystem.
@@ -35,8 +40,8 @@ public class CraftingSystem extends GUI
         itemArray = new CraftingSlot[GRID_SIZE][GRID_SIZE];
         for (int x = 0; x < GRID_SIZE; x++) {
             for(int y = 0; y < GRID_SIZE; y++) {
-                Empty temp = new Empty(16, 16, world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust);
-                itemArray[x][y] = new CraftingSlot(world, 424 + xAdjust, world.getHeight() / 2 - 174 + yAdjust, temp);
+                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[x][y] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
                 xAdjust += 54;
             }
             xAdjust = 0;
@@ -45,6 +50,11 @@ public class CraftingSystem extends GUI
         isVisible = false;
         xAdjust = 0;
         yAdjust = 0;
+        crafted = false;
+        outputSlot = new OutputSlot(world, 772, world.getHeight()/2 - 116, new Empty(16, 16, world, 772, world.getHeight()/2-116));
+        affectedSlots = new ArrayList<CraftingSlot>();
+        usedCoords = new ArrayList<int[]>();
+        needFour = false;
     }
     
     /**
@@ -52,9 +62,19 @@ public class CraftingSystem extends GUI
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act() {
-        if(isVisible) {
-            checkCrafting();
+        boolean key1CurrentlyDown = Greenfoot.isKeyDown("e");
+        checkCrafting();
+        
+        
+        if(!GameWorld.getOpenCrafting() && GameWorld.getGUIOpened() && key1CurrentlyDown && !key1PreviouslyDown){
+            GameWorld.setGUIOpened(false);
+            GameWorld.setOpenCrafting(false);
+            removeCrafting();
+            Player.setActivated(false);
+            world.removeObject(this);
         }
+        manageItems();
+        key1PreviouslyDown = key1CurrentlyDown;
     }
     
     public void addCrafting() {
@@ -85,30 +105,90 @@ public class CraftingSystem extends GUI
             world.addObject(i, i.getXPos(), i.getYPos());
         }
         
-        // Add crafting slots to the world
+        // Add crafting grid slots to the world
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                world.addObject(itemArray[i][j], 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                Item temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
+                itemArray[i][j].setItem(temp);
+                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
                 xAdjust += 54;
             }
             xAdjust = 0;
             yAdjust += 54;
         }
-        
         xAdjust = 0;
         yAdjust = 0;
-        isVisible = true;
+        
+        // Add items in the chest to the world
+        for (Item i : craftingSlotItems) {
+            world.addObject(i, i.getXPos(), i.getYPos());
+        }
+        
+        
+        outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
+        world.addObject(outputSlot.getItem(), 772, world.getHeight() / 2 - 116);
+        GameWorld.setOpenCrafting(true);
     }
-    
+
     public void removeCrafting() {
         
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 9; j++) {
+                world.removeObject(slots[j][i]);
+            }
+        }
+
+        for (Item i : Inventory.getItemsList()) {
+            world.removeObject(i);
+            i.removeNum();
+        }
         
-        isVisible = false;
+        
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                world.removeObject(itemArray[i][j].getItem());
+            }
+        }
+        
+        for (Item i : craftingSlotItems) {
+            world.removeObject(i);
+            i.removeNum();
+        }
+        
+        world.removeObject(outputSlot.getItem());
+        outputSlot.getItem().removeNum();
+        world.removeObject(outputSlot);
     }
     
-    public void setVisible(boolean state) {
-        isVisible = state;
-    }
+    
+    /**
+     * Manages the items between the player's inventory and the chest.
+     * Moves items between the player's inventory and the chest based on their position.
+     */
+    
+    private void manageItems() {
+        
+        // Move items from the player's inventory to the crafting if they are above a certain y-coordinate
+        for (int i = 0; i < Inventory.getItemsList().size(); i++) {
+            if (Inventory.getItemsList().get(i).getY() <= 366) {
+                craftingSlotItems.add(Inventory.getItemsList().get(i));
+                Inventory.removeItem(Inventory.getItemsList().get(i));
+            }
+        }
+        
+        // Move items from the chest to the player's inventory if they are below a certain y-coordinate
+        try {
+            for (int i = 0; i < craftingSlotItems.size(); i++) {
+                if (craftingSlotItems.get(i).getY() > 366) {
+                    Inventory.getItemsList().add(craftingSlotItems.get(i));
+                    craftingSlotItems.remove(craftingSlotItems.get(i));
+                }
+            }
+        } catch (IllegalStateException e) {
+            //System.out.println("fail");
+        }
+        
+    } 
     
     /**
      * Checks the crafting grid for valid crafting recipes and updates the output slot with the crafted item.
@@ -116,23 +196,37 @@ public class CraftingSystem extends GUI
     private void checkCrafting() {
         //Hard code recipes
         //Also try to hard code the possible positions of every single combination ;-;
-        
-        if (isCraftingPlanks()) {
-            outputItem = new Item("block/plank.png", 32, 32, world, true, outputSlot.getX(), outputSlot.getY(), "plank", true);
-            increaseItemAmount(outputItem, 3);
-            outputSlot.setItem(outputItem);
-            outputItem = null;
-            
-        } 
-        // Check for stick recipe (two planks vertically aligned)
-        else if (isCraftingSticks()) {
-            outputItem = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
-            increaseItemAmount(outputItem, 3);
-            outputSlot.setItem(outputItem);
-            outputItem = null;
-            
+        if(!crafted) {
+            if (isCraftingPlanks()) {
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                needFour = true;
+                increaseItemAmount(outputSlot, 3);
+                crafted = true;
+                
+            }
         }
         
+        // Check for stick recipe (two planks vertically aligned)
+        else if (isCraftingSticks()) {
+            //outputSlot = new Stick(world, outputSlot.getX(), outputSlot.getY()); // Example output: 4 sticks
+            increaseItemAmount(outputSlot, 3);
+            crafted = true;
+        }
+        else if (isCraftingTorch()) {
+            world.addObject(new Torch(world, 772, 268), 772, 268);
+            crafted = true; //Crafting is true or not. After crafting is true, just make it so that the crafting wont occur again. 
+        }
+        if(crafted) {
+            update(outputSlot);
+            if(needFour) {
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+                world.addObject(new Item("block/wooden_plank.png", 32, 32, world, true, 772, 268, "plank", true), 772, 268);
+            }
+            needFour = false;
+        }
+        
+        /*
         else if (isCraftingSword("plank")) {
             outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
             outputSlot.setItem(outputItem);
@@ -243,8 +337,13 @@ public class CraftingSystem extends GUI
         
         else {
             outputItem = null;
-        }
+        } */
         
+    }
+    
+    private void update(Item outputSlot) {
+        world.removeObject(outputSlot);
+        world.addObject(outputSlot, 772, world.getHeight()/2 - 116);
     }
     
     /**
@@ -255,7 +354,7 @@ public class CraftingSystem extends GUI
      * @return True if the slot is empty, false otherwise.
      */
     private boolean isEmpty(int x, int y) {
-        return itemArray[y][x].getItem() instanceof Empty;
+        return itemArray[y][x].getItem().getType().equals("air");
     }
     
     /**
@@ -392,15 +491,6 @@ public class CraftingSystem extends GUI
     }
     
     /**
-     * Gets the output item from the crafting process.
-     * 
-     * @return The crafted item.
-     */
-    public Item getOutputItem() {
-        return outputItem;
-    }
-    
-    /**
      * Checks if the current grid configuration matches the recipe for crafting planks.
      * 
      * @return True if the recipe for planks is satisfied, false otherwise.
@@ -417,7 +507,7 @@ public class CraftingSystem extends GUI
                     if(satisfied) {
                         return false; //If there is another block in the crafting system return false
                     }
-                    if(getSlot(x, y).getItem().getType().equals("log")) {
+                    if(getSlot(x, y).getItem().getType().equals("wood")) {
                         satisfied = true;
                     }
                 }
@@ -437,25 +527,79 @@ public class CraftingSystem extends GUI
          * #
          * #
          */
-        boolean foundFirstPlank = false;
+        boolean foundFirstStick = false;
         for (int x = 0; x < GRID_SIZE; x++) {
-            for (int y = 0; y < GRID_SIZE - 1; y++) {
-                if (!isEmpty(x, y) && !isEmpty(x, y + 1)) {
-                    if (getSlot(x, y).getItem() != null && getSlot(x, y + 1).getItem() != null &&
-                        getSlot(x, y).getItem().getType().equals("planks") &&
-                        getSlot(x, y + 1).getItem().getType().equals("planks")) {
-                        if (foundFirstPlank) {
-                            return false; // More than one pair of planks found
-                        }
-                        foundFirstPlank = true;
-                    } else {
-                        return false; // Another item found
+            for (int y = 0; y < GRID_SIZE-1; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1) && getSlot(x, y).getItem().getType().equals("stick") &&
+                    getSlot(x, y + 1).getItem().getType().equals("stick")) {
+                    if (foundFirstStick) {
+                        usedCoords.clear();
+                        return false;
+                    }
+                    foundFirstStick = true;
+                    int[] temp = {x, y};
+                    usedCoords.add(temp);
+                    
+                }
+            }
+        }
+        
+        if(foundFirstStick) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                for (int y = 0; y < GRID_SIZE; y++) {
+                    int[] temp = {x, y};
+                    if (!usedCoords.contains(temp) && !isEmpty(x, y)) {
+                        foundFirstStick = false;
                     }
                 }
             }
         }
         
-        return foundFirstPlank;
+        usedCoords.clear();
+        return foundFirstStick;
+    }
+    
+    /**
+     * Checks if the current grid configuration matches the recipe for crafting a torch.
+     * 
+     * @return True if the recipe for a torch is satisfied, false otherwise.
+     */
+    private boolean isCraftingTorch() {
+        //Recipe for the torch: one coal and stick vertically aligned
+        /*
+         * #
+         * #
+         */
+        boolean foundFirstTorch = false;
+        for (int x = 0; x < GRID_SIZE; x++) {
+            for (int y = 0; y < GRID_SIZE-1; y++) {
+                if (!isEmpty(x, y) && !isEmpty(x, y + 1) && getSlot(x, y).getItem().getType().equals("coal") &&
+                    getSlot(x, y + 1).getItem().getType().equals("stick")) {
+                    if (foundFirstTorch) {
+                        usedCoords.clear();
+                        return false;
+                    }
+                    foundFirstTorch = true;
+                    int[] temp = {x, y};
+                    usedCoords.add(temp);
+                    
+                }
+            }
+        }
+        
+        if(foundFirstTorch) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                for (int y = 0; y < GRID_SIZE; y++) {
+                    int[] temp = {x, y};
+                    if (!usedCoords.contains(temp) && !isEmpty(x, y)) {
+                        foundFirstTorch = false;
+                    }
+                }
+            }
+        }
+        
+        usedCoords.clear();
+        return foundFirstTorch;
     }
     
     /**
@@ -480,10 +624,20 @@ public class CraftingSystem extends GUI
                         getSlot(x, y+1).getItem().getType().equals(itemName) && getSlot(x, y+2).getItem().getType().equals("stick")) {
                         
                         if (foundFirstSword) {
+                            usedCoords.clear();
                             return false; //More than one sword recipe found
                         }
+                        int[] temp = {x, y};
+                        int[] temp1 = {x, y+1};
+                        int[] temp2 = {x, y+2};
+                        
+                        usedCoords.add(temp);
+                        usedCoords.add(temp1);
+                        usedCoords.add(temp2);
+                        
                         foundFirstSword = true;
                     } else {
+                        usedCoords.clear();
                         return false; //Another item found
                     }
                 }
@@ -493,12 +647,14 @@ public class CraftingSystem extends GUI
         if(foundFirstSword) {
             for(int x = 0; x < GRID_SIZE; x++) {
                 for(int y = 0; y < GRID_SIZE; y++) {
-                    if(!isEmpty(x, y)) {
+                    int[] temp = {x, y};
+                    if(!usedCoords.contains(temp) && !isEmpty(x, y)) {
                         foundFirstSword = false;
                     }
                 }
             }
         }
+        usedCoords.clear();
         return foundFirstSword;
     }
     

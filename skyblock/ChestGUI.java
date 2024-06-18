@@ -115,6 +115,7 @@ public class ChestGUI extends GUI {
         for (Item i : contents) {
             world.addObject(i, i.getXPos(), i.getYPos());
         }
+        
     }
 
     /**

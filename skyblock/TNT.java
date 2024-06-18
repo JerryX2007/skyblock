@@ -13,7 +13,7 @@ public class TNT extends Block
     private GreenfootImage img2;
 
     public TNT(){
-        super(brown,2, "plank");
+        super(brown,2, "tnt");
         img = new GreenfootImage("block/TNT.png");
         img.scale(64,64);
         setImage(img);

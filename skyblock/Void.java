@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Void here.
+ * Everything that comes into contact with the void instantly dies
  * 
  * @author (your name) 
  * @version (a version number or a date)
@@ -13,7 +13,7 @@ public class Void extends Block
 
     public Void(){
         super(brown,1000000000, "void");
-        setImage((GreenfootImage)null);
+        setImage(new GreenfootImage(16, 16));
     }
 
     /**

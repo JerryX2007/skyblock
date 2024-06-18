@@ -10,7 +10,7 @@ public class Torch extends Item
 {
     private String image;
 
-    public Torch(int length, int width, World world, int X, int Y){
+    public Torch(World world, int X, int Y){
         super("items/Torch.png", 32, 32, world, true, X, Y, "torch", true);
         image  = "items/Torch.png";
     }

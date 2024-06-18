@@ -92,25 +92,54 @@ public class ItemDrop extends SuperSmoothMover{
                 break;
             case 11:
                 img = new GreenfootImage("block/coal_ore.jpeg");
-                name = "plank";
+                name = "coal";
                 break;
             case 12:
                 img = new GreenfootImage("block/iron_ore.png");
-                name = "iron_ore";
+                name = "iron";
                 break;
             case 13:
-                img = new GreenfootImage("block/diamond_ore.png");
-                name = "diamond_ore";
+                img = new GreenfootImage("items/diamond.png");
+                name = "diamond";
                 break;
             case 14:
-                img = new GreenfootImage("block/Torch_Block.png");
-                name = "torch_block";
+                img = new GreenfootImage("items/torch.png");
+                name = "torch";
+                break;
+            case 15:
+                img = new GreenfootImage("block/wool.png");
+                name = "wool";
+                break;
+            case 16:
+                img = new GreenfootImage("items/leather.png");
+                name = "leather";
+                break;
+            case 17:
+                img = new GreenfootImage("items/gunpowder.png");
+                name = "gunpowder";
+                break;
+            case 18:
+                img = new GreenfootImage("items/string.png");
+                name = "string";
+                break;
+            case 19:
+                img = new GreenfootImage("items/coal.png");
+                name = "coal";
+                break;
+            case 20:
+                img = new GreenfootImage("items/iron.png");
+                name = "iron";
                 break;
         }
         img.scale(15, 15); // Scales the item drop to be a mini version of the original 64x64 block
         setImage(img);
     }
 
+    /**
+     * Checks if the block is on the ground
+     * 
+     * @return the status of the block
+     */
     private boolean onGround() {
         Block under = (Block) getOneObjectAtOffset(0, getImage().getHeight()/2 + 20, Block.class);
         if(under != null) {
@@ -144,9 +173,20 @@ public class ItemDrop extends SuperSmoothMover{
         }
     }
 
+    /**
+     * Gets the integer representation of the item drop
+     * 
+     * @return the integer representation
+     */
     public int getType(){
         return type;
     }
+    
+    /**
+     * Gets the string representation of the item drop
+     * 
+     * @return the string representation
+     */
     public String getName(){
         return name;
     }

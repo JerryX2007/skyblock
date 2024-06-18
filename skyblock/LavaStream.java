@@ -1,13 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * =====PLS CALL remove() INSTEAD OF getWorld().removeObject(lava)!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * Sets pictures of lava according to its relative location to previous blocks and the source block
  * 
  * @author Nick 
  * @version (a version number or a date)

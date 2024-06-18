@@ -17,6 +17,13 @@ import java.util.Random;
  * All block information is stored in a massive 2D array system.
  * The user is able to see a portion of the world using a "camera" system centered around the player.
  * 
+ * The player moves using WAD and shifts the world instead of moving itself
+ * Use left click to mine blocks and attack mobs
+ * Use right click to interact with blocks such as inventory or place down blocks
+ * E to open inventory and close opened interfaces, such as crafting
+ * 
+ * Survive for as long as possible and build 
+ * 
  * @author Evan Xi, Benny Wang
  * @version 1.0.0
  */
@@ -50,16 +57,19 @@ public class GameWorld extends World {
     public GameWorld(TitleScreen titleScreen) {    
         // Create a new world with 1280x768 cells with a cell size of 64x64 pixels.
         super(1280, 768, 1, false);
-        
-        // Optionally fill the grid with initial values or objects
-        loadWorld();
-        
-        checkSave();
+
+        // Load saved information
+        //loadWorld();
+        initializeGrid();
+        prepareWorld();
+        loadInv();
+        loadChest();
 
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
+
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
@@ -73,16 +83,10 @@ public class GameWorld extends World {
      * Tracks inventory, GUI, and player health bar.
      */
     public void act() {
-        
+
         // Determines what goes on top
         setPaintOrder(Label.class, Item.class, Empty.class, GUI.class, Shader.class, SuperSmoothMover.class);
-        
-        if(firstAct){
-            loadInv();
-            loadChest();
-            firstAct = false;
-        }
-        pause();
+
         // Inventory toggle logic
         boolean keyCurrentlyDown = Greenfoot.isKeyDown("e");
 
@@ -97,7 +101,6 @@ public class GameWorld extends World {
                 openInventory = false;
                 inventory.removeInventory();
                 removeObject(inventory);
-
             } 
             for(Label l : getObjects(Label.class)){
                 removeObject(l);
@@ -108,39 +111,41 @@ public class GameWorld extends World {
         // Update health bar position
         hpBar.setLocation(player.getX(), player.getY() - 90);
 
-        checkSave();
-        checkReset();
+        // Checks for inputs and updates certain variables
+        //checkSave();
         checkTime();
-        
+        checkPause();
+        attemptReplace();
+
+        // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
-            //attemptSpawn();
-        }        
+            attemptSpawn();
+        }
     }
 
     /**
-     * Updates the time of the day every 15 seconds, with a full day lasting 1m 30s
+     * Updates the time of the day every 20 seconds
      */
     private void checkTime(){
-        if(dayNightTimer.millisElapsed() < 15000){
+        if(dayNightTimer.millisElapsed() < 20000){
             worldTime = 1;
         }
-        else if(dayNightTimer.millisElapsed() < 30000){
+        else if(dayNightTimer.millisElapsed() < 40000){
             worldTime = 2;
         }
-        else if(dayNightTimer.millisElapsed() < 45000){
+        else if(dayNightTimer.millisElapsed() < 60000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() < 60000){
+        else if(dayNightTimer.millisElapsed() < 80000){
             worldTime = 4;
         }
-        else if(dayNightTimer.millisElapsed() < 75000){
+        else if(dayNightTimer.millisElapsed() < 100000){
             worldTime = 3;
         }
-        else if(dayNightTimer.millisElapsed() < 90000){
+        else if(dayNightTimer.millisElapsed() < 120000){
             worldTime = 2;
             dayNightTimer.mark();
         }
-
     }
 
     /**
@@ -162,6 +167,15 @@ public class GameWorld extends World {
     }
 
     /**
+     * Getter for openChest.
+     * 
+     * @return boolean value of openChest.
+     */
+    public static boolean getOpenCrafting() {
+        return openChest;
+    }
+
+    /**
      * Getter for GUIOpened.
      * 
      * @return boolean value of GUIOpened.
@@ -178,14 +192,14 @@ public class GameWorld extends World {
     public static void setOpenChest(boolean open) {
         openChest = open;
     }
-    
+
     /**
      * Setter for openCrafting.
      * 
      * @param open New value for openCrafting.
      */
     public static void setOpenCrafting(boolean open) {
-        openCrafting = true;
+        openCrafting = open;
     }
 
     /**
@@ -208,12 +222,16 @@ public class GameWorld extends World {
         removeObject(inventory);
     }
 
-    private void pause() {
-        if (Greenfoot.isKeyDown("escape")) {
-            // Capture current grid and actors
-            Block[][] currentGrid = getGrid();
-            ArrayList<Actor> currentActors = getActors();
-            Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
+    public void pause() {
+        // Capture current grid and actors
+        Block[][] currentGrid = getGrid();
+        ArrayList<Actor> currentActors = getActors();
+        Greenfoot.setWorld(new PauseScreen(titleScreen, this, currentActors));   
+    }
+
+    public void checkPause(){
+        if(Greenfoot.isKeyDown("escape")){
+            pause();
         }
     }
 
@@ -259,8 +277,8 @@ public class GameWorld extends World {
      * @return Array containing grid coordinates {gridX, gridY}.
      */
     public int[] getGridCoordinates(int x, int y) {
-        int gridX = (x / 64) + 40;
-        int gridY = (y / 64) + 12;
+        int gridX = ((x - Player.getTotalXOffset())/ 64) + 40;
+        int gridY = ((y - Player.getTotalYOffset())/ 64) + 12;
         return new int[]{gridX, gridY};
     }
 
@@ -302,9 +320,9 @@ public class GameWorld extends World {
             removeObject(block);
         }
         grid[gridX][gridY] = newBlock;
-        addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
+        addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32 - Player.getTotalXOffset()), ((gridY - 12) * 64 + 32 - Player.getTotalYOffset()));
     }
-    
+
     private void saveInv(){
         try{
             fWriter = new FileWriter("saves/inv.txt");
@@ -317,10 +335,10 @@ public class GameWorld extends World {
             fWriter.close();
         }
         catch(IOException e){
-        
+
         }
     }
-    
+
     private void loadInv(){
         try{
             s = new Scanner(new File("saves/inv.txt"));
@@ -338,7 +356,7 @@ public class GameWorld extends World {
                 String type = a[6];
                 boolean placeable = Boolean.valueOf(a[7]);
                 Item temp = new Item(file, lengthWidth, lengthWidth, this, draggable, X, Y, type, placeable);
- 
+
                 GUI.getItemList().add(temp);
             }
             s.close();
@@ -422,6 +440,10 @@ public class GameWorld extends World {
         }
     }
 
+    /**
+     * Loads world information from the saved text file
+     * If there is no saved word, create one.
+     */
     private void loadWorld(){
         try{
             s = new Scanner(new File("saves/world_info.txt"));
@@ -435,21 +457,27 @@ public class GameWorld extends World {
             refreshWorld();
         }
         catch(FileNotFoundException e){
+            initializeGrid();
             prepareWorld();
-        } catch(NullPointerException e){
-            prepareWorld();
-        }
-
-        
-    }
-
-    private void checkReset(){
-        if(Greenfoot.isKeyDown("l")){
+        } 
+        catch(NullPointerException e){
             initializeGrid();
             prepareWorld();
         }
     }
 
+    /**
+     * Placeholder code for world reset
+     */
+    public void checkReset(){
+        initializeGrid();
+        prepareWorld();
+    }
+
+    /**
+     * Saves the world to a text file
+     * Converts all blocks into their respective String names
+     */
     private void saveWorld(){
         try{
             FileWriter f = new FileWriter("saves/world_info.txt");
@@ -461,7 +489,7 @@ public class GameWorld extends World {
                     } else{
                         p.println(grid[i][j].getName());
                     }
-                    
+
                 }
             }
             p.close();
@@ -471,7 +499,10 @@ public class GameWorld extends World {
 
         }
     }
-    
+
+    /**
+     * Gets all the chests in the world and saves them into separate text files
+     */
     private void saveChest(){
         try{
             int x = 0;
@@ -481,7 +512,7 @@ public class GameWorld extends World {
                         Chest tempBlock = (Chest) grid[i][j];
                         fWriter = new FileWriter("saves" + File.separator + "chest" + x + ".txt");
                         pWriter = new PrintWriter(fWriter);
-                        
+
                         for(Item item : tempBlock.getChestGUI().getContents()){
                             pWriter.println(item.toString());
                         }
@@ -490,17 +521,16 @@ public class GameWorld extends World {
                         pWriter.close();
                     }
                 }
-            }
-
-            
-            
-            
+            } 
         }
         catch(IOException e){
 
         }
     }
-    
+
+    /**
+     * Loads information from all chests and places them in their respective places
+     */
     private void loadChest(){
         try{
             int x = 0;
@@ -530,29 +560,40 @@ public class GameWorld extends World {
                         x++;
                     }
                 }
-            }
-            
+            }            
         }
         catch(IOException e){
-            //System.out.println("Error: " + e);
+            System.out.println("Error: " + e);
         }
     }
 
-    private void checkSave(){
-        if(Greenfoot.isKeyDown("k")){
-            saveWorld();
-            spoofInventory();
-            saveInv();
-            saveChest();
-        }
+    /**
+     * Placeholder key for saving the world
+     * Should be replaced by a button during pause screen
+     */
+    public void checkSave(){
+        //  if(Greenfoot.isKeyDown("k")){
+        saveWorld();
+        spoofInventory();
+        saveInv();
+        saveChest();
+        //  }
     }
 
+    /**
+     * Finds the total number of mobs in the world
+     * 
+     * @return the number of mobs found
+     */
     private int totalMobs(){
         ArrayList<Mob> mobList = (ArrayList<Mob>) getObjects(Mob.class);
         return mobList.size();
     }
 
-    private Block toBlock(String name){
+    /**
+     * Returns a Block representation of strings, used when loading information from text files
+     */
+    public Block toBlock(String name){
         Block block = new Air();
 
         if(name.equals("air")){
@@ -582,14 +623,40 @@ public class GameWorld extends World {
         else if(name.equals("sapling")){
             block = new Sapling();
         }
+        else if(name.equals("iron_ore")){
+            block = new IronOre();
+        }
+        else if(name.equals("tnt")){
+            block = new TNT();
+        }
+        else if(name.equals("coal ore")){
+            block = new CoalOre();
+        }
+        else if(name.equals("torch")){
+            block = new TorchBlock();
+        }
+        else if(name.equals("void")){
+            block = new Void();
+        }
+        else if(name.equals("WaterSource")){
+            block = new WaterSource();
+        }
+        else if(name.equals("LavaSource")){
+            block = new LavaSource();
+        }
 
         return block;
     }
 
+    /**
+     * Check for all blocks in the world and the 4 adjacent tiles
+     * If light level requirements are met and it can spawn on solid ground, triggers a chance to spawn the mob
+     */
     private void attemptSpawn(){
         Random random = new Random();        
         for(int i = 1; i < 99; i++){
             for(int j = 1; j < 35; j++){
+                // Checks for the tile and 4 tiles surrounding it
                 Block block1 = grid[i][j];
                 Block block2 = grid[i][j + 1];
                 Block block3 = grid[i][j - 1];
@@ -598,24 +665,26 @@ public class GameWorld extends World {
                 if(!(block2.getName().equals("air"))){
                     if((block1.getName().equals("air") && block3.getName().equals("air")) && (block4.getName().equals("air") && block5.getName().equals("air"))){
                         if(block1.getBrightness() <= 2){
-                            int choice = random.nextInt(20000);
+                            int choice = random.nextInt(20000); // Chance of mob spawn
+                            // Adjust location based on player offset
                             if(choice == 1){
-                                addObject(new Sheep(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Sheep(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 2){
-                                addObject(new Cow(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Cow(), (((i - 40) * 64) - 32), (((j - 12) * 64) - 32));
                             }
                         }
                         if(getTime() > 2){
-                            int choice = random.nextInt(30000);
+                            int choice = random.nextInt(30000); // Chance of mob spawn
+                            // Adjust location based on player offset
                             if(choice == 1){
-                                addObject(new Zombie(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Zombie(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 2){
-                                addObject(new Creeper(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Creeper(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }
                             else if(choice == 3){
-                                addObject(new Spider(), (((i - 40) * 64) + 32), (((j - 12) * 64) + 32));
+                                addObject(new Spider(), (((i - 40) * 64) + 32 - Player.getTotalXOffset()), (((j - 12) * 64) + 32 - Player.getTotalYOffset()));
                             }                           
                         }
                     }
@@ -624,6 +693,21 @@ public class GameWorld extends World {
         }
     }
 
+    private void attemptReplace(){
+        MouseInfo mi = Greenfoot.getMouseInfo();
+        if(mi != null){
+            if(mi.getButton() == 3){
+                if(Inventory.hasHeldItem()){
+                    
+                    String placingBlock = Inventory.getHeldItems().get(0).getType();
+                    Block block = toBlock(placingBlock);
+                    updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, block);
+                    Inventory.removeItem(Inventory.getHeldItems().get(0));
+                }
+            }                
+        }     
+    }
+    
     /**
      * Starts the main menu music when the world starts.
      */
@@ -647,10 +731,20 @@ public class GameWorld extends World {
         return player;
     }
 
+    /**
+     * Gets the grid in the world system
+     * 
+     * @return the grid returned
+     */
     public Block[][] getGrid() {
         return grid;
     }
 
+    /**
+     * Gets all actors in the world
+     * 
+     * @return an ArrayList of all actors
+     */
     public ArrayList<Actor> getActors() {
         return new ArrayList<>(getObjects(Actor.class));
     }
