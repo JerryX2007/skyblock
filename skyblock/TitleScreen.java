@@ -3,6 +3,79 @@ import java.time.LocalTime;
 import greenfoot.GreenfootSound;
 
 /**
+ *  
+ * <p>
+ * The Title Screen of the Simulation
+ * </p>
+ * <div>
+ * <h2> All Assets from Minecraft </h2>
+ * <a href="minecraft.net"> Link to Minecraft's Site</a> <br>
+ * </div>
+ * 
+ * <h2>List of Features</h2>
+ * <p>
+ * There's the Item Superclass, Block Superclass, GUI Superclass and the Player Superclass<br>
+ * </li>Within the game itself, the user spawns is as the Player, Steve, and in an open sandbox world, the player must get resources, tools, expand their home, and survive the nights from the mobs! </li>
+ * <li>If the player survives for 5 days, then a victory screen will be shown!</li><br>
+ * <h3> Items </h3>
+ * Items include:
+ * <ul>
+ * <li> Bones </li>
+ * <li>Bucket</li>
+ * <li>Coal</li>
+ * <li>Diamond</li>
+ * <li>Feather</li>
+ * <li>Gunpowder</li>
+ * <li>Iron</li>
+ * <li>Leather</li>
+ * <li>Stick</li>
+ * <li>Stone Pickaxe/Shovel/Sword</li>
+ * <li>Wood Pickaxe/Shovel/Sword</li>
+ * <li>String</li>
+ * <li>Torch</li>
+ * </ul>
+ * <h3>GUI</h3>
+ * The GUI interfaces in this game include the chest GUI, crafting system GUI and the inventory GUI. 
+ * All these GUI's are crucial to the game, player's interactions with the game, and for the ease of user experience. 
+ *  <h3>Mobs</h3>
+ * Mobs will either attack or not attack the player.
+ * Mobs in the game include:
+ * <ul>
+ * <li>Cow</li>
+ * <li>Spider</li>
+ * <li>Zombie</li>
+ * <li>Sheep</li>
+ * <li>Creeper</li>
+ * </ul>
+ * <h3>Blocks</h3>
+ * Blocks are crucial to the game. 
+ * There are many modifiers which change many aspects of the simulation
+ * <ul>
+ *  <li>Student IQ</li>
+ *  <li>Chaos Mode</li>
+ *  <li>Number of days</li>
+ *  <li>Has robbers</li>
+ *  <li>has janitors</li>
+ *  <li>Chance of computer breaking</li>
+ *  <li>Chance of support to call back</li>
+ * </ul>
+ * <h2>Credits</h2>
+ * Note: credits can also be found in the classes there were used in.<br>
+ * <h3>Art and sounds</h3>
+ * https://www.youtube.com/watch?v=idztNHePKMo - Music by Nintendo from New Super Mario Bros. Wii<br>
+ * https://www.youtube.com/watch?v=jRtDGwmgCR8 - 
+ * <h3>Code</h3>
+ * SuperSmoothMover and SuperStatBar taken from Jordan Cohen<br>
+ * GifImage, SimpleTimer, Label taken from Greenfoot<br>
+ * 
+ * <h2>Bugs</h2>
+ * In chaos mode interactions may seem weird but that is the point.
+ * <ol>
+ *  <li>Memory issues may occur</li>
+ * </ol>
+ * 
+ * </p>
+ * 
  * A 2D recreation of Minecraft Skyblock!
  * 
  * The player moves using WAD and shifts the world instead of moving itself
@@ -20,6 +93,7 @@ import greenfoot.GreenfootSound;
  * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
  * 
  * @author Benny
+ * Edited by: Dylan Dinesh
  * @version May 29, 2024
  */
 public class TitleScreen extends World
