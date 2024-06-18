@@ -51,7 +51,7 @@ public class GameWorld extends World {
     Scanner s;
     FileWriter fWriter;
     PrintWriter pWriter;
-
+    SimpleTimer timer;
     public void clearWorld(){
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
@@ -62,7 +62,7 @@ public class GameWorld extends World {
         loadInv();
         loadChest();
     }
-    
+
     /**
      * Constructor for objects of class GameWorld.
      * Initializes the world, grid, player, inventory, and other components.
@@ -76,16 +76,14 @@ public class GameWorld extends World {
         loadWorld();
         loadInv();
         loadChest();
-        
-        
 
         // Inventory initialization
         inventory = new Inventory(300, this);
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
 
-        
-        
+        timer = new SimpleTimer();
+
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
@@ -136,6 +134,11 @@ public class GameWorld extends World {
         // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
             attemptSpawn();
+        }
+
+        timer.mark();
+        if(timer.millisElapsed() > 600000){
+            
         }
     }
 
@@ -476,11 +479,11 @@ public class GameWorld extends World {
         catch(FileNotFoundException e){
             initializeGrid();
             prepareWorld();
-            
+
         } catch(NullPointerException e){
             initializeGrid();
             prepareWorld();
-            
+
         }
     }
 
@@ -503,7 +506,7 @@ public class GameWorld extends World {
         } 
         prepareWorld();
     }
-    
+
     // Help from ChatGPT
     private static void deleteRecursively(Path path) throws IOException {
         if (Files.isDirectory(path)) {
@@ -531,7 +534,7 @@ public class GameWorld extends World {
                     } else{
                         p.println(grid[i][j].getName());
                     }
-                    
+
                 }
             }
             p.close();
@@ -621,7 +624,7 @@ public class GameWorld extends World {
         saveChest();
         //  }
     }
-    
+
     /**
      * Deletes all saves
      */
@@ -759,7 +762,7 @@ public class GameWorld extends World {
         if(mi != null){
             if(mi.getButton() == 3){
                 if(Inventory.hasHeldItem()){
-                    
+
                     String placingBlock = Inventory.getHeldItems().get(0).getType();
                     Block block = toBlock(placingBlock);
                     updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, block);
@@ -768,7 +771,7 @@ public class GameWorld extends World {
             }                
         }     
     }
-    
+
     /**
      * Starts the main menu music when the world starts.
      */

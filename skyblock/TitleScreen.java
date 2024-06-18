@@ -8,7 +8,7 @@ import greenfoot.GreenfootSound;
  * The TitleScreen class of the Skyblock, or "SKIDBLOCK" Game
  * </p>
  * <div>
- * <h2> All Assets from Minecraft </h2>
+ * <h2> All Assets from Minecraft, with the exception of the GPT-4 created win screen. </h2>
  * <a href="minecraft.net"> Link to Minecraft's Site</a> <br>
  * </div>
  *  * A 2D recreation of Minecraft Skyblock!
