@@ -637,8 +637,8 @@ public class GameWorld extends World {
             //System.out.println("All contents in the 'saves' folder have been deleted.");
         } catch (IOException e) {
             //System.err.println("An error occurred while deleting the contents of the directory.");
-        } 
-        Greenfoot.delay(60);
+        }
+
     }
 
     /**
