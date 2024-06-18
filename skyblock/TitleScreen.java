@@ -3,6 +3,20 @@ import java.time.LocalTime;
 import greenfoot.GreenfootSound;
 
 /**
+ * A 2D recreation of Minecraft Skyblock!
+ * 
+ * The player moves using WAD and shifts the world instead of moving itself
+ * Use left click to mine blocks and attack mobs
+ * Use right click to interact with blocks such as inventory or place down blocks
+ * E to open inventory and close opened interfaces, such as crafting
+ * 
+ * Mobs will automatically spawn and drop items
+ * Lava/water implemented, but players not yet given buckets on spawn
+ * Certain items have no effects 
+ * Crafting recipes incomplete and sometimes bugs out
+ * 
+ * Survive for as long as possible!
+ * 
  * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
  * 
  * @author Benny

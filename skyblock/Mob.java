@@ -13,8 +13,10 @@ import java.util.List;
  * 
  * Mobs will spawn based on lighting and will only do so on solid blocks
  * 
+ * Known bugs: Mobs sometimes fly (jump too high) or clip into blocks slightly
+ * 
  * @author Evan Xi
- * @version (a version number or a date)
+ * @version 1.0
  */
 public abstract class Mob extends SuperSmoothMover{
     protected boolean isHostile;
