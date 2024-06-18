@@ -161,10 +161,10 @@ public class GameWorld extends World {
             }
         }
         
-        if (brightCount > 600) {
+        if (brightCount > 600) { //Check if day has ended
             darken = true;
         }
-        else {
+        else { //Day has started
             darken = false;
 
         }
@@ -172,7 +172,7 @@ public class GameWorld extends World {
         if(darken) {
             darkenBackground();
             darkCount++;
-            if (darkCount > 600) {
+            if (darkCount > 600) { //After 600, reset to 0
                 brightCount = 0;
                 darkCount = 0;
             }
@@ -181,8 +181,6 @@ public class GameWorld extends World {
             brightenBackground();
             brightCount++;
         }
-        
-        System.out.println(darkCount + " " + brightCount);
     }
 
     /**
