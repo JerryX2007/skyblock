@@ -125,6 +125,7 @@ public class TitleScreen extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1280, 768, 1); 
+        game = new GameWorld(this);
         LocalTime now = LocalTime.now();
         int currentHour = now.getHour();
         Image logo = new Image("logo.png", 75);
@@ -235,29 +236,26 @@ public class TitleScreen extends World
      */
     private void checkIfPressed()
     {
-        if(playFromSave.isPressed()){
-            game = new GameWorld(this);
+        if(playFromSave.isPressed()){ // loads world
             Greenfoot.setWorld(game);
             playFromSave.setPressedCondition(false);
         }
-
-        if(playNewWorld.isPressed()){
+        
+        else if(playNewWorld.isPressed()){ // creates new world
+            GameWorld.deleteStuff();
+            // game.clearWorld();
             game = new GameWorld(this);
-            game.checkReset();
             Greenfoot.setWorld(game);
             playNewWorld.setPressedCondition(false);
         }
-
-        if(instructions.isPressed()){
-            addObject(instructionsImage, getWidth()/2, getHeight()/2);
-
-            instructions.setPressedCondition(false);
+        
+        else if(instructions.isPressed()){
+            playNewWorld.setPressedCondition(false);
         }
-
-        if(credits.isPressed()){
-            addObject(creditsImage, getWidth()/2, getHeight()/2);
-
-            credits.setPressedCondition(false);
+        
+        else if(credits.isPressed()){
+            
+            playNewWorld.setPressedCondition(false);
         }
     }
 
