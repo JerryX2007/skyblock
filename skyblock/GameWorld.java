@@ -52,6 +52,8 @@ public class GameWorld extends World {
     FileWriter fWriter;
     PrintWriter pWriter;
     SimpleTimer timer;
+    private Image winScreen;
+
     public void clearWorld(){
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
@@ -90,6 +92,8 @@ public class GameWorld extends World {
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
+
+        winScreen = new Image("win_screen.png", 1280, 768);
     }
 
     /**
@@ -135,11 +139,17 @@ public class GameWorld extends World {
         if(totalMobs() < 20){
             attemptSpawn();
         }
-
+        
+        int counter = 0;
         timer.mark();
-        if(timer.millisElapsed() > 600000){
-            
+        if(timer.millisElapsed() > 6000 && counter == 0){
+            addObject(winScreen, getWidth()/2, getHeight()/2);
+            counter++;
+            if(Greenfoot.isKeyDown("escape")){
+                removeObject(winScreen);
+            }
         }
+
     }
 
     /**
