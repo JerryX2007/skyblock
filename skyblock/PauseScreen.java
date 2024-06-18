@@ -14,9 +14,9 @@ import java.util.ArrayList;
  * </ul>
  * </p>
  * 
- * Edited By: Felix Zhao, Benny Wang & Dylan Dinesh
+ * Edited By: Felix Zhao, Benny Wang
  * 
- * @author Andy Feng
+ * @author Andy Feng and Dylan Dinesh
  * @version 0.0.1
  */
 public class PauseScreen extends World
@@ -26,13 +26,14 @@ public class PauseScreen extends World
     private GameWorld world;
     private Button resume = new Button("resume", 3, ".png");
     private ArrayList<Actor> pauseLocation;
-    private GreenfootImage overlay = new GreenfootImage(1260, 720);
+    private GreenfootImage overlay = new GreenfootImage(1400, 820);
     private ValueBox volumeSlider;
     private Image soundOnImg = new Image("sound_on.png"); 
     private Image soundOffImg = new Image("sound_off.png");
     protected static int volume = 100;
     private boolean soundOn = true;
     private int previousVolume;
+    private boolean firstTime = true;
 
     /**
      * Constructor for objects of class PauseScreen.
@@ -44,7 +45,7 @@ public class PauseScreen extends World
     public PauseScreen(TitleScreen titleScreen, GameWorld world, ArrayList<Actor> actors)
     {    
         // Create a new world with 1260x720 cells with a cell size of 1x1 pixels.
-        super(1260, 720, 1);
+        super(1280, 768, 1);
 
         // Capture the background of the current game world
         GreenfootImage background = new GreenfootImage(world.getBackground());
@@ -77,7 +78,11 @@ public class PauseScreen extends World
             addObject(soundOffImg, getWidth() / 2 - 110, getHeight() - 25);
             soundOffImg.getImage().scale(40, 40);
         }
-        getActorImage();
+        
+    }
+    
+    public void updateActors(ArrayList<Actor> list){
+        pauseLocation = list;
     }
 
     /**
@@ -85,12 +90,16 @@ public class PauseScreen extends World
      * It also checks whether or not buttons are clicked.
      */
     public void act() {
+        if(firstTime){
+            getActorImage();
+            firstTime = false;
+        }
         if (menu.isPressed()) {
             world.checkSave();
             Greenfoot.setWorld(titleScreen);
             menu.setPressedCondition(false);
-          //  TitleScreen.setMusicVolume(25);
-           // TitleScreen.playMusic();
+            //  TitleScreen.setMusicVolume(25);
+            // TitleScreen.playMusic();
         }
         if (resume.isPressed()) {
             Greenfoot.setWorld(world);
@@ -128,6 +137,15 @@ public class PauseScreen extends World
         }
     }
 
+    /**
+     * Setter for firstTime
+     * 
+     * @param first New value for firstTime
+     */    
+    public void setFirstTime(boolean first){
+        firstTime = first;
+    }
+    
     /**
      * method which gets the image of actors in the simulation, and draw their 
      * picture at their location before the simulation is paused

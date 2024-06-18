@@ -26,7 +26,7 @@ import java.util.Random;
  * Blocks don't place correctly at times
  * Java heapspace error (very rarely happens; can close and reopen program to reset)
  * 
- * @author Evan Xi, Benny Wang
+ * @author Evan Xi, Benny Wang, Dylan Dinesh
  * @version 1.0.0
  */
 public class GameWorld extends World {
@@ -51,6 +51,19 @@ public class GameWorld extends World {
     Scanner s;
     FileWriter fWriter;
     PrintWriter pWriter;
+    SimpleTimer timer;
+    private Image winScreen;
+
+    public void clearWorld(){
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 36; j++) {
+                grid[i][j] = new Air();
+            }
+        }
+        loadWorld();
+        loadInv();
+        loadChest();
+    }
 
     /**
      * Constructor for objects of class GameWorld.
@@ -61,6 +74,7 @@ public class GameWorld extends World {
         super(1280, 768, 1, false);
 
         // Load saved information
+        initializeGrid();
         loadWorld();
         loadInv();
         loadChest();
@@ -70,15 +84,16 @@ public class GameWorld extends World {
         craftingSystem = new CraftingSystem(300, this);
         this.titleScreen = titleScreen;
 
-        
-        
+        timer = new SimpleTimer();
+
         // Player and health bar initialization
         player = new Steve(4, 3, 3, true, 3, inventory);
         hpBar = new HealthBar(player);
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
-        
+
+        winScreen = new Image("win_screen.png", 1280, 768);
     }
 
     /**
@@ -124,6 +139,17 @@ public class GameWorld extends World {
         if(totalMobs() < 20){
             attemptSpawn();
         }
+        
+        int counter = 0;
+        timer.mark();
+        if(timer.millisElapsed() > 6000 && counter == 0){
+            addObject(winScreen, getWidth()/2, getHeight()/2);
+            counter++;
+            if(Greenfoot.isKeyDown("escape")){
+                removeObject(winScreen);
+            }
+        }
+
     }
 
     /**
@@ -244,7 +270,7 @@ public class GameWorld extends World {
     private void initializeGrid() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
-                updateBlock(i, j, new Air());
+                grid[i][j] = new Air();
             }
         }
     }
@@ -410,7 +436,7 @@ public class GameWorld extends World {
      * Loads the initial island by placing associated blocks.
      * Called when the world is generated.
      */
-    private void prepareWorld() {
+    public void prepareWorld() {
         updateBlock(42, 18, new Chest(this));
         updateBlock(44, 18, new Chest(this));
         updateBlock(45, 18, new CraftingTable(this));
@@ -458,14 +484,16 @@ public class GameWorld extends World {
                 }
             }
             refreshWorld();
+            s.close();
         }
         catch(FileNotFoundException e){
             initializeGrid();
             prepareWorld();
-        } 
-        catch(NullPointerException e){
+
+        } catch(NullPointerException e){
             initializeGrid();
             prepareWorld();
+
         }
     }
 
@@ -488,7 +516,7 @@ public class GameWorld extends World {
         } 
         prepareWorld();
     }
-    
+
     // Help from ChatGPT
     private static void deleteRecursively(Path path) throws IOException {
         if (Files.isDirectory(path)) {
@@ -605,6 +633,25 @@ public class GameWorld extends World {
         saveInv();
         saveChest();
         //  }
+    }
+
+    /**
+     * Deletes all saves
+     */
+    public static void deleteStuff(){
+        Path directory = Paths.get("saves");
+
+        // Help from ChatGPT
+        // Delete all files and subdirectories in the specified directory
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path entry : stream) {
+                deleteRecursively(entry);
+            }
+            //System.out.println("All contents in the 'saves' folder have been deleted.");
+        } catch (IOException e) {
+            //System.err.println("An error occurred while deleting the contents of the directory.");
+        }
+
     }
 
     /**
@@ -725,7 +772,7 @@ public class GameWorld extends World {
         if(mi != null){
             if(mi.getButton() == 3){
                 if(Inventory.hasHeldItem()){
-                    
+
                     String placingBlock = Inventory.getHeldItems().get(0).getType();
                     Block block = toBlock(placingBlock);
                     updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, block);
@@ -734,7 +781,7 @@ public class GameWorld extends World {
             }                
         }     
     }
-    
+
     /**
      * Starts the main menu music when the world starts.
      */
