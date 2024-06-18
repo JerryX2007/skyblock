@@ -17,6 +17,7 @@ public class TitleScreen extends World
     private Button credits;
     private Button instructions;
     private GameWorld game;
+    private GreenfootImage instructionsImage;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
 
