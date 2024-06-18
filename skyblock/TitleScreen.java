@@ -96,6 +96,7 @@ import greenfoot.GreenfootSound;
  * <li>Memory issues may occur</li>
  * <li>Currently, the sound slider is not implemented to work with the sounds of our game (so it does not function yet).</li>
  * <li>As of the present commit, crafting is not always consistent and may be buggy.</li>
+ * <li>For some reason block plcaing has been broken and is not implemented.</li>
  * </p>
  * 
  * 
