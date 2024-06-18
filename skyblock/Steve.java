@@ -22,12 +22,13 @@ public class Steve extends Player
     private LeftLeg leftLeg;
     private RightLeg rightLeg;
     private int actNum, counter;
-    private boolean isPunching;
+    private boolean isPunching, isHoldingItem;
     private ArrayList<Item> heldItems;
+    private Item itemInHand;
     protected int X;
     protected int Y;
     protected ArrayList<BodyPart> bodyparts = new ArrayList<>();
-    
+
     /**
      * Constructor for the Steve class.
      * 
@@ -71,13 +72,15 @@ public class Steve extends Player
             getWorld().addObject(leftArm,0,0);  getWorld().addObject(rightArm,0,0);
             getWorld().addObject(leftHead,0,0); getWorld().addObject(rightHead,0,0);
         }
-        
+
         punching();
         rotateTowardsMouse();
         super.act();
         updateLayering();
         checkIfMoving();
-        //rotateTowardsMouse();
+        //update the inventory
+        heldItems = inventory.getHeldItems();
+        holdItem();
         actNum++;
     }
 
@@ -256,4 +259,44 @@ public class Steve extends Player
             counter++;
         }
     }
+
+    /**
+     * makes steve holds an item
+     */
+    public void holdItem(){
+        String key = Greenfoot.getKey();
+        int numberPressed;
+        //check if player can hold the item
+        if (key != null && key.matches("[1-9]")) {
+            numberPressed =  (int)Integer.parseInt(key);
+            if(heldItems.size() > 0 && numberPressed < heldItems.size() - 1){
+                //if the number key pressed on a item that exist, set it to that item
+                //itemInHand = heldItems.get(numberPressed);
+                itemInHand = new Bones(32, 32, getWorld(), 0,0);
+            }
+            else{
+                //else make an empty item
+                //itemInHand = new Empty(32, 32, getWorld(), 0,0);
+                itemInHand = new Bones(32, 32, getWorld(), 0,0);
+            }
+        }
+        //check if player's hand is empty
+        if(itemInHand != null && !(itemInHand instanceof Empty)){
+            isHoldingItem = true;
+        }
+        else{
+            isHoldingItem = false;
+        }
+        //let the player hold the item if it exists
+        if(isHoldingItem){
+            if(direction){
+                itemInHand.setLocation(getX() + 32, getY()-16);
+
+            }
+            else{
+                itemInHand.setLocation(getX() - 32, getY()-16);
+            }
+        }
+    }
+
 }

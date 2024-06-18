@@ -36,7 +36,6 @@ public abstract class Player extends SuperSmoothMover{
     protected int moveLeftCounter;
     protected int moveRightCounter;
     protected int hp;    
-
     /**
      * Constructor for Player class.
      * 
@@ -125,6 +124,7 @@ public abstract class Player extends SuperSmoothMover{
                     moveLeft();
                     isMoving = true;
                 }
+
 
                 MouseInfo mi = Greenfoot.getMouseInfo();
 
