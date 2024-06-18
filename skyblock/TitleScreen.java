@@ -5,12 +5,25 @@ import greenfoot.GreenfootSound;
 /**
  *  
  * <p>
- * The Title Screen of the Simulation
+ * The TitleScreen class of the Skyblock, or "SKIDBLOCK" Game
  * </p>
  * <div>
- * <h2> All Assets from Minecraft </h2>
+ * <h2> All Assets from Minecraft, with the exception of the GPT-4 created win screen. </h2>
  * <a href="minecraft.net"> Link to Minecraft's Site</a> <br>
  * </div>
+ *  * A 2D recreation of Minecraft Skyblock!
+ * 
+ * The player moves using WAD and shifts the world instead of moving itself
+ * Use left click to mine blocks and attack mobs
+ * Use right click to interact with blocks such as inventory or place down blocks
+ * E to open inventory and close opened interfaces, such as crafting
+ * 
+ * Mobs will automatically spawn and drop items
+ * Lava/water implemented, but players not yet given buckets on spawn
+ * Certain items have no effects 
+ * Crafting recipes incomplete and sometimes bugs out
+ * 
+ * Survive for as long as possible!
  * 
  * <h2>List of Features</h2>
  * <p>
@@ -48,47 +61,43 @@ import greenfoot.GreenfootSound;
  * <li>Creeper</li>
  * </ul>
  * <h3>Blocks</h3>
- * Blocks are crucial to the game. 
- * There are many modifiers which change many aspects of the simulation
+ * Blocks are crucial to the game. The skyblock world itself is made out of a 2D Array filled with blocks, whether it be with the cobblestone blocks or the air blocks. 
+ * There are many blocks in the game, which include:
  * <ul>
- *  <li>Student IQ</li>
- *  <li>Chaos Mode</li>
- *  <li>Number of days</li>
- *  <li>Has robbers</li>
- *  <li>has janitors</li>
- *  <li>Chance of computer breaking</li>
- *  <li>Chance of support to call back</li>
+ *  <li>Air Blocks (transparent)</li>
+ *  <li>Chest</li>
+ *  <li>Cobblestone</li>
+ *  <li>Wooden Plank</li>
+ *  <li>Crafting Table</li>
+ *  <li>Diamond Ore</li>
+ *  <li>Dirt</li>
+ *  <li>Grass</li>
+ *  <li>Iron Ore</li>
+ *  <li>Lava Source</li>
+ *  <li>Leaf</li>
+ *  <li>Log</li>
+ *  <li>Sapling</li>
+ *  <li>TNT</li>
+ *  <li>Water Source</li>
+ *  <li>Torch Block</li>
  * </ul>
  * <h2>Credits</h2>
- * Note: credits can also be found in the classes there were used in.<br>
- * <h3>Art and sounds</h3>
- * https://www.youtube.com/watch?v=idztNHePKMo - Music by Nintendo from New Super Mario Bros. Wii<br>
- * https://www.youtube.com/watch?v=jRtDGwmgCR8 - 
+ * Most, if not all assets/sounds come from Minecraft itself! As mentioned at the top. 
+ * <h3>Music</h3>
+ * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
  * <h3>Code</h3>
  * SuperSmoothMover and SuperStatBar taken from Jordan Cohen<br>
+ * Bar, PauseScreen, Button, Panel, Slider, ValueBox taekn from the previous simulation assignment, with some of the current group with the addition of the support of Felix Zhao and Andy Feng.<br>
  * GifImage, SimpleTimer, Label taken from Greenfoot<br>
- * 
+ * ChatGPT was used to assist with some of the coding throughout.<br>
  * <h2>Bugs</h2>
- * In chaos mode interactions may seem weird but that is the point.
- * <ol>
- *  <li>Memory issues may occur</li>
- * </ol>
- * 
+ * <li>Originally our save files, loading and reseting the word worked, but after a change to help deal with memory issues, issues with the save/load/resetting occured. 
+ * <a href="https://www.youtube.com/watch?v=xgb6DekApIs"><b>Refer to this video of Benny explaining the bug</b></a></li>
+ * <li>Memory issues may occur</li>
+ * <li>Currently, the sound slider is not implemented to work with the sounds of our game (so it does not function yet).</li>
+ * <li>As of the present commit, crafting is not always consistent and may be buggy.</li>
  * </p>
  * 
- * A 2D recreation of Minecraft Skyblock!
- * 
- * The player moves using WAD and shifts the world instead of moving itself
- * Use left click to mine blocks and attack mobs
- * Use right click to interact with blocks such as inventory or place down blocks
- * E to open inventory and close opened interfaces, such as crafting
- * 
- * Mobs will automatically spawn and drop items
- * Lava/water implemented, but players not yet given buckets on spawn
- * Certain items have no effects 
- * Crafting recipes incomplete and sometimes bugs out
- * 
- * Survive for as long as possible!
  * 
  * <a href="https://www.youtube.com/watch?v=5ChvaSe6aK0"> Link to music</a>
  * 
@@ -158,7 +167,7 @@ public class TitleScreen extends World
                 removeObject(instructionsImage);
             }
         }
-        
+
         if (creditsImage != null)
         {
             if(Greenfoot.isKeyDown("escape")){

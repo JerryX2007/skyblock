@@ -14,9 +14,9 @@ import java.util.ArrayList;
  * </ul>
  * </p>
  * 
- * Edited By: Felix Zhao, Benny Wang & Dylan Dinesh
+ * Edited By: Felix Zhao, Benny Wang
  * 
- * @author Andy Feng
+ * @author Andy Feng and Dylan Dinesh
  * @version 0.0.1
  */
 public class PauseScreen extends World
