@@ -94,7 +94,7 @@ import greenfoot.GreenfootSound;
  * <li>Originally our save files, loading and reseting the word worked, but after a change to help deal with memory issues, issues with the save/load/resetting occured. 
  * <a href="https://www.youtube.com/watch?v=xgb6DekApIs"><b>Refer to this video of Benny explaining the bug</b></a></li>
  * <li>Memory issues may occur</li>
- * <li>Currently, the sound slider is not implemented to work with the sounds of our game (so it does not function).</li>
+ * <li>Currently, the sound slider is not implemented to work with the sounds of our game (so it does not function yet).</li>
  * <li>As of the present commit, crafting is not always consistent and may be buggy.</li>
  * </p>
  * 
