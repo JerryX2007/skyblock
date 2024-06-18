@@ -78,55 +78,6 @@ public class CraftingSystem extends GUI
     }
     
     public void addCrafting() {
-        /*
-        xAdjust = 0;
-        yAdjust = 0;
-        
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (i == 0) {
-                    world.addObject(slots[j][i], 424 + xAdjust, 588);
-                    xAdjust += 54;
-                } else {
-                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
-                    xAdjust += 54;
-                }
-            }
-            xAdjust = 0;
-            if (i != 0) {
-                yAdjust += 54;
-            }
-        }
-        xAdjust = 0;
-        yAdjust = 0;
-
-        for (Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos());
-        }
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
-                itemArray[i][j] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
-                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
-                if(!initialized) {
-                    craftingSlotItems.add(temp);
-                    initialized = true;
-                }
-                xAdjust += 54;
-            }
-            xAdjust = 0;
-            yAdjust += 54;
-        }
-
-        xAdjust = 0;
-        yAdjust = 0;
-        
-        outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
-        world.addObject(outputSlot, 772, world.getHeight() / 2 - 116);
-        GameWorld.setOpenCrafting(true);
-        */
-        
         xAdjust = 0;
         yAdjust = 0;
         
