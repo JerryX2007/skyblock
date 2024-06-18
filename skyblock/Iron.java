@@ -1,9 +1,9 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class StonePickaxe here.
+ * Iron Item Class
  * 
- * Jerry Xing
+ * Dylan Dinesh
  * @version (a version number or a date)
  */
 public class Iron extends Item
