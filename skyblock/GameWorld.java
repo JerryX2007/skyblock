@@ -52,6 +52,17 @@ public class GameWorld extends World {
     FileWriter fWriter;
     PrintWriter pWriter;
 
+    public void clearWorld(){
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 36; j++) {
+                grid[i][j] = new Air();
+            }
+        }
+        loadWorld();
+        loadInv();
+        loadChest();
+    }
+    
     /**
      * Constructor for objects of class GameWorld.
      * Initializes the world, grid, player, inventory, and other components.
@@ -61,9 +72,12 @@ public class GameWorld extends World {
         super(1280, 768, 1, false);
 
         // Load saved information
+        initializeGrid();
         loadWorld();
         loadInv();
         loadChest();
+        
+        
 
         // Inventory initialization
         inventory = new Inventory(300, this);
@@ -78,7 +92,7 @@ public class GameWorld extends World {
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
-        
+        Greenfoot.delay(30);
     }
 
     /**
@@ -244,7 +258,7 @@ public class GameWorld extends World {
     private void initializeGrid() {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 36; j++) {
-                updateBlock(i, j, new Air());
+                grid[i][j] = new Air();
             }
         }
     }
@@ -410,7 +424,7 @@ public class GameWorld extends World {
      * Loads the initial island by placing associated blocks.
      * Called when the world is generated.
      */
-    private void prepareWorld() {
+    public void prepareWorld() {
         updateBlock(42, 18, new Chest(this));
         updateBlock(44, 18, new Chest(this));
         updateBlock(45, 18, new CraftingTable(this));
@@ -458,14 +472,16 @@ public class GameWorld extends World {
                 }
             }
             refreshWorld();
+            s.close();
         }
         catch(FileNotFoundException e){
             initializeGrid();
             prepareWorld();
-        } 
-        catch(NullPointerException e){
+            
+        } catch(NullPointerException e){
             initializeGrid();
             prepareWorld();
+            
         }
     }
 
@@ -516,7 +532,7 @@ public class GameWorld extends World {
                     } else{
                         p.println(grid[i][j].getName());
                     }
-
+                    
                 }
             }
             p.close();
@@ -605,6 +621,25 @@ public class GameWorld extends World {
         saveInv();
         saveChest();
         //  }
+    }
+    
+    /**
+     * Deletes all saves
+     */
+    public static void deleteStuff(){
+        Path directory = Paths.get("saves");
+
+        // Help from ChatGPT
+        // Delete all files and subdirectories in the specified directory
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path entry : stream) {
+                deleteRecursively(entry);
+            }
+            //System.out.println("All contents in the 'saves' folder have been deleted.");
+        } catch (IOException e) {
+            //System.err.println("An error occurred while deleting the contents of the directory.");
+        } 
+        Greenfoot.delay(60);
     }
 
     /**
