@@ -106,8 +106,7 @@ public class GameWorld extends World {
         
         winScreen = new Image("win_screen.png", 1280, 768);
     }
-    
-    private int counter = 0;
+
     /**
      * Act method that is called repeatedly to check for actions in the world.
      * Tracks inventory, GUI, and player health bar.
@@ -152,22 +151,20 @@ public class GameWorld extends World {
             attemptSpawn();
         }
         
-        
-        
-        if(timer.millisElapsed() > 600000 && counter == 0){
+        int counter = 0;
+        timer.mark();
+        if(timer.millisElapsed() > 6000 && counter == 0){
             addObject(winScreen, getWidth()/2, getHeight()/2);
             counter++;
-            
-        }
-        
-        if(Greenfoot.isKeyDown("p") && counter == 1){
+            if(Greenfoot.isKeyDown("escape")){
                 removeObject(winScreen);
             }
+        }
         
-        if (brightCount > 600) {
+        if (brightCount > 600) { //Check if day has ended
             darken = true;
         }
-        else {
+        else { //Day has started
             darken = false;
 
         }
@@ -175,7 +172,7 @@ public class GameWorld extends World {
         if(darken) {
             darkenBackground();
             darkCount++;
-            if (darkCount > 600) {
+            if (darkCount > 600) { //After 600, reset to 0
                 brightCount = 0;
                 darkCount = 0;
             }
@@ -184,7 +181,6 @@ public class GameWorld extends World {
             brightenBackground();
             brightCount++;
         }
-        
     }
 
     /**
