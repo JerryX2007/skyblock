@@ -6,24 +6,14 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Air extends Block
-{
-    /**
-     * Act - do whatever the Air wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+public class Air extends Block{
     private GreenfootImage img;
-    private GreenfootImage img2;
 
     public Air(){
         super(null,100, "air");
-
         img = new GreenfootImage("block/air.png");
-        img.setColor(new Color(0, 0, 0));
-
+        img.scale(64, 64);
         setImage(img);
-        img2 = addBorder(img, black);
-
     }
 
     public void act(){
