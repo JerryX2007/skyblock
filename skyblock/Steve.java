@@ -288,12 +288,10 @@ public class Steve extends Player
             numberPressed = Integer.parseInt(key) - 1;  // Convert to 0-based index
             if (numberPressed < heldItems.size()) {
                 // If the number key pressed on an item that exists, set it to that item
-                //itemInHand = heldItems.get(numberPressed);
-                itemInHand = new Bones(32, 32, getWorld(), 0, 0);
-            } else {
+                itemInHand = heldItems.get(numberPressed);
+                            } else {
                 // Else make an empty item
-                //itemInHand = new Empty(32, 32, getWorld(), 0, 0);
-                itemInHand = new Bones(32, 32, getWorld(), 0, 0);
+                itemInHand = new Empty(32, 32, getWorld(), 0, 0);
             }
         }
         // Check if player's hand is empty
