@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents the inventory GUI in the game.
@@ -19,6 +20,7 @@ public class Inventory extends GUI {
     private boolean foundLocation = false;
     private static boolean addedSomethingToInventory = false;
     private static boolean addedYet = false;
+    private static Item[] heldItem = new Item[1];
 
     /**
      * Constructor for the Inventory class.
@@ -177,8 +179,13 @@ public class Inventory extends GUI {
         return tempItemsList;
     }
     
-    public ArrayList<Item> getHeldItems(){
-        ArrayList<Item> b = new ArrayList<>();
+    /**
+     * Returns the list of items player is holding
+     * 
+     * @return the list of items
+     */
+    public static ArrayList<Item> getHeldItems(){
+        ArrayList<Item> b = new ArrayList<>(1);
         for(Item i : itemsList){
             if(i.getXPos() == heldItem[0].getXPos() && i.getYPos() == heldItem[0].getYPos()){
                 b.add(i);
@@ -281,15 +288,18 @@ public class Inventory extends GUI {
         tempItemsList.add(temp);
         addedYet = false;
     }
-
-    /**
-     * Checks if there is space for the specified item in the inventory.
-     * 
-     * @param item The item to check space for.
-     * @return True if there is space for the item, otherwise false.
-     */
-    public static boolean hasSpaceFor(String item) {
-        return true;  // This implementation always returns true, consider implementing actual logic
+    
+    public static boolean hasHeldItem(){
+        ArrayList<Item> b = new ArrayList<>(1);
+        for(Item i : itemsList){
+            if(i.getXPos() == heldItem[0].getXPos() && i.getYPos() == heldItem[0].getYPos()){
+                b.add(i);
+            }
+        }
+        if(b.size() > 0){
+            return true;
+        }
+        return false;
     }
 
     /**

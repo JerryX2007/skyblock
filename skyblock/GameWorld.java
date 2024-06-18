@@ -59,7 +59,9 @@ public class GameWorld extends World {
         super(1280, 768, 1, false);
 
         // Load saved information
-        loadWorld();
+        //loadWorld();
+        initializeGrid();
+        prepareWorld();
         loadInv();
         loadChest();
 
@@ -115,6 +117,7 @@ public class GameWorld extends World {
         //checkSave();
         checkTime();
         checkPause();
+        attemptReplace();
 
         // Only try spawning mobs if there are less than 20 total mobs in the world
         if(totalMobs() < 20){
@@ -145,7 +148,6 @@ public class GameWorld extends World {
             worldTime = 2;
             dayNightTimer.mark();
         }
-
     }
 
     /**
@@ -277,8 +279,8 @@ public class GameWorld extends World {
      * @return Array containing grid coordinates {gridX, gridY}.
      */
     public int[] getGridCoordinates(int x, int y) {
-        int gridX = (x / 64) + 40;
-        int gridY = (y / 64) + 12;
+        int gridX = ((x - Player.getTotalXOffset())/ 64) + 40;
+        int gridY = ((y - Player.getTotalYOffset())/ 64) + 12;
         return new int[]{gridX, gridY};
     }
 
@@ -320,7 +322,7 @@ public class GameWorld extends World {
             removeObject(block);
         }
         grid[gridX][gridY] = newBlock;
-        addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32), ((gridY - 12) * 64 + 32));
+        addObject(grid[gridX][gridY], ((gridX - 40) * 64 + 32 - Player.getTotalXOffset()), ((gridY - 12) * 64 + 32 - Player.getTotalYOffset()));
     }
 
     private void saveInv(){
@@ -593,7 +595,7 @@ public class GameWorld extends World {
     /**
      * Returns a Block representation of strings, used when loading information from text files
      */
-    private Block toBlock(String name){
+    public Block toBlock(String name){
         Block block = new Air();
 
         if(name.equals("air")){
@@ -693,6 +695,21 @@ public class GameWorld extends World {
         }
     }
 
+    private void attemptReplace(){
+        MouseInfo mi = Greenfoot.getMouseInfo();
+        if(mi != null){
+            if(mi.getButton() == 3){
+                if(Inventory.hasHeldItem()){
+                    
+                    String placingBlock = Inventory.getHeldItems().get(0).getType();
+                    Block block = toBlock(placingBlock);
+                    updateBlock(((mi.getX() + Player.getTotalXOffset())/ 64) + 40, ((mi.getY() + Player.getTotalYOffset())/ 64) + 12, block);
+                    Inventory.removeItem(Inventory.getHeldItems().get(0));
+                }
+            }                
+        }     
+    }
+    
     /**
      * Starts the main menu music when the world starts.
      */

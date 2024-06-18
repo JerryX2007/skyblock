@@ -82,6 +82,8 @@ public abstract class Player extends SuperSmoothMover{
         walking[2] = new GreenfootSound("walking_wood.mp3");
         isPlaying = false;
         healTimer.mark();
+        totalXOffset = 0;
+        totalYOffset = 0;
     }
 
     /**
@@ -391,15 +393,12 @@ public abstract class Player extends SuperSmoothMover{
 
     /**
      * Gets a list of all items in a radius for pick up 
-     * If there is space in the inventory, pick it up
      */
     protected void checkPickup(){
         ArrayList<ItemDrop> dropsInRange = (ArrayList)getObjectsInRange(60, ItemDrop.class);
         for(ItemDrop item : dropsInRange){
-            if(Inventory.hasSpaceFor(item.getName())){
-                Inventory.addItem(item.getName());
-                getWorld().removeObject(item);
-            }
+            Inventory.addItem(item.getName());
+            getWorld().removeObject(item);
         }
     }
 

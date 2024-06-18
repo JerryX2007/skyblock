@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class StonePickaxe here.
+ * Write a description of class Bucket here.
  * 
  * Jerry Xing
  * @version (a version number or a date)
