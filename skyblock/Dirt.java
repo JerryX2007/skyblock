@@ -6,8 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Dirt extends Block
-{
+public class Dirt extends Block{
     private static Color brown = new Color(185, 122, 87);
     private GreenfootImage img;
     private GreenfootImage img2;
