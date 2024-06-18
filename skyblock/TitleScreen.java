@@ -17,7 +17,7 @@ public class TitleScreen extends World
     private Button credits;
     private Button instructions;
     private GameWorld game;
-    private GreenfootImage instructionsImage;
+    private Image instructionsImage;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
 
@@ -47,11 +47,13 @@ public class TitleScreen extends World
         instructions = new Button("Instructions", 3, ".png");
         Button.init();
 
+        instructionsImage = new Image("instructions_image.png", 1280, 768);
+
         addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 150);
         addObject(playFromSave, getWidth() / 2, getHeight() / 2 + 200);
         addObject(instructions, getWidth() / 2, getHeight() / 2 + 250);
         addObject(credits, getWidth() / 2, getHeight() / 2 + 300);
-        
+
         addObject(logo, getWidth() / 2, 100);
         prepare();
     }
@@ -59,6 +61,13 @@ public class TitleScreen extends World
     public void act(){
         checkIfPressed();
         startMusic();
+
+        if (instructions != null)
+        {
+            if(Greenfoot.isKeyDown("escape")){
+                removeObject(instructionsImage);
+            }
+        }
     }
 
     /**
@@ -117,7 +126,6 @@ public class TitleScreen extends World
         }
     }
 
-    
     /**
      * Checks if buttons are pressed
      */
@@ -128,26 +136,27 @@ public class TitleScreen extends World
             Greenfoot.setWorld(game);
             playFromSave.setPressedCondition(false);
         }
-        
+
         if(playNewWorld.isPressed()){
             game = new GameWorld(this);
             game.checkReset();
             Greenfoot.setWorld(game);
             playNewWorld.setPressedCondition(false);
         }
-        
+
         if(instructions.isPressed()){
-            game = new GameWorld(this);
-            playNewWorld.setPressedCondition(false);
+            addObject(instructionsImage, getWidth()/2, getHeight()/2);
+
+            instructions.setPressedCondition(false);
         }
-        
+
         if(credits.isPressed()){
             game = new GameWorld(this);
-            
-            playNewWorld.setPressedCondition(false);
+
+            credits.setPressedCondition(false);
         }
     }
-    
+
     /**
      * Prepare the world for the start of the program.
      * That is: create the initial objects and add them to the world.
