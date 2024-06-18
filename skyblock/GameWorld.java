@@ -56,7 +56,8 @@ public class GameWorld extends World {
     private int red = 135;
     private int green = 206;
     private int blue = 250;
-    private int actCount = 1;
+    private int darkCount = 1;
+    private int brightCount = 1;
     private boolean darken = false;
 
     public void clearWorld(){
@@ -160,21 +161,28 @@ public class GameWorld extends World {
             }
         }
         
-        if (actCount < 300) {
+        if (brightCount > 600) {
             darken = true;
         }
         else {
             darken = false;
-            actCount = 0;
+
         }
         
         if(darken) {
             darkenBackground();
+            darkCount++;
+            if (darkCount > 600) {
+                brightCount = 0;
+                darkCount = 0;
+            }
         }
         else {
             brightenBackground();
+            brightCount++;
         }
-
+        
+        System.out.println(darkCount + " " + brightCount);
     }
 
     /**
@@ -296,8 +304,8 @@ public class GameWorld extends World {
      * Gradually brightens the background color.
      */
     private void brightenBackground() {
-        if (red > 135) {
-            red--;
+        if (red < 135) {
+            red++;
         }
         if (green < 206) {
             green++;
