@@ -23,6 +23,7 @@ import greenfoot.GreenfootSound;
  * Certain items have no effects 
  * Crafting recipes incomplete and sometimes bugs out
  * 
+ *  * If you survive for 5 days a Victory Pop Up will appear! It is was left intentional that the player can move during this pop up.
  * Survive for as long as possible!
  * 
  * <h2>List of Features</h2>
