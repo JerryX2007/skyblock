@@ -18,6 +18,7 @@ public class TitleScreen extends World
     private Button instructions;
     private GameWorld game;
     private Image instructionsImage;
+    private Image creditsImage;
     private static GreenfootSound mainMenu = new GreenfootSound("mainmenu.mp3");
     private boolean musicStarted = false;
 
@@ -48,7 +49,7 @@ public class TitleScreen extends World
         Button.init();
 
         instructionsImage = new Image("instructions_image.png", 1280, 768);
-
+        creditsImage = new Image("credits_image.png", 1280, 768);
         addObject(playNewWorld, getWidth() / 2, getHeight() / 2 + 150);
         addObject(playFromSave, getWidth() / 2, getHeight() / 2 + 200);
         addObject(instructions, getWidth() / 2, getHeight() / 2 + 250);
@@ -62,10 +63,17 @@ public class TitleScreen extends World
         checkIfPressed();
         startMusic();
 
-        if (instructions != null)
+        if (instructionsImage != null)
         {
             if(Greenfoot.isKeyDown("escape")){
                 removeObject(instructionsImage);
+            }
+        }
+        
+        if (creditsImage != null)
+        {
+            if(Greenfoot.isKeyDown("escape")){
+                removeObject(creditsImage);
             }
         }
     }
@@ -151,7 +159,7 @@ public class TitleScreen extends World
         }
 
         if(credits.isPressed()){
-            game = new GameWorld(this);
+            addObject(creditsImage, getWidth()/2, getHeight()/2);
 
             credits.setPressedCondition(false);
         }
