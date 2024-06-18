@@ -78,55 +78,6 @@ public class CraftingSystem extends GUI
     }
     
     public void addCrafting() {
-        /*
-        xAdjust = 0;
-        yAdjust = 0;
-        
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (i == 0) {
-                    world.addObject(slots[j][i], 424 + xAdjust, 588);
-                    xAdjust += 54;
-                } else {
-                    world.addObject(slots[j][i], 424 + xAdjust, 414 + yAdjust);
-                    xAdjust += 54;
-                }
-            }
-            xAdjust = 0;
-            if (i != 0) {
-                yAdjust += 54;
-            }
-        }
-        xAdjust = 0;
-        yAdjust = 0;
-
-        for (Item i : Inventory.getItemsList()) {
-            world.addObject(i, i.getXPos(), i.getYPos());
-        }
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Empty temp = new Empty(16, 16, world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
-                itemArray[i][j] = new CraftingSlot(world, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust, temp);
-                world.addObject(temp, 490 + xAdjust, world.getHeight() / 2 - 170 + yAdjust);
-                if(!initialized) {
-                    craftingSlotItems.add(temp);
-                    initialized = true;
-                }
-                xAdjust += 54;
-            }
-            xAdjust = 0;
-            yAdjust += 54;
-        }
-
-        xAdjust = 0;
-        yAdjust = 0;
-        
-        outputSlot = new OutputSlot(world, 772, world.getHeight() / 2 - 116, new Empty(16, 16, world, 772, world.getHeight() / 2 - 116));
-        world.addObject(outputSlot, 772, world.getHeight() / 2 - 116);
-        GameWorld.setOpenCrafting(true);
-        */
-        
         xAdjust = 0;
         yAdjust = 0;
         
@@ -225,8 +176,6 @@ public class CraftingSystem extends GUI
             }
         }
         
-        
-        System.out.println(craftingSlotItems.size());
         // Move items from the chest to the player's inventory if they are below a certain y-coordinate
         try {
             for (int i = 0; i < craftingSlotItems.size(); i++) {
@@ -236,7 +185,7 @@ public class CraftingSystem extends GUI
                 }
             }
         } catch (IllegalStateException e) {
-            System.out.println("fail");
+            //System.out.println("fail");
         }
         
     } 
@@ -263,6 +212,10 @@ public class CraftingSystem extends GUI
             increaseItemAmount(outputSlot, 3);
             crafted = true;
         }
+        else if (isCraftingTorch()) {
+            world.addObject(new Torch(world, 772, 268), 772, 268);
+            crafted = true; //Crafting is true or not. After crafting is true, just make it so that the crafting wont occur again. 
+        }
         if(crafted) {
             update(outputSlot);
             if(needFour) {
@@ -272,6 +225,7 @@ public class CraftingSystem extends GUI
             }
             needFour = false;
         }
+        
         /*
         else if (isCraftingSword("plank")) {
             outputItem = new WoodenSword(world, outputSlot.getX(), outputSlot.getY());
