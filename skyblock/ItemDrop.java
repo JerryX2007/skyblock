@@ -99,11 +99,11 @@ public class ItemDrop extends SuperSmoothMover{
                 name = "iron";
                 break;
             case 13:
-                img = new GreenfootImage("items/diamond.png");
+                img = new GreenfootImage("items/Diamond.png");
                 name = "diamond";
                 break;
             case 14:
-                img = new GreenfootImage("items/torch.png");
+                img = new GreenfootImage("items/Torch.png");
                 name = "torch";
                 break;
             case 15:
@@ -119,15 +119,15 @@ public class ItemDrop extends SuperSmoothMover{
                 name = "gunpowder";
                 break;
             case 18:
-                img = new GreenfootImage("items/string.png");
+                img = new GreenfootImage("items/String.png");
                 name = "string";
                 break;
             case 19:
-                img = new GreenfootImage("items/coal.png");
+                img = new GreenfootImage("items/Coal.png");
                 name = "coal";
                 break;
             case 20:
-                img = new GreenfootImage("items/iron.png");
+                img = new GreenfootImage("items/Iron.png");
                 name = "iron";
                 break;
         }

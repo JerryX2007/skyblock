@@ -1,1 +1,1 @@
-block/dirt.png 32 GameWorld@69a43c61 true 424 588 dirt true
+block/dirt.png 32 GameWorld@47273681 true 631 348 dirt true
