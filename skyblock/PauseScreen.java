@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class PauseScreen extends World
 {
-    private Button menu = new Button("menu", 3, ".png");
+    private Button menu = new Button("Save_Quit", 3, ".png");
     private TitleScreen titleScreen;
     private GameWorld world;
     private Button resume = new Button("resume", 3, ".png");
@@ -86,10 +86,11 @@ public class PauseScreen extends World
      */
     public void act() {
         if (menu.isPressed()) {
+            world.checkSave();
             Greenfoot.setWorld(titleScreen);
             menu.setPressedCondition(false);
           //  TitleScreen.setMusicVolume(25);
-          //  TitleScreen.playMusic();
+           // TitleScreen.playMusic();
         }
         if (resume.isPressed()) {
             Greenfoot.setWorld(world);
