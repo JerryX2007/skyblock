@@ -53,6 +53,11 @@ public class GameWorld extends World {
     PrintWriter pWriter;
     SimpleTimer timer;
     private Image winScreen;
+    private int red = 135;
+    private int green = 206;
+    private int blue = 250;
+    private int actCount = 1;
+    private boolean darken = false;
 
     public void clearWorld(){
         for (int i = 0; i < 100; i++) {
@@ -92,7 +97,12 @@ public class GameWorld extends World {
         addObject(hpBar, 0, 0);
         addObject(player, 640, 384);
         dayNightTimer.mark();
-
+        
+        //Background
+        setBackground(new GreenfootImage(getWidth(), getHeight()));
+        updateBackground();
+        
+        
         winScreen = new Image("win_screen.png", 1280, 768);
     }
 
@@ -148,6 +158,21 @@ public class GameWorld extends World {
             if(Greenfoot.isKeyDown("escape")){
                 removeObject(winScreen);
             }
+        }
+        
+        if (actCount < 300) {
+            darken = true;
+        }
+        else {
+            darken = false;
+            actCount = 0;
+        }
+        
+        if(darken) {
+            darkenBackground();
+        }
+        else {
+            brightenBackground();
         }
 
     }
@@ -239,7 +264,51 @@ public class GameWorld extends World {
     public static void setGUIOpened(boolean opened) {
         GUIOpened = opened;
     }
-
+    
+    /**
+     * Updates the background color based on the current RGB values.
+     */
+    private void updateBackground() {
+        GreenfootImage bg = getBackground();
+        bg.setColor(new Color(red, green, blue));
+        bg.fill();
+    }
+    
+    /**
+     * Gradually darkens the background color.
+     */
+    private void darkenBackground() {
+        // Ensure the color values do not go below 0
+        if (red > 0) {
+            red--;
+        }
+        if (green > 0) {
+            green--;
+        }
+        if (blue > 139) {
+            blue--; // Limit blue to a darker shade
+        }
+        
+        updateBackground();
+    }
+    
+    /**
+     * Gradually brightens the background color.
+     */
+    private void brightenBackground() {
+        if (red > 135) {
+            red--;
+        }
+        if (green < 206) {
+            green++;
+        }
+        if (blue < 250) {
+            blue++;
+        }
+        
+        updateBackground();
+    }
+    
     /**
      * Simulates inventory actions.
      */
